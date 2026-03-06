@@ -6,6 +6,7 @@ import {
   calculerTempsSession
 } from '../revision'
 import { getMapping } from '../mapping'
+import CarteCoran from '../components/CarteCoran'
 
 function SectionTag({ children }) {
   return (
@@ -86,6 +87,7 @@ function ParamBtns({ options, value, onChange }) {
 
 function Revisions() {
   const [parametres, setParametres] = useState(null)
+  const [corpus, setCorpus] = useState([])
   const [revisionsDuJour, setRevisionsDuJour] = useState([])
   const [etape, setEtape] = useState('chargement')
   const [indexCourant, setIndexCourant] = useState(0)
@@ -117,6 +119,10 @@ function Revisions() {
     const { data: user } = await supabase.from('utilisateur').select('*').single()
     if (!user) { setEtape('parametrage'); return }
     setParametres(user)
+
+    const { data: corpusData } = await supabase.from('corpus').select('*')
+    if (corpusData) setCorpus(corpusData.map(d => ({ page: d.valeur, sourate_num: d.sourate_num })))
+
     if (!user.frequence || !user.temps_session || !user.unite_revision) {
       setEtape('parametrage'); return
     }
@@ -131,24 +137,24 @@ function Revisions() {
   }
 
   async function initialiserRevisions(user) {
-    const { data: corpus } = await supabase.from('corpus').select('*')
-    if (!corpus || corpus.length === 0) { setEtape('termine'); return }
+    const { data: corpusData } = await supabase.from('corpus').select('*')
+    if (!corpusData || corpusData.length === 0) { setEtape('termine'); return }
     const mapping = getMapping(user.version || 'warsh')
     const unite = user.unite_revision
     const today = aujourdhui()
     let valeurs = []
     if (unite === 'hizb') {
       const s = new Set()
-      corpus.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.hizb)))
+      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.hizb)))
       valeurs = [...s]
     } else if (unite === 'page') {
-      valeurs = [...new Set(corpus.map(c => c.valeur))]
+      valeurs = [...new Set(corpusData.map(c => c.valeur))]
     } else if (unite === 'quart') {
       const s = new Set()
-      corpus.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.quart_global)))
+      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.quart_global)))
       valeurs = [...s]
     } else if (unite === 'sourate') {
-      valeurs = [...new Set(corpus.map(c => c.sourate_num))]
+      valeurs = [...new Set(corpusData.map(c => c.sourate_num))]
     }
     for (const valeur of valeurs) {
       await supabase.from('revisions').insert({
@@ -222,6 +228,7 @@ function Revisions() {
   }
 
   const mapping = getMapping(parametres?.version || 'warsh')
+  const version = parametres?.version || 'warsh'
 
   // CHARGEMENT
   if (etape === 'chargement') return (
@@ -230,12 +237,13 @@ function Revisions() {
     </div>
   )
 
-  // PARAMÉTRAGE
+  // PARAMETRAGE
   if (etape === 'parametrage') return (
     <div>
+      <CarteCoran corpus={corpus} version={version} />
       <SectionTag>Rythme</SectionTag>
-      <SectionTitle>Configure tes révisions</SectionTitle>
-      <SectionSub>Ces paramètres déterminent ton planning quotidien</SectionSub>
+      <SectionTitle>Configure tes revisions</SectionTitle>
+      <SectionSub>Ces parametres determinent ton planning quotidien</SectionSub>
       <ParametrageRevision parametres={parametres} onSave={sauvegarderParametres} />
     </div>
   )
@@ -258,11 +266,12 @@ function Revisions() {
 
     return (
       <div>
-        <SectionTag>Révisions du jour</SectionTag>
-        <SectionTitle>Bismillah</SectionTitle>
-        <SectionSub>{revisionsDuJour.length} unités · environ {tempsTotal} min</SectionSub>
+        <CarteCoran corpus={corpus} version={version} />
 
-        {/* Barre de progression */}
+        <SectionTag>Revisions du jour</SectionTag>
+        <SectionTitle>Bismillah</SectionTitle>
+        <SectionSub>{revisionsDuJour.length} unites · environ {tempsTotal} min</SectionSub>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
           <div style={{ flex: 1, height: '3px', background: 'rgba(255,255,255,0.07)', borderRadius: '2px', overflow: 'hidden' }}>
             <div style={{
@@ -276,11 +285,10 @@ function Revisions() {
           </div>
         </div>
 
-        {/* Info pills */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
           {[
-            `${revisionsDuJour.length} unités`,
-            `${tempsTotal} min estimées`,
+            `${revisionsDuJour.length} unites`,
+            `${tempsTotal} min estimees`,
             `${parametres.unite_revision} · Warsh`
           ].map(t => (
             <div key={t} style={{
@@ -292,7 +300,6 @@ function Revisions() {
           ))}
         </div>
 
-        {/* Carte révision */}
         <div style={{
           background: 'linear-gradient(145deg, rgba(26,92,46,0.12), rgba(7,26,14,0.6))',
           border: '1px solid rgba(201,168,76,0.22)',
@@ -300,7 +307,6 @@ function Revisions() {
           textAlign: 'center', position: 'relative',
           overflow: 'hidden', marginBottom: '16px'
         }}>
-          {/* Lettre arabe décorative */}
           <div style={{
             position: 'absolute', fontFamily: 'Amiri, serif',
             fontSize: '240px', color: 'rgba(201,168,76,0.03)',
@@ -311,7 +317,7 @@ function Revisions() {
           <div style={{
             fontSize: '10px', fontWeight: 700, letterSpacing: '3px',
             textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '14px'
-          }}>À réciter</div>
+          }}>A reciter</div>
 
           <div style={{
             fontSize: '52px', fontWeight: 800, color: 'var(--text)',
@@ -320,11 +326,10 @@ function Revisions() {
 
           {rev.nb_revisions > 0 && (
             <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '16px' }}>
-              {rev.nb_revisions} révision{rev.nb_revisions > 1 ? 's' : ''} · dernière le {rev.derniere_revision}
+              {rev.nb_revisions} revision{rev.nb_revisions > 1 ? 's' : ''} · derniere le {rev.derniere_revision}
             </div>
           )}
 
-          {/* Chevauchement */}
           {chevauchements.length > 0 && (
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '24px', flexWrap: 'wrap' }}>
               {chevauchements.map(({ page, position }) => (
@@ -335,13 +340,12 @@ function Revisions() {
                   border: `1px solid ${position === 'avant' ? 'rgba(230,81,0,0.25)' : 'rgba(45,138,78,0.25)'}`,
                   color: position === 'avant' ? '#ffb74d' : '#81c784'
                 }}>
-                  {position === 'avant' ? '← ' : ''}p.{page}{position === 'apres' ? ' →' : ''}
+                  {position === 'avant' ? '<- ' : ''}p.{page}{position === 'apres' ? ' ->' : ''}
                 </div>
               ))}
             </div>
           )}
 
-          {/* Chrono */}
           {!chronoActif && !chronoTermine && (
             <button onClick={() => demarrerChrono(tempsUnite)} style={{
               padding: '13px 32px',
@@ -387,37 +391,36 @@ function Revisions() {
 
           {chronoTermine && (
             <div style={{ color: '#7ac49a', fontWeight: 600, fontSize: '14px', letterSpacing: '0.3px' }}>
-              Temps écoulé
+              Temps ecoule
             </div>
           )}
         </div>
 
-        {/* Boutons validation */}
         {chronoTermine && (
           <>
             <div style={{
               textAlign: 'center', fontSize: '11px', fontWeight: 700,
               letterSpacing: '2.5px', textTransform: 'uppercase',
               color: 'var(--gold)', marginBottom: '14px'
-            }}>Comment s'est passée la récitation ?</div>
+            }}>Comment s'est passee la recitation ?</div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {[
-  { niveau: 'fluide',   label: 'Fluide',             desc: 'Parfait, sans hésitation', bg: 'linear-gradient(135deg, rgba(61,184,106,0.25), rgba(26,92,46,0.15))',  border: 'rgba(61,184,106,0.35)',  color: '#a8f0c0' },
-  { niveau: 'hesitant', label: 'Hésitant',            desc: 'Quelques hésitations',     bg: 'linear-gradient(135deg, rgba(100,180,80,0.25), rgba(40,110,50,0.15))', border: 'rgba(100,180,80,0.35)', color: '#c8f0a0' },
-  { niveau: 'erreurs',  label: "Beaucoup d'erreurs",  desc: 'Erreurs fréquentes',       bg: 'linear-gradient(135deg, rgba(200,150,40,0.25), rgba(160,100,20,0.15))', border: 'rgba(200,150,40,0.35)', color: '#f0d080' },
-  { niveau: 'bloque',   label: 'Bloqué',              desc: 'Impossible de réciter',    bg: 'linear-gradient(135deg, rgba(201,120,40,0.25), rgba(160,80,20,0.15))',  border: 'rgba(201,120,40,0.35)', color: '#f0b060' },
-].map(({ niveau, label, desc, bg, border, color }) => (
-  <button key={niveau} onClick={() => validerRevision(niveau)} style={{
-    padding: '18px 16px', borderRadius: '16px',
-    border: `1px solid ${border}`,
-    background: bg, color, textAlign: 'left',
-    cursor: 'pointer', transition: 'all 0.2s'
-  }}>
-    <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>{label}</div>
-    <div style={{ fontSize: '12px', opacity: 0.65 }}>{desc}</div>
-  </button>
-))}
+                { niveau: 'fluide',   label: 'Fluide',            desc: 'Parfait, sans hesitation', bg: 'linear-gradient(135deg, rgba(61,184,106,0.25), rgba(26,92,46,0.15))',  border: 'rgba(61,184,106,0.35)',  color: '#a8f0c0' },
+                { niveau: 'hesitant', label: 'Hesitant',           desc: 'Quelques hesitations',     bg: 'linear-gradient(135deg, rgba(100,180,80,0.25), rgba(40,110,50,0.15))', border: 'rgba(100,180,80,0.35)', color: '#c8f0a0' },
+                { niveau: 'erreurs',  label: "Beaucoup d'erreurs", desc: 'Erreurs frequentes',       bg: 'linear-gradient(135deg, rgba(200,150,40,0.25), rgba(160,100,20,0.15))', border: 'rgba(200,150,40,0.35)', color: '#f0d080' },
+                { niveau: 'bloque',   label: 'Bloque',             desc: 'Impossible de reciter',    bg: 'linear-gradient(135deg, rgba(201,120,40,0.25), rgba(160,80,20,0.15))',  border: 'rgba(201,120,40,0.35)', color: '#f0b060' },
+              ].map(({ niveau, label, desc, bg, border, color }) => (
+                <button key={niveau} onClick={() => validerRevision(niveau)} style={{
+                  padding: '18px 16px', borderRadius: '16px',
+                  border: `1px solid ${border}`,
+                  background: bg, color, textAlign: 'left',
+                  cursor: 'pointer', transition: 'all 0.2s'
+                }}>
+                  <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>{label}</div>
+                  <div style={{ fontSize: '12px', opacity: 0.65 }}>{desc}</div>
+                </button>
+              ))}
             </div>
           </>
         )}
@@ -427,26 +430,32 @@ function Revisions() {
     )
   }
 
-  // TERMINÉ
+  // TERMINE
   return (
-    <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-      <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '16px' }}>
-        Session terminée
-      </div>
-      <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-1px', marginBottom: '10px' }}>
-        Barakallahu fik
-      </div>
-      <div style={{ fontSize: '14px', color: 'var(--text-dim)', marginBottom: '8px' }}>
-        Tu as révisé <span style={{ color: 'var(--text)', fontWeight: 600 }}>{revisionsDuJour.length} unité{revisionsDuJour.length > 1 ? 's' : ''}</span> aujourd'hui
-      </div>
-      <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
-        Reviens demain pour continuer
+    <div>
+      <CarteCoran corpus={corpus} version={version} />
+      <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '16px' }}>
+          Session terminee
+        </div>
+        <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-1px', marginBottom: '10px' }}>
+          Barakallahu fik
+        </div>
+        <div style={{ fontSize: '14px', color: 'var(--text-dim)', marginBottom: '8px' }}>
+          Tu as revise{' '}
+          <span style={{ color: 'var(--text)', fontWeight: 600 }}>
+            {revisionsDuJour.length} unite{revisionsDuJour.length > 1 ? 's' : ''}
+          </span>{' '}
+          aujourd'hui
+        </div>
+        <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
+          Reviens demain pour continuer
+        </div>
       </div>
     </div>
   )
 }
 
-// ─── PARAMÉTRAGE RÉVISION ───
 function ParametrageRevision({ parametres, onSave }) {
   const [frequence, setFrequence] = useState(parametres?.frequence || 'quotidien')
   const [tempsSession, setTempsSession] = useState(parametres?.temps_session || 30)
@@ -455,7 +464,7 @@ function ParametrageRevision({ parametres, onSave }) {
 
   return (
     <Card>
-      <FieldLabel>Fréquence</FieldLabel>
+      <FieldLabel>Frequence</FieldLabel>
       <ParamBtns
         value={frequence} onChange={setFrequence}
         options={[
@@ -465,7 +474,7 @@ function ParametrageRevision({ parametres, onSave }) {
         ]}
       />
 
-      <FieldLabel>Durée par session</FieldLabel>
+      <FieldLabel>Duree par session</FieldLabel>
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
         {[15, 30, 45, 60].map(t => (
           <button key={t} onClick={() => setTempsSession(t)} style={{
@@ -488,7 +497,7 @@ function ParametrageRevision({ parametres, onSave }) {
         />
       </div>
 
-      <FieldLabel>Unité de révision</FieldLabel>
+      <FieldLabel>Unite de revision</FieldLabel>
       <ParamBtns
         value={uniteRevision} onChange={setUniteRevision}
         options={[
@@ -503,9 +512,9 @@ function ParametrageRevision({ parametres, onSave }) {
       <ParamBtns
         value={modeChevauchement} onChange={setModeChevauchement}
         options={[
-          { val: 'aucun', label: 'Aucun', desc: 'Révise uniquement l\'unité' },
-          { val: 'leger', label: 'Léger', desc: '2 pages avant / après' },
-          { val: 'renforce', label: 'Renforcé', desc: '5 pages avant / après' },
+          { val: 'aucun', label: 'Aucun', desc: "Revise uniquement l'unite" },
+          { val: 'leger', label: 'Leger', desc: '2 pages avant / apres' },
+          { val: 'renforce', label: 'Renforce', desc: '5 pages avant / apres' },
         ]}
       />
 
