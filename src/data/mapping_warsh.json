@@ -1,0 +1,5582 @@
+[
+  {
+    "version": "warsh",
+    "page": 1,
+    "sourate_num": 1,
+    "sourate_nom": "Al-Fatiha",
+    "hizb": 1,
+    "quart": 1,
+    "quart_global": 1
+  },
+  {
+    "version": "warsh",
+    "page": 2,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 1,
+    "quart_global": 1
+  },
+  {
+    "version": "warsh",
+    "page": 3,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 1,
+    "quart_global": 1
+  },
+  {
+    "version": "warsh",
+    "page": 4,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 1,
+    "quart_global": 1
+  },
+  {
+    "version": "warsh",
+    "page": 5,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 2,
+    "quart_global": 2
+  },
+  {
+    "version": "warsh",
+    "page": 6,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 2,
+    "quart_global": 2
+  },
+  {
+    "version": "warsh",
+    "page": 7,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 3,
+    "quart_global": 3
+  },
+  {
+    "version": "warsh",
+    "page": 8,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 3,
+    "quart_global": 3
+  },
+  {
+    "version": "warsh",
+    "page": 9,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 4,
+    "quart_global": 4
+  },
+  {
+    "version": "warsh",
+    "page": 10,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 1,
+    "quart": 4,
+    "quart_global": 4
+  },
+  {
+    "version": "warsh",
+    "page": 11,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 1,
+    "quart_global": 5
+  },
+  {
+    "version": "warsh",
+    "page": 12,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 1,
+    "quart_global": 5
+  },
+  {
+    "version": "warsh",
+    "page": 13,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 1,
+    "quart_global": 5
+  },
+  {
+    "version": "warsh",
+    "page": 14,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 2,
+    "quart_global": 6
+  },
+  {
+    "version": "warsh",
+    "page": 15,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 2,
+    "quart_global": 6
+  },
+  {
+    "version": "warsh",
+    "page": 16,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 2,
+    "quart_global": 6
+  },
+  {
+    "version": "warsh",
+    "page": 17,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 3,
+    "quart_global": 7
+  },
+  {
+    "version": "warsh",
+    "page": 18,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 3,
+    "quart_global": 7
+  },
+  {
+    "version": "warsh",
+    "page": 19,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 4,
+    "quart_global": 8
+  },
+  {
+    "version": "warsh",
+    "page": 20,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 4,
+    "quart_global": 8
+  },
+  {
+    "version": "warsh",
+    "page": 21,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 2,
+    "quart": 4,
+    "quart_global": 8
+  },
+  {
+    "version": "warsh",
+    "page": 22,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 1,
+    "quart_global": 9
+  },
+  {
+    "version": "warsh",
+    "page": 23,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 1,
+    "quart_global": 9
+  },
+  {
+    "version": "warsh",
+    "page": 24,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 2,
+    "quart_global": 10
+  },
+  {
+    "version": "warsh",
+    "page": 25,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 2,
+    "quart_global": 10
+  },
+  {
+    "version": "warsh",
+    "page": 26,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 2,
+    "quart_global": 10
+  },
+  {
+    "version": "warsh",
+    "page": 27,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 3,
+    "quart_global": 11
+  },
+  {
+    "version": "warsh",
+    "page": 28,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 3,
+    "quart_global": 11
+  },
+  {
+    "version": "warsh",
+    "page": 29,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 4,
+    "quart_global": 12
+  },
+  {
+    "version": "warsh",
+    "page": 30,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 4,
+    "quart_global": 12
+  },
+  {
+    "version": "warsh",
+    "page": 31,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 3,
+    "quart": 4,
+    "quart_global": 12
+  },
+  {
+    "version": "warsh",
+    "page": 32,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 1,
+    "quart_global": 13
+  },
+  {
+    "version": "warsh",
+    "page": 33,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 1,
+    "quart_global": 13
+  },
+  {
+    "version": "warsh",
+    "page": 34,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 2,
+    "quart_global": 14
+  },
+  {
+    "version": "warsh",
+    "page": 35,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 2,
+    "quart_global": 14
+  },
+  {
+    "version": "warsh",
+    "page": 36,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 2,
+    "quart_global": 14
+  },
+  {
+    "version": "warsh",
+    "page": 37,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 3,
+    "quart_global": 15
+  },
+  {
+    "version": "warsh",
+    "page": 38,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 3,
+    "quart_global": 15
+  },
+  {
+    "version": "warsh",
+    "page": 39,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 4,
+    "quart_global": 16
+  },
+  {
+    "version": "warsh",
+    "page": 40,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 4,
+    "quart_global": 16
+  },
+  {
+    "version": "warsh",
+    "page": 41,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 4,
+    "quart": 4,
+    "quart_global": 16
+  },
+  {
+    "version": "warsh",
+    "page": 42,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 1,
+    "quart_global": 17
+  },
+  {
+    "version": "warsh",
+    "page": 43,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 1,
+    "quart_global": 17
+  },
+  {
+    "version": "warsh",
+    "page": 44,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 2,
+    "quart_global": 18
+  },
+  {
+    "version": "warsh",
+    "page": 45,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 2,
+    "quart_global": 18
+  },
+  {
+    "version": "warsh",
+    "page": 46,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 3,
+    "quart_global": 19
+  },
+  {
+    "version": "warsh",
+    "page": 47,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 3,
+    "quart_global": 19
+  },
+  {
+    "version": "warsh",
+    "page": 48,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 3,
+    "quart_global": 19
+  },
+  {
+    "version": "warsh",
+    "page": 49,
+    "sourate_num": 2,
+    "sourate_nom": "Al-Baqara",
+    "hizb": 5,
+    "quart": 4,
+    "quart_global": 20
+  },
+  {
+    "version": "warsh",
+    "page": 50,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 5,
+    "quart": 4,
+    "quart_global": 20
+  },
+  {
+    "version": "warsh",
+    "page": 51,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 1,
+    "quart_global": 21
+  },
+  {
+    "version": "warsh",
+    "page": 52,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 1,
+    "quart_global": 21
+  },
+  {
+    "version": "warsh",
+    "page": 53,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 1,
+    "quart_global": 21
+  },
+  {
+    "version": "warsh",
+    "page": 54,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 2,
+    "quart_global": 22
+  },
+  {
+    "version": "warsh",
+    "page": 55,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 2,
+    "quart_global": 22
+  },
+  {
+    "version": "warsh",
+    "page": 56,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 3,
+    "quart_global": 23
+  },
+  {
+    "version": "warsh",
+    "page": 57,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 3,
+    "quart_global": 23
+  },
+  {
+    "version": "warsh",
+    "page": 58,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 3,
+    "quart_global": 23
+  },
+  {
+    "version": "warsh",
+    "page": 59,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 4,
+    "quart_global": 24
+  },
+  {
+    "version": "warsh",
+    "page": 60,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 4,
+    "quart_global": 24
+  },
+  {
+    "version": "warsh",
+    "page": 61,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 6,
+    "quart": 4,
+    "quart_global": 24
+  },
+  {
+    "version": "warsh",
+    "page": 62,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 1,
+    "quart_global": 25
+  },
+  {
+    "version": "warsh",
+    "page": 63,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 1,
+    "quart_global": 25
+  },
+  {
+    "version": "warsh",
+    "page": 64,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 2,
+    "quart_global": 26
+  },
+  {
+    "version": "warsh",
+    "page": 65,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 2,
+    "quart_global": 26
+  },
+  {
+    "version": "warsh",
+    "page": 66,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 2,
+    "quart_global": 26
+  },
+  {
+    "version": "warsh",
+    "page": 67,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 3,
+    "quart_global": 27
+  },
+  {
+    "version": "warsh",
+    "page": 68,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 3,
+    "quart_global": 27
+  },
+  {
+    "version": "warsh",
+    "page": 69,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 4,
+    "quart_global": 28
+  },
+  {
+    "version": "warsh",
+    "page": 70,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 4,
+    "quart_global": 28
+  },
+  {
+    "version": "warsh",
+    "page": 71,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 7,
+    "quart": 4,
+    "quart_global": 28
+  },
+  {
+    "version": "warsh",
+    "page": 72,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 8,
+    "quart": 1,
+    "quart_global": 29
+  },
+  {
+    "version": "warsh",
+    "page": 73,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 8,
+    "quart": 1,
+    "quart_global": 29
+  },
+  {
+    "version": "warsh",
+    "page": 74,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 8,
+    "quart": 2,
+    "quart_global": 30
+  },
+  {
+    "version": "warsh",
+    "page": 75,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 8,
+    "quart": 2,
+    "quart_global": 30
+  },
+  {
+    "version": "warsh",
+    "page": 76,
+    "sourate_num": 3,
+    "sourate_nom": "Al-Imran",
+    "hizb": 8,
+    "quart": 2,
+    "quart_global": 30
+  },
+  {
+    "version": "warsh",
+    "page": 77,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 8,
+    "quart": 3,
+    "quart_global": 31
+  },
+  {
+    "version": "warsh",
+    "page": 78,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 8,
+    "quart": 3,
+    "quart_global": 31
+  },
+  {
+    "version": "warsh",
+    "page": 79,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 8,
+    "quart": 4,
+    "quart_global": 32
+  },
+  {
+    "version": "warsh",
+    "page": 80,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 8,
+    "quart": 4,
+    "quart_global": 32
+  },
+  {
+    "version": "warsh",
+    "page": 81,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 8,
+    "quart": 4,
+    "quart_global": 32
+  },
+  {
+    "version": "warsh",
+    "page": 82,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 1,
+    "quart_global": 33
+  },
+  {
+    "version": "warsh",
+    "page": 83,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 1,
+    "quart_global": 33
+  },
+  {
+    "version": "warsh",
+    "page": 84,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 2,
+    "quart_global": 34
+  },
+  {
+    "version": "warsh",
+    "page": 85,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 2,
+    "quart_global": 34
+  },
+  {
+    "version": "warsh",
+    "page": 86,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 2,
+    "quart_global": 34
+  },
+  {
+    "version": "warsh",
+    "page": 87,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 3,
+    "quart_global": 35
+  },
+  {
+    "version": "warsh",
+    "page": 88,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 3,
+    "quart_global": 35
+  },
+  {
+    "version": "warsh",
+    "page": 89,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 4,
+    "quart_global": 36
+  },
+  {
+    "version": "warsh",
+    "page": 90,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 4,
+    "quart_global": 36
+  },
+  {
+    "version": "warsh",
+    "page": 91,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 9,
+    "quart": 4,
+    "quart_global": 36
+  },
+  {
+    "version": "warsh",
+    "page": 92,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 1,
+    "quart_global": 37
+  },
+  {
+    "version": "warsh",
+    "page": 93,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 1,
+    "quart_global": 37
+  },
+  {
+    "version": "warsh",
+    "page": 94,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 2,
+    "quart_global": 38
+  },
+  {
+    "version": "warsh",
+    "page": 95,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 2,
+    "quart_global": 38
+  },
+  {
+    "version": "warsh",
+    "page": 96,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 2,
+    "quart_global": 38
+  },
+  {
+    "version": "warsh",
+    "page": 97,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 3,
+    "quart_global": 39
+  },
+  {
+    "version": "warsh",
+    "page": 98,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 3,
+    "quart_global": 39
+  },
+  {
+    "version": "warsh",
+    "page": 99,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 4,
+    "quart_global": 40
+  },
+  {
+    "version": "warsh",
+    "page": 100,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 4,
+    "quart_global": 40
+  },
+  {
+    "version": "warsh",
+    "page": 101,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 10,
+    "quart": 4,
+    "quart_global": 40
+  },
+  {
+    "version": "warsh",
+    "page": 102,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 11,
+    "quart": 1,
+    "quart_global": 41
+  },
+  {
+    "version": "warsh",
+    "page": 103,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 11,
+    "quart": 1,
+    "quart_global": 41
+  },
+  {
+    "version": "warsh",
+    "page": 104,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 11,
+    "quart": 2,
+    "quart_global": 42
+  },
+  {
+    "version": "warsh",
+    "page": 105,
+    "sourate_num": 4,
+    "sourate_nom": "An-Nisa",
+    "hizb": 11,
+    "quart": 2,
+    "quart_global": 42
+  },
+  {
+    "version": "warsh",
+    "page": 106,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 11,
+    "quart": 2,
+    "quart_global": 42
+  },
+  {
+    "version": "warsh",
+    "page": 107,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 11,
+    "quart": 3,
+    "quart_global": 43
+  },
+  {
+    "version": "warsh",
+    "page": 108,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 11,
+    "quart": 3,
+    "quart_global": 43
+  },
+  {
+    "version": "warsh",
+    "page": 109,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 11,
+    "quart": 4,
+    "quart_global": 44
+  },
+  {
+    "version": "warsh",
+    "page": 110,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 11,
+    "quart": 4,
+    "quart_global": 44
+  },
+  {
+    "version": "warsh",
+    "page": 111,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 1,
+    "quart_global": 45
+  },
+  {
+    "version": "warsh",
+    "page": 112,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 1,
+    "quart_global": 45
+  },
+  {
+    "version": "warsh",
+    "page": 113,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 1,
+    "quart_global": 45
+  },
+  {
+    "version": "warsh",
+    "page": 114,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 2,
+    "quart_global": 46
+  },
+  {
+    "version": "warsh",
+    "page": 115,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 2,
+    "quart_global": 46
+  },
+  {
+    "version": "warsh",
+    "page": 116,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 3,
+    "quart_global": 47
+  },
+  {
+    "version": "warsh",
+    "page": 117,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 3,
+    "quart_global": 47
+  },
+  {
+    "version": "warsh",
+    "page": 118,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 3,
+    "quart_global": 47
+  },
+  {
+    "version": "warsh",
+    "page": 119,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 4,
+    "quart_global": 48
+  },
+  {
+    "version": "warsh",
+    "page": 120,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 12,
+    "quart": 4,
+    "quart_global": 48
+  },
+  {
+    "version": "warsh",
+    "page": 121,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 1,
+    "quart_global": 49
+  },
+  {
+    "version": "warsh",
+    "page": 122,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 1,
+    "quart_global": 49
+  },
+  {
+    "version": "warsh",
+    "page": 123,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 1,
+    "quart_global": 49
+  },
+  {
+    "version": "warsh",
+    "page": 124,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 2,
+    "quart_global": 50
+  },
+  {
+    "version": "warsh",
+    "page": 125,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 2,
+    "quart_global": 50
+  },
+  {
+    "version": "warsh",
+    "page": 126,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 3,
+    "quart_global": 51
+  },
+  {
+    "version": "warsh",
+    "page": 127,
+    "sourate_num": 5,
+    "sourate_nom": "Al-Maida",
+    "hizb": 13,
+    "quart": 3,
+    "quart_global": 51
+  },
+  {
+    "version": "warsh",
+    "page": 128,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 13,
+    "quart": 3,
+    "quart_global": 51
+  },
+  {
+    "version": "warsh",
+    "page": 129,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 13,
+    "quart": 4,
+    "quart_global": 52
+  },
+  {
+    "version": "warsh",
+    "page": 130,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 13,
+    "quart": 4,
+    "quart_global": 52
+  },
+  {
+    "version": "warsh",
+    "page": 131,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 13,
+    "quart": 4,
+    "quart_global": 52
+  },
+  {
+    "version": "warsh",
+    "page": 132,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 1,
+    "quart_global": 53
+  },
+  {
+    "version": "warsh",
+    "page": 133,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 1,
+    "quart_global": 53
+  },
+  {
+    "version": "warsh",
+    "page": 134,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 2,
+    "quart_global": 54
+  },
+  {
+    "version": "warsh",
+    "page": 135,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 2,
+    "quart_global": 54
+  },
+  {
+    "version": "warsh",
+    "page": 136,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 2,
+    "quart_global": 54
+  },
+  {
+    "version": "warsh",
+    "page": 137,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 3,
+    "quart_global": 55
+  },
+  {
+    "version": "warsh",
+    "page": 138,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 3,
+    "quart_global": 55
+  },
+  {
+    "version": "warsh",
+    "page": 139,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 4,
+    "quart_global": 56
+  },
+  {
+    "version": "warsh",
+    "page": 140,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 14,
+    "quart": 4,
+    "quart_global": 56
+  },
+  {
+    "version": "warsh",
+    "page": 141,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 1,
+    "quart_global": 57
+  },
+  {
+    "version": "warsh",
+    "page": 142,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 1,
+    "quart_global": 57
+  },
+  {
+    "version": "warsh",
+    "page": 143,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 1,
+    "quart_global": 57
+  },
+  {
+    "version": "warsh",
+    "page": 144,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 2,
+    "quart_global": 58
+  },
+  {
+    "version": "warsh",
+    "page": 145,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 2,
+    "quart_global": 58
+  },
+  {
+    "version": "warsh",
+    "page": 146,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 3,
+    "quart_global": 59
+  },
+  {
+    "version": "warsh",
+    "page": 147,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 3,
+    "quart_global": 59
+  },
+  {
+    "version": "warsh",
+    "page": 148,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 4,
+    "quart_global": 60
+  },
+  {
+    "version": "warsh",
+    "page": 149,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 4,
+    "quart_global": 60
+  },
+  {
+    "version": "warsh",
+    "page": 150,
+    "sourate_num": 6,
+    "sourate_nom": "Al-Anam",
+    "hizb": 15,
+    "quart": 4,
+    "quart_global": 60
+  },
+  {
+    "version": "warsh",
+    "page": 151,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 1,
+    "quart_global": 61
+  },
+  {
+    "version": "warsh",
+    "page": 152,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 1,
+    "quart_global": 61
+  },
+  {
+    "version": "warsh",
+    "page": 153,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 1,
+    "quart_global": 61
+  },
+  {
+    "version": "warsh",
+    "page": 154,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 2,
+    "quart_global": 62
+  },
+  {
+    "version": "warsh",
+    "page": 155,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 2,
+    "quart_global": 62
+  },
+  {
+    "version": "warsh",
+    "page": 156,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 3,
+    "quart_global": 63
+  },
+  {
+    "version": "warsh",
+    "page": 157,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 3,
+    "quart_global": 63
+  },
+  {
+    "version": "warsh",
+    "page": 158,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 3,
+    "quart_global": 63
+  },
+  {
+    "version": "warsh",
+    "page": 159,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 4,
+    "quart_global": 64
+  },
+  {
+    "version": "warsh",
+    "page": 160,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 4,
+    "quart_global": 64
+  },
+  {
+    "version": "warsh",
+    "page": 161,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 16,
+    "quart": 4,
+    "quart_global": 64
+  },
+  {
+    "version": "warsh",
+    "page": 162,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 1,
+    "quart_global": 65
+  },
+  {
+    "version": "warsh",
+    "page": 163,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 1,
+    "quart_global": 65
+  },
+  {
+    "version": "warsh",
+    "page": 164,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 2,
+    "quart_global": 66
+  },
+  {
+    "version": "warsh",
+    "page": 165,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 2,
+    "quart_global": 66
+  },
+  {
+    "version": "warsh",
+    "page": 166,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 2,
+    "quart_global": 66
+  },
+  {
+    "version": "warsh",
+    "page": 167,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 3,
+    "quart_global": 67
+  },
+  {
+    "version": "warsh",
+    "page": 168,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 3,
+    "quart_global": 67
+  },
+  {
+    "version": "warsh",
+    "page": 169,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 3,
+    "quart_global": 67
+  },
+  {
+    "version": "warsh",
+    "page": 170,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 4,
+    "quart_global": 68
+  },
+  {
+    "version": "warsh",
+    "page": 171,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 4,
+    "quart_global": 68
+  },
+  {
+    "version": "warsh",
+    "page": 172,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 17,
+    "quart": 4,
+    "quart_global": 68
+  },
+  {
+    "version": "warsh",
+    "page": 173,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 18,
+    "quart": 1,
+    "quart_global": 69
+  },
+  {
+    "version": "warsh",
+    "page": 174,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 18,
+    "quart": 1,
+    "quart_global": 69
+  },
+  {
+    "version": "warsh",
+    "page": 175,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 18,
+    "quart": 2,
+    "quart_global": 70
+  },
+  {
+    "version": "warsh",
+    "page": 176,
+    "sourate_num": 7,
+    "sourate_nom": "Al-Araf",
+    "hizb": 18,
+    "quart": 2,
+    "quart_global": 70
+  },
+  {
+    "version": "warsh",
+    "page": 177,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 18,
+    "quart": 3,
+    "quart_global": 71
+  },
+  {
+    "version": "warsh",
+    "page": 178,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 18,
+    "quart": 3,
+    "quart_global": 71
+  },
+  {
+    "version": "warsh",
+    "page": 179,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 18,
+    "quart": 4,
+    "quart_global": 72
+  },
+  {
+    "version": "warsh",
+    "page": 180,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 18,
+    "quart": 4,
+    "quart_global": 72
+  },
+  {
+    "version": "warsh",
+    "page": 181,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 18,
+    "quart": 4,
+    "quart_global": 72
+  },
+  {
+    "version": "warsh",
+    "page": 182,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 19,
+    "quart": 1,
+    "quart_global": 73
+  },
+  {
+    "version": "warsh",
+    "page": 183,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 19,
+    "quart": 1,
+    "quart_global": 73
+  },
+  {
+    "version": "warsh",
+    "page": 184,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 19,
+    "quart": 2,
+    "quart_global": 74
+  },
+  {
+    "version": "warsh",
+    "page": 185,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 19,
+    "quart": 2,
+    "quart_global": 74
+  },
+  {
+    "version": "warsh",
+    "page": 186,
+    "sourate_num": 8,
+    "sourate_nom": "Al-Anfal",
+    "hizb": 19,
+    "quart": 2,
+    "quart_global": 74
+  },
+  {
+    "version": "warsh",
+    "page": 187,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 19,
+    "quart": 3,
+    "quart_global": 75
+  },
+  {
+    "version": "warsh",
+    "page": 188,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 19,
+    "quart": 3,
+    "quart_global": 75
+  },
+  {
+    "version": "warsh",
+    "page": 189,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 19,
+    "quart": 4,
+    "quart_global": 76
+  },
+  {
+    "version": "warsh",
+    "page": 190,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 19,
+    "quart": 4,
+    "quart_global": 76
+  },
+  {
+    "version": "warsh",
+    "page": 191,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 19,
+    "quart": 4,
+    "quart_global": 76
+  },
+  {
+    "version": "warsh",
+    "page": 192,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 1,
+    "quart_global": 77
+  },
+  {
+    "version": "warsh",
+    "page": 193,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 1,
+    "quart_global": 77
+  },
+  {
+    "version": "warsh",
+    "page": 194,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 2,
+    "quart_global": 78
+  },
+  {
+    "version": "warsh",
+    "page": 195,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 2,
+    "quart_global": 78
+  },
+  {
+    "version": "warsh",
+    "page": 196,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 3,
+    "quart_global": 79
+  },
+  {
+    "version": "warsh",
+    "page": 197,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 3,
+    "quart_global": 79
+  },
+  {
+    "version": "warsh",
+    "page": 198,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 3,
+    "quart_global": 79
+  },
+  {
+    "version": "warsh",
+    "page": 199,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 4,
+    "quart_global": 80
+  },
+  {
+    "version": "warsh",
+    "page": 200,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 20,
+    "quart": 4,
+    "quart_global": 80
+  },
+  {
+    "version": "warsh",
+    "page": 201,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 1,
+    "quart_global": 81
+  },
+  {
+    "version": "warsh",
+    "page": 202,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 1,
+    "quart_global": 81
+  },
+  {
+    "version": "warsh",
+    "page": 203,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 1,
+    "quart_global": 81
+  },
+  {
+    "version": "warsh",
+    "page": 204,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 2,
+    "quart_global": 82
+  },
+  {
+    "version": "warsh",
+    "page": 205,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 2,
+    "quart_global": 82
+  },
+  {
+    "version": "warsh",
+    "page": 206,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 2,
+    "quart_global": 82
+  },
+  {
+    "version": "warsh",
+    "page": 207,
+    "sourate_num": 9,
+    "sourate_nom": "At-Tawba",
+    "hizb": 21,
+    "quart": 3,
+    "quart_global": 83
+  },
+  {
+    "version": "warsh",
+    "page": 208,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 21,
+    "quart": 3,
+    "quart_global": 83
+  },
+  {
+    "version": "warsh",
+    "page": 209,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 21,
+    "quart": 4,
+    "quart_global": 84
+  },
+  {
+    "version": "warsh",
+    "page": 210,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 21,
+    "quart": 4,
+    "quart_global": 84
+  },
+  {
+    "version": "warsh",
+    "page": 211,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 21,
+    "quart": 4,
+    "quart_global": 84
+  },
+  {
+    "version": "warsh",
+    "page": 212,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 1,
+    "quart_global": 85
+  },
+  {
+    "version": "warsh",
+    "page": 213,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 1,
+    "quart_global": 85
+  },
+  {
+    "version": "warsh",
+    "page": 214,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 2,
+    "quart_global": 86
+  },
+  {
+    "version": "warsh",
+    "page": 215,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 2,
+    "quart_global": 86
+  },
+  {
+    "version": "warsh",
+    "page": 216,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 2,
+    "quart_global": 86
+  },
+  {
+    "version": "warsh",
+    "page": 217,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 3,
+    "quart_global": 87
+  },
+  {
+    "version": "warsh",
+    "page": 218,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 3,
+    "quart_global": 87
+  },
+  {
+    "version": "warsh",
+    "page": 219,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 3,
+    "quart_global": 87
+  },
+  {
+    "version": "warsh",
+    "page": 220,
+    "sourate_num": 10,
+    "sourate_nom": "Yunus",
+    "hizb": 22,
+    "quart": 4,
+    "quart_global": 88
+  },
+  {
+    "version": "warsh",
+    "page": 221,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 22,
+    "quart": 4,
+    "quart_global": 88
+  },
+  {
+    "version": "warsh",
+    "page": 222,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 1,
+    "quart_global": 89
+  },
+  {
+    "version": "warsh",
+    "page": 223,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 1,
+    "quart_global": 89
+  },
+  {
+    "version": "warsh",
+    "page": 224,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 2,
+    "quart_global": 90
+  },
+  {
+    "version": "warsh",
+    "page": 225,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 2,
+    "quart_global": 90
+  },
+  {
+    "version": "warsh",
+    "page": 226,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 3,
+    "quart_global": 91
+  },
+  {
+    "version": "warsh",
+    "page": 227,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 3,
+    "quart_global": 91
+  },
+  {
+    "version": "warsh",
+    "page": 228,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 4,
+    "quart_global": 92
+  },
+  {
+    "version": "warsh",
+    "page": 229,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 4,
+    "quart_global": 92
+  },
+  {
+    "version": "warsh",
+    "page": 230,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 23,
+    "quart": 4,
+    "quart_global": 92
+  },
+  {
+    "version": "warsh",
+    "page": 231,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 24,
+    "quart": 1,
+    "quart_global": 93
+  },
+  {
+    "version": "warsh",
+    "page": 232,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 24,
+    "quart": 1,
+    "quart_global": 93
+  },
+  {
+    "version": "warsh",
+    "page": 233,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 24,
+    "quart": 2,
+    "quart_global": 94
+  },
+  {
+    "version": "warsh",
+    "page": 234,
+    "sourate_num": 11,
+    "sourate_nom": "Hud",
+    "hizb": 24,
+    "quart": 2,
+    "quart_global": 94
+  },
+  {
+    "version": "warsh",
+    "page": 235,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 2,
+    "quart_global": 94
+  },
+  {
+    "version": "warsh",
+    "page": 236,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 3,
+    "quart_global": 95
+  },
+  {
+    "version": "warsh",
+    "page": 237,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 3,
+    "quart_global": 95
+  },
+  {
+    "version": "warsh",
+    "page": 238,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 3,
+    "quart_global": 95
+  },
+  {
+    "version": "warsh",
+    "page": 239,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 4,
+    "quart_global": 96
+  },
+  {
+    "version": "warsh",
+    "page": 240,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 4,
+    "quart_global": 96
+  },
+  {
+    "version": "warsh",
+    "page": 241,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 24,
+    "quart": 4,
+    "quart_global": 96
+  },
+  {
+    "version": "warsh",
+    "page": 242,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 1,
+    "quart_global": 97
+  },
+  {
+    "version": "warsh",
+    "page": 243,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 1,
+    "quart_global": 97
+  },
+  {
+    "version": "warsh",
+    "page": 244,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 2,
+    "quart_global": 98
+  },
+  {
+    "version": "warsh",
+    "page": 245,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 2,
+    "quart_global": 98
+  },
+  {
+    "version": "warsh",
+    "page": 246,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 2,
+    "quart_global": 98
+  },
+  {
+    "version": "warsh",
+    "page": 247,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 3,
+    "quart_global": 99
+  },
+  {
+    "version": "warsh",
+    "page": 248,
+    "sourate_num": 12,
+    "sourate_nom": "Yusuf",
+    "hizb": 25,
+    "quart": 3,
+    "quart_global": 99
+  },
+  {
+    "version": "warsh",
+    "page": 249,
+    "sourate_num": 13,
+    "sourate_nom": "Ar-Rad",
+    "hizb": 25,
+    "quart": 4,
+    "quart_global": 100
+  },
+  {
+    "version": "warsh",
+    "page": 250,
+    "sourate_num": 13,
+    "sourate_nom": "Ar-Rad",
+    "hizb": 25,
+    "quart": 4,
+    "quart_global": 100
+  },
+  {
+    "version": "warsh",
+    "page": 251,
+    "sourate_num": 13,
+    "sourate_nom": "Ar-Rad",
+    "hizb": 25,
+    "quart": 4,
+    "quart_global": 100
+  },
+  {
+    "version": "warsh",
+    "page": 252,
+    "sourate_num": 13,
+    "sourate_nom": "Ar-Rad",
+    "hizb": 26,
+    "quart": 1,
+    "quart_global": 101
+  },
+  {
+    "version": "warsh",
+    "page": 253,
+    "sourate_num": 13,
+    "sourate_nom": "Ar-Rad",
+    "hizb": 26,
+    "quart": 1,
+    "quart_global": 101
+  },
+  {
+    "version": "warsh",
+    "page": 254,
+    "sourate_num": 13,
+    "sourate_nom": "Ar-Rad",
+    "hizb": 26,
+    "quart": 2,
+    "quart_global": 102
+  },
+  {
+    "version": "warsh",
+    "page": 255,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 2,
+    "quart_global": 102
+  },
+  {
+    "version": "warsh",
+    "page": 256,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 3,
+    "quart_global": 103
+  },
+  {
+    "version": "warsh",
+    "page": 257,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 3,
+    "quart_global": 103
+  },
+  {
+    "version": "warsh",
+    "page": 258,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 3,
+    "quart_global": 103
+  },
+  {
+    "version": "warsh",
+    "page": 259,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 4,
+    "quart_global": 104
+  },
+  {
+    "version": "warsh",
+    "page": 260,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 4,
+    "quart_global": 104
+  },
+  {
+    "version": "warsh",
+    "page": 261,
+    "sourate_num": 14,
+    "sourate_nom": "Ibrahim",
+    "hizb": 26,
+    "quart": 4,
+    "quart_global": 104
+  },
+  {
+    "version": "warsh",
+    "page": 262,
+    "sourate_num": 15,
+    "sourate_nom": "Al-Hijr",
+    "hizb": 27,
+    "quart": 1,
+    "quart_global": 105
+  },
+  {
+    "version": "warsh",
+    "page": 263,
+    "sourate_num": 15,
+    "sourate_nom": "Al-Hijr",
+    "hizb": 27,
+    "quart": 1,
+    "quart_global": 105
+  },
+  {
+    "version": "warsh",
+    "page": 264,
+    "sourate_num": 15,
+    "sourate_nom": "Al-Hijr",
+    "hizb": 27,
+    "quart": 2,
+    "quart_global": 106
+  },
+  {
+    "version": "warsh",
+    "page": 265,
+    "sourate_num": 15,
+    "sourate_nom": "Al-Hijr",
+    "hizb": 27,
+    "quart": 2,
+    "quart_global": 106
+  },
+  {
+    "version": "warsh",
+    "page": 266,
+    "sourate_num": 15,
+    "sourate_nom": "Al-Hijr",
+    "hizb": 27,
+    "quart": 2,
+    "quart_global": 106
+  },
+  {
+    "version": "warsh",
+    "page": 267,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 27,
+    "quart": 3,
+    "quart_global": 107
+  },
+  {
+    "version": "warsh",
+    "page": 268,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 27,
+    "quart": 3,
+    "quart_global": 107
+  },
+  {
+    "version": "warsh",
+    "page": 269,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 27,
+    "quart": 3,
+    "quart_global": 107
+  },
+  {
+    "version": "warsh",
+    "page": 270,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 27,
+    "quart": 4,
+    "quart_global": 108
+  },
+  {
+    "version": "warsh",
+    "page": 271,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 27,
+    "quart": 4,
+    "quart_global": 108
+  },
+  {
+    "version": "warsh",
+    "page": 272,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 1,
+    "quart_global": 109
+  },
+  {
+    "version": "warsh",
+    "page": 273,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 1,
+    "quart_global": 109
+  },
+  {
+    "version": "warsh",
+    "page": 274,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 2,
+    "quart_global": 110
+  },
+  {
+    "version": "warsh",
+    "page": 275,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 2,
+    "quart_global": 110
+  },
+  {
+    "version": "warsh",
+    "page": 276,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 2,
+    "quart_global": 110
+  },
+  {
+    "version": "warsh",
+    "page": 277,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 3,
+    "quart_global": 111
+  },
+  {
+    "version": "warsh",
+    "page": 278,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 3,
+    "quart_global": 111
+  },
+  {
+    "version": "warsh",
+    "page": 279,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 3,
+    "quart_global": 111
+  },
+  {
+    "version": "warsh",
+    "page": 280,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 4,
+    "quart_global": 112
+  },
+  {
+    "version": "warsh",
+    "page": 281,
+    "sourate_num": 16,
+    "sourate_nom": "An-Nahl",
+    "hizb": 28,
+    "quart": 4,
+    "quart_global": 112
+  },
+  {
+    "version": "warsh",
+    "page": 282,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 1,
+    "quart_global": 113
+  },
+  {
+    "version": "warsh",
+    "page": 283,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 1,
+    "quart_global": 113
+  },
+  {
+    "version": "warsh",
+    "page": 284,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 2,
+    "quart_global": 114
+  },
+  {
+    "version": "warsh",
+    "page": 285,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 2,
+    "quart_global": 114
+  },
+  {
+    "version": "warsh",
+    "page": 286,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 2,
+    "quart_global": 114
+  },
+  {
+    "version": "warsh",
+    "page": 287,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 3,
+    "quart_global": 115
+  },
+  {
+    "version": "warsh",
+    "page": 288,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 3,
+    "quart_global": 115
+  },
+  {
+    "version": "warsh",
+    "page": 289,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 4,
+    "quart_global": 116
+  },
+  {
+    "version": "warsh",
+    "page": 290,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 4,
+    "quart_global": 116
+  },
+  {
+    "version": "warsh",
+    "page": 291,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 29,
+    "quart": 4,
+    "quart_global": 116
+  },
+  {
+    "version": "warsh",
+    "page": 292,
+    "sourate_num": 17,
+    "sourate_nom": "Al-Isra",
+    "hizb": 30,
+    "quart": 1,
+    "quart_global": 117
+  },
+  {
+    "version": "warsh",
+    "page": 293,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 1,
+    "quart_global": 117
+  },
+  {
+    "version": "warsh",
+    "page": 294,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 1,
+    "quart_global": 117
+  },
+  {
+    "version": "warsh",
+    "page": 295,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 2,
+    "quart_global": 118
+  },
+  {
+    "version": "warsh",
+    "page": 296,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 2,
+    "quart_global": 118
+  },
+  {
+    "version": "warsh",
+    "page": 297,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 3,
+    "quart_global": 119
+  },
+  {
+    "version": "warsh",
+    "page": 298,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 3,
+    "quart_global": 119
+  },
+  {
+    "version": "warsh",
+    "page": 299,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 4,
+    "quart_global": 120
+  },
+  {
+    "version": "warsh",
+    "page": 300,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 4,
+    "quart_global": 120
+  },
+  {
+    "version": "warsh",
+    "page": 301,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 30,
+    "quart": 4,
+    "quart_global": 120
+  },
+  {
+    "version": "warsh",
+    "page": 302,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 31,
+    "quart": 1,
+    "quart_global": 121
+  },
+  {
+    "version": "warsh",
+    "page": 303,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 31,
+    "quart": 1,
+    "quart_global": 121
+  },
+  {
+    "version": "warsh",
+    "page": 304,
+    "sourate_num": 18,
+    "sourate_nom": "Al-Kahf",
+    "hizb": 31,
+    "quart": 2,
+    "quart_global": 122
+  },
+  {
+    "version": "warsh",
+    "page": 305,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 2,
+    "quart_global": 122
+  },
+  {
+    "version": "warsh",
+    "page": 306,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 3,
+    "quart_global": 123
+  },
+  {
+    "version": "warsh",
+    "page": 307,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 3,
+    "quart_global": 123
+  },
+  {
+    "version": "warsh",
+    "page": 308,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 3,
+    "quart_global": 123
+  },
+  {
+    "version": "warsh",
+    "page": 309,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 4,
+    "quart_global": 124
+  },
+  {
+    "version": "warsh",
+    "page": 310,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 4,
+    "quart_global": 124
+  },
+  {
+    "version": "warsh",
+    "page": 311,
+    "sourate_num": 19,
+    "sourate_nom": "Maryam",
+    "hizb": 31,
+    "quart": 4,
+    "quart_global": 124
+  },
+  {
+    "version": "warsh",
+    "page": 312,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 1,
+    "quart_global": 125
+  },
+  {
+    "version": "warsh",
+    "page": 313,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 1,
+    "quart_global": 125
+  },
+  {
+    "version": "warsh",
+    "page": 314,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 1,
+    "quart_global": 125
+  },
+  {
+    "version": "warsh",
+    "page": 315,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 2,
+    "quart_global": 126
+  },
+  {
+    "version": "warsh",
+    "page": 316,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 2,
+    "quart_global": 126
+  },
+  {
+    "version": "warsh",
+    "page": 317,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 3,
+    "quart_global": 127
+  },
+  {
+    "version": "warsh",
+    "page": 318,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 3,
+    "quart_global": 127
+  },
+  {
+    "version": "warsh",
+    "page": 319,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 4,
+    "quart_global": 128
+  },
+  {
+    "version": "warsh",
+    "page": 320,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 4,
+    "quart_global": 128
+  },
+  {
+    "version": "warsh",
+    "page": 321,
+    "sourate_num": 20,
+    "sourate_nom": "Ta-Ha",
+    "hizb": 32,
+    "quart": 4,
+    "quart_global": 128
+  },
+  {
+    "version": "warsh",
+    "page": 322,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 1,
+    "quart_global": 129
+  },
+  {
+    "version": "warsh",
+    "page": 323,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 1,
+    "quart_global": 129
+  },
+  {
+    "version": "warsh",
+    "page": 324,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 2,
+    "quart_global": 130
+  },
+  {
+    "version": "warsh",
+    "page": 325,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 2,
+    "quart_global": 130
+  },
+  {
+    "version": "warsh",
+    "page": 326,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 3,
+    "quart_global": 131
+  },
+  {
+    "version": "warsh",
+    "page": 327,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 3,
+    "quart_global": 131
+  },
+  {
+    "version": "warsh",
+    "page": 328,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 3,
+    "quart_global": 131
+  },
+  {
+    "version": "warsh",
+    "page": 329,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 4,
+    "quart_global": 132
+  },
+  {
+    "version": "warsh",
+    "page": 330,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 4,
+    "quart_global": 132
+  },
+  {
+    "version": "warsh",
+    "page": 331,
+    "sourate_num": 21,
+    "sourate_nom": "Al-Anbiya",
+    "hizb": 33,
+    "quart": 4,
+    "quart_global": 132
+  },
+  {
+    "version": "warsh",
+    "page": 332,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 1,
+    "quart_global": 133
+  },
+  {
+    "version": "warsh",
+    "page": 333,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 1,
+    "quart_global": 133
+  },
+  {
+    "version": "warsh",
+    "page": 334,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 2,
+    "quart_global": 134
+  },
+  {
+    "version": "warsh",
+    "page": 335,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 2,
+    "quart_global": 134
+  },
+  {
+    "version": "warsh",
+    "page": 336,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 3,
+    "quart_global": 135
+  },
+  {
+    "version": "warsh",
+    "page": 337,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 3,
+    "quart_global": 135
+  },
+  {
+    "version": "warsh",
+    "page": 338,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 3,
+    "quart_global": 135
+  },
+  {
+    "version": "warsh",
+    "page": 339,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 4,
+    "quart_global": 136
+  },
+  {
+    "version": "warsh",
+    "page": 340,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 4,
+    "quart_global": 136
+  },
+  {
+    "version": "warsh",
+    "page": 341,
+    "sourate_num": 22,
+    "sourate_nom": "Al-Hajj",
+    "hizb": 34,
+    "quart": 4,
+    "quart_global": 136
+  },
+  {
+    "version": "warsh",
+    "page": 342,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 1,
+    "quart_global": 137
+  },
+  {
+    "version": "warsh",
+    "page": 343,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 1,
+    "quart_global": 137
+  },
+  {
+    "version": "warsh",
+    "page": 344,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 2,
+    "quart_global": 138
+  },
+  {
+    "version": "warsh",
+    "page": 345,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 2,
+    "quart_global": 138
+  },
+  {
+    "version": "warsh",
+    "page": 346,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 2,
+    "quart_global": 138
+  },
+  {
+    "version": "warsh",
+    "page": 347,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 3,
+    "quart_global": 139
+  },
+  {
+    "version": "warsh",
+    "page": 348,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 3,
+    "quart_global": 139
+  },
+  {
+    "version": "warsh",
+    "page": 349,
+    "sourate_num": 23,
+    "sourate_nom": "Al-Muminun",
+    "hizb": 35,
+    "quart": 4,
+    "quart_global": 140
+  },
+  {
+    "version": "warsh",
+    "page": 350,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 35,
+    "quart": 4,
+    "quart_global": 140
+  },
+  {
+    "version": "warsh",
+    "page": 351,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 35,
+    "quart": 4,
+    "quart_global": 140
+  },
+  {
+    "version": "warsh",
+    "page": 352,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 1,
+    "quart_global": 141
+  },
+  {
+    "version": "warsh",
+    "page": 353,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 1,
+    "quart_global": 141
+  },
+  {
+    "version": "warsh",
+    "page": 354,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 2,
+    "quart_global": 142
+  },
+  {
+    "version": "warsh",
+    "page": 355,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 2,
+    "quart_global": 142
+  },
+  {
+    "version": "warsh",
+    "page": 356,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 3,
+    "quart_global": 143
+  },
+  {
+    "version": "warsh",
+    "page": 357,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 3,
+    "quart_global": 143
+  },
+  {
+    "version": "warsh",
+    "page": 358,
+    "sourate_num": 24,
+    "sourate_nom": "An-Nur",
+    "hizb": 36,
+    "quart": 3,
+    "quart_global": 143
+  },
+  {
+    "version": "warsh",
+    "page": 359,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 36,
+    "quart": 4,
+    "quart_global": 144
+  },
+  {
+    "version": "warsh",
+    "page": 360,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 36,
+    "quart": 4,
+    "quart_global": 144
+  },
+  {
+    "version": "warsh",
+    "page": 361,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 36,
+    "quart": 4,
+    "quart_global": 144
+  },
+  {
+    "version": "warsh",
+    "page": 362,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 37,
+    "quart": 1,
+    "quart_global": 145
+  },
+  {
+    "version": "warsh",
+    "page": 363,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 37,
+    "quart": 1,
+    "quart_global": 145
+  },
+  {
+    "version": "warsh",
+    "page": 364,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 37,
+    "quart": 2,
+    "quart_global": 146
+  },
+  {
+    "version": "warsh",
+    "page": 365,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 37,
+    "quart": 2,
+    "quart_global": 146
+  },
+  {
+    "version": "warsh",
+    "page": 366,
+    "sourate_num": 25,
+    "sourate_nom": "Al-Furqan",
+    "hizb": 37,
+    "quart": 2,
+    "quart_global": 146
+  },
+  {
+    "version": "warsh",
+    "page": 367,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 37,
+    "quart": 3,
+    "quart_global": 147
+  },
+  {
+    "version": "warsh",
+    "page": 368,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 37,
+    "quart": 3,
+    "quart_global": 147
+  },
+  {
+    "version": "warsh",
+    "page": 369,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 37,
+    "quart": 4,
+    "quart_global": 148
+  },
+  {
+    "version": "warsh",
+    "page": 370,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 37,
+    "quart": 4,
+    "quart_global": 148
+  },
+  {
+    "version": "warsh",
+    "page": 371,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 38,
+    "quart": 1,
+    "quart_global": 149
+  },
+  {
+    "version": "warsh",
+    "page": 372,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 38,
+    "quart": 1,
+    "quart_global": 149
+  },
+  {
+    "version": "warsh",
+    "page": 373,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 38,
+    "quart": 1,
+    "quart_global": 149
+  },
+  {
+    "version": "warsh",
+    "page": 374,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 38,
+    "quart": 2,
+    "quart_global": 150
+  },
+  {
+    "version": "warsh",
+    "page": 375,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 38,
+    "quart": 2,
+    "quart_global": 150
+  },
+  {
+    "version": "warsh",
+    "page": 376,
+    "sourate_num": 26,
+    "sourate_nom": "Ash-Shuara",
+    "hizb": 38,
+    "quart": 2,
+    "quart_global": 150
+  },
+  {
+    "version": "warsh",
+    "page": 377,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 38,
+    "quart": 3,
+    "quart_global": 151
+  },
+  {
+    "version": "warsh",
+    "page": 378,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 38,
+    "quart": 3,
+    "quart_global": 151
+  },
+  {
+    "version": "warsh",
+    "page": 379,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 38,
+    "quart": 4,
+    "quart_global": 152
+  },
+  {
+    "version": "warsh",
+    "page": 380,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 38,
+    "quart": 4,
+    "quart_global": 152
+  },
+  {
+    "version": "warsh",
+    "page": 381,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 38,
+    "quart": 4,
+    "quart_global": 152
+  },
+  {
+    "version": "warsh",
+    "page": 382,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 39,
+    "quart": 1,
+    "quart_global": 153
+  },
+  {
+    "version": "warsh",
+    "page": 383,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 39,
+    "quart": 1,
+    "quart_global": 153
+  },
+  {
+    "version": "warsh",
+    "page": 384,
+    "sourate_num": 27,
+    "sourate_nom": "An-Naml",
+    "hizb": 39,
+    "quart": 2,
+    "quart_global": 154
+  },
+  {
+    "version": "warsh",
+    "page": 385,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 2,
+    "quart_global": 154
+  },
+  {
+    "version": "warsh",
+    "page": 386,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 3,
+    "quart_global": 155
+  },
+  {
+    "version": "warsh",
+    "page": 387,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 3,
+    "quart_global": 155
+  },
+  {
+    "version": "warsh",
+    "page": 388,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 3,
+    "quart_global": 155
+  },
+  {
+    "version": "warsh",
+    "page": 389,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 4,
+    "quart_global": 156
+  },
+  {
+    "version": "warsh",
+    "page": 390,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 4,
+    "quart_global": 156
+  },
+  {
+    "version": "warsh",
+    "page": 391,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 39,
+    "quart": 4,
+    "quart_global": 156
+  },
+  {
+    "version": "warsh",
+    "page": 392,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 40,
+    "quart": 1,
+    "quart_global": 157
+  },
+  {
+    "version": "warsh",
+    "page": 393,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 40,
+    "quart": 1,
+    "quart_global": 157
+  },
+  {
+    "version": "warsh",
+    "page": 394,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 40,
+    "quart": 2,
+    "quart_global": 158
+  },
+  {
+    "version": "warsh",
+    "page": 395,
+    "sourate_num": 28,
+    "sourate_nom": "Al-Qasas",
+    "hizb": 40,
+    "quart": 2,
+    "quart_global": 158
+  },
+  {
+    "version": "warsh",
+    "page": 396,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 40,
+    "quart": 2,
+    "quart_global": 158
+  },
+  {
+    "version": "warsh",
+    "page": 397,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 40,
+    "quart": 3,
+    "quart_global": 159
+  },
+  {
+    "version": "warsh",
+    "page": 398,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 40,
+    "quart": 3,
+    "quart_global": 159
+  },
+  {
+    "version": "warsh",
+    "page": 399,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 40,
+    "quart": 4,
+    "quart_global": 160
+  },
+  {
+    "version": "warsh",
+    "page": 400,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 40,
+    "quart": 4,
+    "quart_global": 160
+  },
+  {
+    "version": "warsh",
+    "page": 401,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 40,
+    "quart": 4,
+    "quart_global": 160
+  },
+  {
+    "version": "warsh",
+    "page": 402,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 41,
+    "quart": 1,
+    "quart_global": 161
+  },
+  {
+    "version": "warsh",
+    "page": 403,
+    "sourate_num": 29,
+    "sourate_nom": "Al-Ankabut",
+    "hizb": 41,
+    "quart": 1,
+    "quart_global": 161
+  },
+  {
+    "version": "warsh",
+    "page": 404,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 1,
+    "quart_global": 161
+  },
+  {
+    "version": "warsh",
+    "page": 405,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 2,
+    "quart_global": 162
+  },
+  {
+    "version": "warsh",
+    "page": 406,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 2,
+    "quart_global": 162
+  },
+  {
+    "version": "warsh",
+    "page": 407,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 3,
+    "quart_global": 163
+  },
+  {
+    "version": "warsh",
+    "page": 408,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 3,
+    "quart_global": 163
+  },
+  {
+    "version": "warsh",
+    "page": 409,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 3,
+    "quart_global": 163
+  },
+  {
+    "version": "warsh",
+    "page": 410,
+    "sourate_num": 30,
+    "sourate_nom": "Ar-Rum",
+    "hizb": 41,
+    "quart": 4,
+    "quart_global": 164
+  },
+  {
+    "version": "warsh",
+    "page": 411,
+    "sourate_num": 31,
+    "sourate_nom": "Luqman",
+    "hizb": 41,
+    "quart": 4,
+    "quart_global": 164
+  },
+  {
+    "version": "warsh",
+    "page": 412,
+    "sourate_num": 31,
+    "sourate_nom": "Luqman",
+    "hizb": 41,
+    "quart": 4,
+    "quart_global": 164
+  },
+  {
+    "version": "warsh",
+    "page": 413,
+    "sourate_num": 31,
+    "sourate_nom": "Luqman",
+    "hizb": 42,
+    "quart": 1,
+    "quart_global": 165
+  },
+  {
+    "version": "warsh",
+    "page": 414,
+    "sourate_num": 31,
+    "sourate_nom": "Luqman",
+    "hizb": 42,
+    "quart": 1,
+    "quart_global": 165
+  },
+  {
+    "version": "warsh",
+    "page": 415,
+    "sourate_num": 32,
+    "sourate_nom": "As-Sajda",
+    "hizb": 42,
+    "quart": 2,
+    "quart_global": 166
+  },
+  {
+    "version": "warsh",
+    "page": 416,
+    "sourate_num": 32,
+    "sourate_nom": "As-Sajda",
+    "hizb": 42,
+    "quart": 2,
+    "quart_global": 166
+  },
+  {
+    "version": "warsh",
+    "page": 417,
+    "sourate_num": 32,
+    "sourate_nom": "As-Sajda",
+    "hizb": 42,
+    "quart": 2,
+    "quart_global": 166
+  },
+  {
+    "version": "warsh",
+    "page": 418,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 42,
+    "quart": 3,
+    "quart_global": 167
+  },
+  {
+    "version": "warsh",
+    "page": 419,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 42,
+    "quart": 3,
+    "quart_global": 167
+  },
+  {
+    "version": "warsh",
+    "page": 420,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 42,
+    "quart": 4,
+    "quart_global": 168
+  },
+  {
+    "version": "warsh",
+    "page": 421,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 42,
+    "quart": 4,
+    "quart_global": 168
+  },
+  {
+    "version": "warsh",
+    "page": 422,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 43,
+    "quart": 1,
+    "quart_global": 169
+  },
+  {
+    "version": "warsh",
+    "page": 423,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 43,
+    "quart": 1,
+    "quart_global": 169
+  },
+  {
+    "version": "warsh",
+    "page": 424,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 43,
+    "quart": 2,
+    "quart_global": 170
+  },
+  {
+    "version": "warsh",
+    "page": 425,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 43,
+    "quart": 2,
+    "quart_global": 170
+  },
+  {
+    "version": "warsh",
+    "page": 426,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 43,
+    "quart": 3,
+    "quart_global": 171
+  },
+  {
+    "version": "warsh",
+    "page": 427,
+    "sourate_num": 33,
+    "sourate_nom": "Al-Ahzab",
+    "hizb": 43,
+    "quart": 3,
+    "quart_global": 171
+  },
+  {
+    "version": "warsh",
+    "page": 428,
+    "sourate_num": 34,
+    "sourate_nom": "Saba",
+    "hizb": 43,
+    "quart": 3,
+    "quart_global": 171
+  },
+  {
+    "version": "warsh",
+    "page": 429,
+    "sourate_num": 34,
+    "sourate_nom": "Saba",
+    "hizb": 43,
+    "quart": 4,
+    "quart_global": 172
+  },
+  {
+    "version": "warsh",
+    "page": 430,
+    "sourate_num": 34,
+    "sourate_nom": "Saba",
+    "hizb": 43,
+    "quart": 4,
+    "quart_global": 172
+  },
+  {
+    "version": "warsh",
+    "page": 431,
+    "sourate_num": 34,
+    "sourate_nom": "Saba",
+    "hizb": 44,
+    "quart": 1,
+    "quart_global": 173
+  },
+  {
+    "version": "warsh",
+    "page": 432,
+    "sourate_num": 34,
+    "sourate_nom": "Saba",
+    "hizb": 44,
+    "quart": 1,
+    "quart_global": 173
+  },
+  {
+    "version": "warsh",
+    "page": 433,
+    "sourate_num": 34,
+    "sourate_nom": "Saba",
+    "hizb": 44,
+    "quart": 2,
+    "quart_global": 174
+  },
+  {
+    "version": "warsh",
+    "page": 434,
+    "sourate_num": 35,
+    "sourate_nom": "Fatir",
+    "hizb": 44,
+    "quart": 2,
+    "quart_global": 174
+  },
+  {
+    "version": "warsh",
+    "page": 435,
+    "sourate_num": 35,
+    "sourate_nom": "Fatir",
+    "hizb": 44,
+    "quart": 2,
+    "quart_global": 174
+  },
+  {
+    "version": "warsh",
+    "page": 436,
+    "sourate_num": 35,
+    "sourate_nom": "Fatir",
+    "hizb": 44,
+    "quart": 3,
+    "quart_global": 175
+  },
+  {
+    "version": "warsh",
+    "page": 437,
+    "sourate_num": 35,
+    "sourate_nom": "Fatir",
+    "hizb": 44,
+    "quart": 3,
+    "quart_global": 175
+  },
+  {
+    "version": "warsh",
+    "page": 438,
+    "sourate_num": 35,
+    "sourate_nom": "Fatir",
+    "hizb": 44,
+    "quart": 3,
+    "quart_global": 175
+  },
+  {
+    "version": "warsh",
+    "page": 439,
+    "sourate_num": 35,
+    "sourate_nom": "Fatir",
+    "hizb": 44,
+    "quart": 4,
+    "quart_global": 176
+  },
+  {
+    "version": "warsh",
+    "page": 440,
+    "sourate_num": 36,
+    "sourate_nom": "Ya-Sin",
+    "hizb": 44,
+    "quart": 4,
+    "quart_global": 176
+  },
+  {
+    "version": "warsh",
+    "page": 441,
+    "sourate_num": 36,
+    "sourate_nom": "Ya-Sin",
+    "hizb": 44,
+    "quart": 4,
+    "quart_global": 176
+  },
+  {
+    "version": "warsh",
+    "page": 442,
+    "sourate_num": 36,
+    "sourate_nom": "Ya-Sin",
+    "hizb": 45,
+    "quart": 1,
+    "quart_global": 177
+  },
+  {
+    "version": "warsh",
+    "page": 443,
+    "sourate_num": 36,
+    "sourate_nom": "Ya-Sin",
+    "hizb": 45,
+    "quart": 1,
+    "quart_global": 177
+  },
+  {
+    "version": "warsh",
+    "page": 444,
+    "sourate_num": 36,
+    "sourate_nom": "Ya-Sin",
+    "hizb": 45,
+    "quart": 2,
+    "quart_global": 178
+  },
+  {
+    "version": "warsh",
+    "page": 445,
+    "sourate_num": 36,
+    "sourate_nom": "Ya-Sin",
+    "hizb": 45,
+    "quart": 2,
+    "quart_global": 178
+  },
+  {
+    "version": "warsh",
+    "page": 446,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 45,
+    "quart": 3,
+    "quart_global": 179
+  },
+  {
+    "version": "warsh",
+    "page": 447,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 45,
+    "quart": 3,
+    "quart_global": 179
+  },
+  {
+    "version": "warsh",
+    "page": 448,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 45,
+    "quart": 3,
+    "quart_global": 179
+  },
+  {
+    "version": "warsh",
+    "page": 449,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 45,
+    "quart": 4,
+    "quart_global": 180
+  },
+  {
+    "version": "warsh",
+    "page": 450,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 45,
+    "quart": 4,
+    "quart_global": 180
+  },
+  {
+    "version": "warsh",
+    "page": 451,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 46,
+    "quart": 1,
+    "quart_global": 181
+  },
+  {
+    "version": "warsh",
+    "page": 452,
+    "sourate_num": 37,
+    "sourate_nom": "As-Saffat",
+    "hizb": 46,
+    "quart": 1,
+    "quart_global": 181
+  },
+  {
+    "version": "warsh",
+    "page": 453,
+    "sourate_num": 38,
+    "sourate_nom": "Sad",
+    "hizb": 46,
+    "quart": 1,
+    "quart_global": 181
+  },
+  {
+    "version": "warsh",
+    "page": 454,
+    "sourate_num": 38,
+    "sourate_nom": "Sad",
+    "hizb": 46,
+    "quart": 2,
+    "quart_global": 182
+  },
+  {
+    "version": "warsh",
+    "page": 455,
+    "sourate_num": 38,
+    "sourate_nom": "Sad",
+    "hizb": 46,
+    "quart": 2,
+    "quart_global": 182
+  },
+  {
+    "version": "warsh",
+    "page": 456,
+    "sourate_num": 38,
+    "sourate_nom": "Sad",
+    "hizb": 46,
+    "quart": 3,
+    "quart_global": 183
+  },
+  {
+    "version": "warsh",
+    "page": 457,
+    "sourate_num": 38,
+    "sourate_nom": "Sad",
+    "hizb": 46,
+    "quart": 3,
+    "quart_global": 183
+  },
+  {
+    "version": "warsh",
+    "page": 458,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 46,
+    "quart": 3,
+    "quart_global": 183
+  },
+  {
+    "version": "warsh",
+    "page": 459,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 46,
+    "quart": 4,
+    "quart_global": 184
+  },
+  {
+    "version": "warsh",
+    "page": 460,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 46,
+    "quart": 4,
+    "quart_global": 184
+  },
+  {
+    "version": "warsh",
+    "page": 461,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 46,
+    "quart": 4,
+    "quart_global": 184
+  },
+  {
+    "version": "warsh",
+    "page": 462,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 47,
+    "quart": 1,
+    "quart_global": 185
+  },
+  {
+    "version": "warsh",
+    "page": 463,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 47,
+    "quart": 1,
+    "quart_global": 185
+  },
+  {
+    "version": "warsh",
+    "page": 464,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 47,
+    "quart": 2,
+    "quart_global": 186
+  },
+  {
+    "version": "warsh",
+    "page": 465,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 47,
+    "quart": 2,
+    "quart_global": 186
+  },
+  {
+    "version": "warsh",
+    "page": 466,
+    "sourate_num": 39,
+    "sourate_nom": "Az-Zumar",
+    "hizb": 47,
+    "quart": 2,
+    "quart_global": 186
+  },
+  {
+    "version": "warsh",
+    "page": 467,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 47,
+    "quart": 3,
+    "quart_global": 187
+  },
+  {
+    "version": "warsh",
+    "page": 468,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 47,
+    "quart": 3,
+    "quart_global": 187
+  },
+  {
+    "version": "warsh",
+    "page": 469,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 47,
+    "quart": 4,
+    "quart_global": 188
+  },
+  {
+    "version": "warsh",
+    "page": 470,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 47,
+    "quart": 4,
+    "quart_global": 188
+  },
+  {
+    "version": "warsh",
+    "page": 471,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 47,
+    "quart": 4,
+    "quart_global": 188
+  },
+  {
+    "version": "warsh",
+    "page": 472,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 48,
+    "quart": 1,
+    "quart_global": 189
+  },
+  {
+    "version": "warsh",
+    "page": 473,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 48,
+    "quart": 1,
+    "quart_global": 189
+  },
+  {
+    "version": "warsh",
+    "page": 474,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 48,
+    "quart": 2,
+    "quart_global": 190
+  },
+  {
+    "version": "warsh",
+    "page": 475,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 48,
+    "quart": 2,
+    "quart_global": 190
+  },
+  {
+    "version": "warsh",
+    "page": 476,
+    "sourate_num": 40,
+    "sourate_nom": "Ghafir",
+    "hizb": 48,
+    "quart": 2,
+    "quart_global": 190
+  },
+  {
+    "version": "warsh",
+    "page": 477,
+    "sourate_num": 41,
+    "sourate_nom": "Fussilat",
+    "hizb": 48,
+    "quart": 3,
+    "quart_global": 191
+  },
+  {
+    "version": "warsh",
+    "page": 478,
+    "sourate_num": 41,
+    "sourate_nom": "Fussilat",
+    "hizb": 48,
+    "quart": 3,
+    "quart_global": 191
+  },
+  {
+    "version": "warsh",
+    "page": 479,
+    "sourate_num": 41,
+    "sourate_nom": "Fussilat",
+    "hizb": 48,
+    "quart": 4,
+    "quart_global": 192
+  },
+  {
+    "version": "warsh",
+    "page": 480,
+    "sourate_num": 41,
+    "sourate_nom": "Fussilat",
+    "hizb": 48,
+    "quart": 4,
+    "quart_global": 192
+  },
+  {
+    "version": "warsh",
+    "page": 481,
+    "sourate_num": 41,
+    "sourate_nom": "Fussilat",
+    "hizb": 48,
+    "quart": 4,
+    "quart_global": 192
+  },
+  {
+    "version": "warsh",
+    "page": 482,
+    "sourate_num": 41,
+    "sourate_nom": "Fussilat",
+    "hizb": 49,
+    "quart": 1,
+    "quart_global": 193
+  },
+  {
+    "version": "warsh",
+    "page": 483,
+    "sourate_num": 42,
+    "sourate_nom": "Ash-Shura",
+    "hizb": 49,
+    "quart": 1,
+    "quart_global": 193
+  },
+  {
+    "version": "warsh",
+    "page": 484,
+    "sourate_num": 42,
+    "sourate_nom": "Ash-Shura",
+    "hizb": 49,
+    "quart": 2,
+    "quart_global": 194
+  },
+  {
+    "version": "warsh",
+    "page": 485,
+    "sourate_num": 42,
+    "sourate_nom": "Ash-Shura",
+    "hizb": 49,
+    "quart": 2,
+    "quart_global": 194
+  },
+  {
+    "version": "warsh",
+    "page": 486,
+    "sourate_num": 42,
+    "sourate_nom": "Ash-Shura",
+    "hizb": 49,
+    "quart": 3,
+    "quart_global": 195
+  },
+  {
+    "version": "warsh",
+    "page": 487,
+    "sourate_num": 42,
+    "sourate_nom": "Ash-Shura",
+    "hizb": 49,
+    "quart": 3,
+    "quart_global": 195
+  },
+  {
+    "version": "warsh",
+    "page": 488,
+    "sourate_num": 42,
+    "sourate_nom": "Ash-Shura",
+    "hizb": 49,
+    "quart": 4,
+    "quart_global": 196
+  },
+  {
+    "version": "warsh",
+    "page": 489,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 49,
+    "quart": 4,
+    "quart_global": 196
+  },
+  {
+    "version": "warsh",
+    "page": 490,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 49,
+    "quart": 4,
+    "quart_global": 196
+  },
+  {
+    "version": "warsh",
+    "page": 491,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 50,
+    "quart": 1,
+    "quart_global": 197
+  },
+  {
+    "version": "warsh",
+    "page": 492,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 50,
+    "quart": 1,
+    "quart_global": 197
+  },
+  {
+    "version": "warsh",
+    "page": 493,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 50,
+    "quart": 1,
+    "quart_global": 197
+  },
+  {
+    "version": "warsh",
+    "page": 494,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 50,
+    "quart": 2,
+    "quart_global": 198
+  },
+  {
+    "version": "warsh",
+    "page": 495,
+    "sourate_num": 43,
+    "sourate_nom": "Az-Zukhruf",
+    "hizb": 50,
+    "quart": 2,
+    "quart_global": 198
+  },
+  {
+    "version": "warsh",
+    "page": 496,
+    "sourate_num": 44,
+    "sourate_nom": "Ad-Dukhan",
+    "hizb": 50,
+    "quart": 2,
+    "quart_global": 198
+  },
+  {
+    "version": "warsh",
+    "page": 497,
+    "sourate_num": 44,
+    "sourate_nom": "Ad-Dukhan",
+    "hizb": 50,
+    "quart": 3,
+    "quart_global": 199
+  },
+  {
+    "version": "warsh",
+    "page": 498,
+    "sourate_num": 44,
+    "sourate_nom": "Ad-Dukhan",
+    "hizb": 50,
+    "quart": 3,
+    "quart_global": 199
+  },
+  {
+    "version": "warsh",
+    "page": 499,
+    "sourate_num": 45,
+    "sourate_nom": "Al-Jathiya",
+    "hizb": 50,
+    "quart": 3,
+    "quart_global": 199
+  },
+  {
+    "version": "warsh",
+    "page": 500,
+    "sourate_num": 45,
+    "sourate_nom": "Al-Jathiya",
+    "hizb": 50,
+    "quart": 4,
+    "quart_global": 200
+  },
+  {
+    "version": "warsh",
+    "page": 501,
+    "sourate_num": 45,
+    "sourate_nom": "Al-Jathiya",
+    "hizb": 50,
+    "quart": 4,
+    "quart_global": 200
+  },
+  {
+    "version": "warsh",
+    "page": 502,
+    "sourate_num": 46,
+    "sourate_nom": "Al-Ahqaf",
+    "hizb": 51,
+    "quart": 1,
+    "quart_global": 201
+  },
+  {
+    "version": "warsh",
+    "page": 503,
+    "sourate_num": 46,
+    "sourate_nom": "Al-Ahqaf",
+    "hizb": 51,
+    "quart": 1,
+    "quart_global": 201
+  },
+  {
+    "version": "warsh",
+    "page": 504,
+    "sourate_num": 46,
+    "sourate_nom": "Al-Ahqaf",
+    "hizb": 51,
+    "quart": 1,
+    "quart_global": 201
+  },
+  {
+    "version": "warsh",
+    "page": 505,
+    "sourate_num": 46,
+    "sourate_nom": "Al-Ahqaf",
+    "hizb": 51,
+    "quart": 2,
+    "quart_global": 202
+  },
+  {
+    "version": "warsh",
+    "page": 506,
+    "sourate_num": 46,
+    "sourate_nom": "Al-Ahqaf",
+    "hizb": 51,
+    "quart": 2,
+    "quart_global": 202
+  },
+  {
+    "version": "warsh",
+    "page": 507,
+    "sourate_num": 47,
+    "sourate_nom": "Muhammad",
+    "hizb": 51,
+    "quart": 3,
+    "quart_global": 203
+  },
+  {
+    "version": "warsh",
+    "page": 508,
+    "sourate_num": 47,
+    "sourate_nom": "Muhammad",
+    "hizb": 51,
+    "quart": 3,
+    "quart_global": 203
+  },
+  {
+    "version": "warsh",
+    "page": 509,
+    "sourate_num": 47,
+    "sourate_nom": "Muhammad",
+    "hizb": 51,
+    "quart": 3,
+    "quart_global": 203
+  },
+  {
+    "version": "warsh",
+    "page": 510,
+    "sourate_num": 47,
+    "sourate_nom": "Muhammad",
+    "hizb": 51,
+    "quart": 4,
+    "quart_global": 204
+  },
+  {
+    "version": "warsh",
+    "page": 511,
+    "sourate_num": 48,
+    "sourate_nom": "Al-Fath",
+    "hizb": 51,
+    "quart": 4,
+    "quart_global": 204
+  },
+  {
+    "version": "warsh",
+    "page": 512,
+    "sourate_num": 48,
+    "sourate_nom": "Al-Fath",
+    "hizb": 51,
+    "quart": 4,
+    "quart_global": 204
+  },
+  {
+    "version": "warsh",
+    "page": 513,
+    "sourate_num": 48,
+    "sourate_nom": "Al-Fath",
+    "hizb": 52,
+    "quart": 1,
+    "quart_global": 205
+  },
+  {
+    "version": "warsh",
+    "page": 514,
+    "sourate_num": 48,
+    "sourate_nom": "Al-Fath",
+    "hizb": 52,
+    "quart": 1,
+    "quart_global": 205
+  },
+  {
+    "version": "warsh",
+    "page": 515,
+    "sourate_num": 49,
+    "sourate_nom": "Al-Hujurat",
+    "hizb": 52,
+    "quart": 2,
+    "quart_global": 206
+  },
+  {
+    "version": "warsh",
+    "page": 516,
+    "sourate_num": 49,
+    "sourate_nom": "Al-Hujurat",
+    "hizb": 52,
+    "quart": 2,
+    "quart_global": 206
+  },
+  {
+    "version": "warsh",
+    "page": 517,
+    "sourate_num": 49,
+    "sourate_nom": "Al-Hujurat",
+    "hizb": 52,
+    "quart": 3,
+    "quart_global": 207
+  },
+  {
+    "version": "warsh",
+    "page": 518,
+    "sourate_num": 50,
+    "sourate_nom": "Qaf",
+    "hizb": 52,
+    "quart": 3,
+    "quart_global": 207
+  },
+  {
+    "version": "warsh",
+    "page": 519,
+    "sourate_num": 50,
+    "sourate_nom": "Qaf",
+    "hizb": 52,
+    "quart": 4,
+    "quart_global": 208
+  },
+  {
+    "version": "warsh",
+    "page": 520,
+    "sourate_num": 51,
+    "sourate_nom": "Adh-Dhariyat",
+    "hizb": 52,
+    "quart": 4,
+    "quart_global": 208
+  },
+  {
+    "version": "warsh",
+    "page": 521,
+    "sourate_num": 51,
+    "sourate_nom": "Adh-Dhariyat",
+    "hizb": 52,
+    "quart": 4,
+    "quart_global": 208
+  },
+  {
+    "version": "warsh",
+    "page": 522,
+    "sourate_num": 51,
+    "sourate_nom": "Adh-Dhariyat",
+    "hizb": 53,
+    "quart": 1,
+    "quart_global": 209
+  },
+  {
+    "version": "warsh",
+    "page": 523,
+    "sourate_num": 52,
+    "sourate_nom": "At-Tur",
+    "hizb": 53,
+    "quart": 1,
+    "quart_global": 209
+  },
+  {
+    "version": "warsh",
+    "page": 524,
+    "sourate_num": 52,
+    "sourate_nom": "At-Tur",
+    "hizb": 53,
+    "quart": 2,
+    "quart_global": 210
+  },
+  {
+    "version": "warsh",
+    "page": 525,
+    "sourate_num": 52,
+    "sourate_nom": "At-Tur",
+    "hizb": 53,
+    "quart": 2,
+    "quart_global": 210
+  },
+  {
+    "version": "warsh",
+    "page": 526,
+    "sourate_num": 53,
+    "sourate_nom": "An-Najm",
+    "hizb": 53,
+    "quart": 3,
+    "quart_global": 211
+  },
+  {
+    "version": "warsh",
+    "page": 527,
+    "sourate_num": 53,
+    "sourate_nom": "An-Najm",
+    "hizb": 53,
+    "quart": 3,
+    "quart_global": 211
+  },
+  {
+    "version": "warsh",
+    "page": 528,
+    "sourate_num": 54,
+    "sourate_nom": "Al-Qamar",
+    "hizb": 53,
+    "quart": 3,
+    "quart_global": 211
+  },
+  {
+    "version": "warsh",
+    "page": 529,
+    "sourate_num": 54,
+    "sourate_nom": "Al-Qamar",
+    "hizb": 53,
+    "quart": 4,
+    "quart_global": 212
+  },
+  {
+    "version": "warsh",
+    "page": 530,
+    "sourate_num": 54,
+    "sourate_nom": "Al-Qamar",
+    "hizb": 53,
+    "quart": 4,
+    "quart_global": 212
+  },
+  {
+    "version": "warsh",
+    "page": 531,
+    "sourate_num": 55,
+    "sourate_nom": "Ar-Rahman",
+    "hizb": 54,
+    "quart": 1,
+    "quart_global": 213
+  },
+  {
+    "version": "warsh",
+    "page": 532,
+    "sourate_num": 55,
+    "sourate_nom": "Ar-Rahman",
+    "hizb": 54,
+    "quart": 1,
+    "quart_global": 213
+  },
+  {
+    "version": "warsh",
+    "page": 533,
+    "sourate_num": 55,
+    "sourate_nom": "Ar-Rahman",
+    "hizb": 54,
+    "quart": 1,
+    "quart_global": 213
+  },
+  {
+    "version": "warsh",
+    "page": 534,
+    "sourate_num": 56,
+    "sourate_nom": "Al-Waqia",
+    "hizb": 54,
+    "quart": 2,
+    "quart_global": 214
+  },
+  {
+    "version": "warsh",
+    "page": 535,
+    "sourate_num": 56,
+    "sourate_nom": "Al-Waqia",
+    "hizb": 54,
+    "quart": 2,
+    "quart_global": 214
+  },
+  {
+    "version": "warsh",
+    "page": 536,
+    "sourate_num": 56,
+    "sourate_nom": "Al-Waqia",
+    "hizb": 54,
+    "quart": 3,
+    "quart_global": 215
+  },
+  {
+    "version": "warsh",
+    "page": 537,
+    "sourate_num": 57,
+    "sourate_nom": "Al-Hadid",
+    "hizb": 54,
+    "quart": 3,
+    "quart_global": 215
+  },
+  {
+    "version": "warsh",
+    "page": 538,
+    "sourate_num": 57,
+    "sourate_nom": "Al-Hadid",
+    "hizb": 54,
+    "quart": 3,
+    "quart_global": 215
+  },
+  {
+    "version": "warsh",
+    "page": 539,
+    "sourate_num": 57,
+    "sourate_nom": "Al-Hadid",
+    "hizb": 54,
+    "quart": 4,
+    "quart_global": 216
+  },
+  {
+    "version": "warsh",
+    "page": 540,
+    "sourate_num": 57,
+    "sourate_nom": "Al-Hadid",
+    "hizb": 54,
+    "quart": 4,
+    "quart_global": 216
+  },
+  {
+    "version": "warsh",
+    "page": 541,
+    "sourate_num": 57,
+    "sourate_nom": "Al-Hadid",
+    "hizb": 54,
+    "quart": 4,
+    "quart_global": 216
+  },
+  {
+    "version": "warsh",
+    "page": 542,
+    "sourate_num": 58,
+    "sourate_nom": "Al-Mujadila",
+    "hizb": 55,
+    "quart": 1,
+    "quart_global": 217
+  },
+  {
+    "version": "warsh",
+    "page": 543,
+    "sourate_num": 58,
+    "sourate_nom": "Al-Mujadila",
+    "hizb": 55,
+    "quart": 1,
+    "quart_global": 217
+  },
+  {
+    "version": "warsh",
+    "page": 544,
+    "sourate_num": 58,
+    "sourate_nom": "Al-Mujadila",
+    "hizb": 55,
+    "quart": 2,
+    "quart_global": 218
+  },
+  {
+    "version": "warsh",
+    "page": 545,
+    "sourate_num": 59,
+    "sourate_nom": "Al-Hashr",
+    "hizb": 55,
+    "quart": 2,
+    "quart_global": 218
+  },
+  {
+    "version": "warsh",
+    "page": 546,
+    "sourate_num": 59,
+    "sourate_nom": "Al-Hashr",
+    "hizb": 55,
+    "quart": 2,
+    "quart_global": 218
+  },
+  {
+    "version": "warsh",
+    "page": 547,
+    "sourate_num": 59,
+    "sourate_nom": "Al-Hashr",
+    "hizb": 55,
+    "quart": 3,
+    "quart_global": 219
+  },
+  {
+    "version": "warsh",
+    "page": 548,
+    "sourate_num": 59,
+    "sourate_nom": "Al-Hashr",
+    "hizb": 55,
+    "quart": 3,
+    "quart_global": 219
+  },
+  {
+    "version": "warsh",
+    "page": 549,
+    "sourate_num": 60,
+    "sourate_nom": "Al-Mumtahina",
+    "hizb": 55,
+    "quart": 3,
+    "quart_global": 219
+  },
+  {
+    "version": "warsh",
+    "page": 550,
+    "sourate_num": 60,
+    "sourate_nom": "Al-Mumtahina",
+    "hizb": 55,
+    "quart": 4,
+    "quart_global": 220
+  },
+  {
+    "version": "warsh",
+    "page": 551,
+    "sourate_num": 61,
+    "sourate_nom": "As-Saf",
+    "hizb": 55,
+    "quart": 4,
+    "quart_global": 220
+  },
+  {
+    "version": "warsh",
+    "page": 552,
+    "sourate_num": 61,
+    "sourate_nom": "As-Saf",
+    "hizb": 55,
+    "quart": 4,
+    "quart_global": 220
+  },
+  {
+    "version": "warsh",
+    "page": 553,
+    "sourate_num": 62,
+    "sourate_nom": "Al-Jumua",
+    "hizb": 56,
+    "quart": 1,
+    "quart_global": 221
+  },
+  {
+    "version": "warsh",
+    "page": 554,
+    "sourate_num": 63,
+    "sourate_nom": "Al-Munafiqun",
+    "hizb": 56,
+    "quart": 1,
+    "quart_global": 221
+  },
+  {
+    "version": "warsh",
+    "page": 555,
+    "sourate_num": 63,
+    "sourate_nom": "Al-Munafiqun",
+    "hizb": 56,
+    "quart": 2,
+    "quart_global": 222
+  },
+  {
+    "version": "warsh",
+    "page": 556,
+    "sourate_num": 64,
+    "sourate_nom": "At-Taghabun",
+    "hizb": 56,
+    "quart": 2,
+    "quart_global": 222
+  },
+  {
+    "version": "warsh",
+    "page": 557,
+    "sourate_num": 64,
+    "sourate_nom": "At-Taghabun",
+    "hizb": 56,
+    "quart": 2,
+    "quart_global": 222
+  },
+  {
+    "version": "warsh",
+    "page": 558,
+    "sourate_num": 65,
+    "sourate_nom": "At-Talaq",
+    "hizb": 56,
+    "quart": 3,
+    "quart_global": 223
+  },
+  {
+    "version": "warsh",
+    "page": 559,
+    "sourate_num": 65,
+    "sourate_nom": "At-Talaq",
+    "hizb": 56,
+    "quart": 3,
+    "quart_global": 223
+  },
+  {
+    "version": "warsh",
+    "page": 560,
+    "sourate_num": 66,
+    "sourate_nom": "At-Tahrim",
+    "hizb": 56,
+    "quart": 4,
+    "quart_global": 224
+  },
+  {
+    "version": "warsh",
+    "page": 561,
+    "sourate_num": 66,
+    "sourate_nom": "At-Tahrim",
+    "hizb": 56,
+    "quart": 4,
+    "quart_global": 224
+  },
+  {
+    "version": "warsh",
+    "page": 562,
+    "sourate_num": 67,
+    "sourate_nom": "Al-Mulk",
+    "hizb": 57,
+    "quart": 1,
+    "quart_global": 225
+  },
+  {
+    "version": "warsh",
+    "page": 563,
+    "sourate_num": 67,
+    "sourate_nom": "Al-Mulk",
+    "hizb": 57,
+    "quart": 1,
+    "quart_global": 225
+  },
+  {
+    "version": "warsh",
+    "page": 564,
+    "sourate_num": 68,
+    "sourate_nom": "Al-Qalam",
+    "hizb": 57,
+    "quart": 1,
+    "quart_global": 225
+  },
+  {
+    "version": "warsh",
+    "page": 565,
+    "sourate_num": 68,
+    "sourate_nom": "Al-Qalam",
+    "hizb": 57,
+    "quart": 2,
+    "quart_global": 226
+  },
+  {
+    "version": "warsh",
+    "page": 566,
+    "sourate_num": 69,
+    "sourate_nom": "Al-Haqqa",
+    "hizb": 57,
+    "quart": 2,
+    "quart_global": 226
+  },
+  {
+    "version": "warsh",
+    "page": 567,
+    "sourate_num": 69,
+    "sourate_nom": "Al-Haqqa",
+    "hizb": 57,
+    "quart": 3,
+    "quart_global": 227
+  },
+  {
+    "version": "warsh",
+    "page": 568,
+    "sourate_num": 70,
+    "sourate_nom": "Al-Maarij",
+    "hizb": 57,
+    "quart": 3,
+    "quart_global": 227
+  },
+  {
+    "version": "warsh",
+    "page": 569,
+    "sourate_num": 70,
+    "sourate_nom": "Al-Maarij",
+    "hizb": 57,
+    "quart": 3,
+    "quart_global": 227
+  },
+  {
+    "version": "warsh",
+    "page": 570,
+    "sourate_num": 71,
+    "sourate_nom": "Nuh",
+    "hizb": 57,
+    "quart": 4,
+    "quart_global": 228
+  },
+  {
+    "version": "warsh",
+    "page": 571,
+    "sourate_num": 71,
+    "sourate_nom": "Nuh",
+    "hizb": 57,
+    "quart": 4,
+    "quart_global": 228
+  },
+  {
+    "version": "warsh",
+    "page": 572,
+    "sourate_num": 72,
+    "sourate_nom": "Al-Jinn",
+    "hizb": 58,
+    "quart": 1,
+    "quart_global": 229
+  },
+  {
+    "version": "warsh",
+    "page": 573,
+    "sourate_num": 72,
+    "sourate_nom": "Al-Jinn",
+    "hizb": 58,
+    "quart": 1,
+    "quart_global": 229
+  },
+  {
+    "version": "warsh",
+    "page": 574,
+    "sourate_num": 73,
+    "sourate_nom": "Al-Muzzammil",
+    "hizb": 58,
+    "quart": 1,
+    "quart_global": 229
+  },
+  {
+    "version": "warsh",
+    "page": 575,
+    "sourate_num": 74,
+    "sourate_nom": "Al-Muddaththir",
+    "hizb": 58,
+    "quart": 2,
+    "quart_global": 230
+  },
+  {
+    "version": "warsh",
+    "page": 576,
+    "sourate_num": 74,
+    "sourate_nom": "Al-Muddaththir",
+    "hizb": 58,
+    "quart": 2,
+    "quart_global": 230
+  },
+  {
+    "version": "warsh",
+    "page": 577,
+    "sourate_num": 75,
+    "sourate_nom": "Al-Qiyama",
+    "hizb": 58,
+    "quart": 3,
+    "quart_global": 231
+  },
+  {
+    "version": "warsh",
+    "page": 578,
+    "sourate_num": 76,
+    "sourate_nom": "Al-Insan",
+    "hizb": 58,
+    "quart": 3,
+    "quart_global": 231
+  },
+  {
+    "version": "warsh",
+    "page": 579,
+    "sourate_num": 76,
+    "sourate_nom": "Al-Insan",
+    "hizb": 58,
+    "quart": 4,
+    "quart_global": 232
+  },
+  {
+    "version": "warsh",
+    "page": 580,
+    "sourate_num": 77,
+    "sourate_nom": "Al-Mursalat",
+    "hizb": 58,
+    "quart": 4,
+    "quart_global": 232
+  },
+  {
+    "version": "warsh",
+    "page": 581,
+    "sourate_num": 77,
+    "sourate_nom": "Al-Mursalat",
+    "hizb": 58,
+    "quart": 4,
+    "quart_global": 232
+  },
+  {
+    "version": "warsh",
+    "page": 582,
+    "sourate_num": 78,
+    "sourate_nom": "An-Naba",
+    "hizb": 59,
+    "quart": 1,
+    "quart_global": 233
+  },
+  {
+    "version": "warsh",
+    "page": 583,
+    "sourate_num": 79,
+    "sourate_nom": "An-Naziat",
+    "hizb": 59,
+    "quart": 1,
+    "quart_global": 233
+  },
+  {
+    "version": "warsh",
+    "page": 584,
+    "sourate_num": 79,
+    "sourate_nom": "An-Naziat",
+    "hizb": 59,
+    "quart": 2,
+    "quart_global": 234
+  },
+  {
+    "version": "warsh",
+    "page": 585,
+    "sourate_num": 80,
+    "sourate_nom": "Abasa",
+    "hizb": 59,
+    "quart": 2,
+    "quart_global": 234
+  },
+  {
+    "version": "warsh",
+    "page": 586,
+    "sourate_num": 81,
+    "sourate_nom": "At-Takwir",
+    "hizb": 59,
+    "quart": 2,
+    "quart_global": 234
+  },
+  {
+    "version": "warsh",
+    "page": 587,
+    "sourate_num": 82,
+    "sourate_nom": "Al-Infitar",
+    "hizb": 59,
+    "quart": 3,
+    "quart_global": 235
+  },
+  {
+    "version": "warsh",
+    "page": 587,
+    "sourate_num": 83,
+    "sourate_nom": "Al-Mutaffifin",
+    "hizb": 59,
+    "quart": 3,
+    "quart_global": 235
+  },
+  {
+    "version": "warsh",
+    "page": 588,
+    "sourate_num": 83,
+    "sourate_nom": "Al-Mutaffifin",
+    "hizb": 59,
+    "quart": 3,
+    "quart_global": 235
+  },
+  {
+    "version": "warsh",
+    "page": 589,
+    "sourate_num": 84,
+    "sourate_nom": "Al-Inshiqaq",
+    "hizb": 59,
+    "quart": 4,
+    "quart_global": 236
+  },
+  {
+    "version": "warsh",
+    "page": 590,
+    "sourate_num": 85,
+    "sourate_nom": "Al-Buruj",
+    "hizb": 59,
+    "quart": 4,
+    "quart_global": 236
+  },
+  {
+    "version": "warsh",
+    "page": 591,
+    "sourate_num": 86,
+    "sourate_nom": "At-Tariq",
+    "hizb": 59,
+    "quart": 4,
+    "quart_global": 236
+  },
+  {
+    "version": "warsh",
+    "page": 591,
+    "sourate_num": 87,
+    "sourate_nom": "Al-Ala",
+    "hizb": 60,
+    "quart": 1,
+    "quart_global": 237
+  },
+  {
+    "version": "warsh",
+    "page": 592,
+    "sourate_num": 88,
+    "sourate_nom": "Al-Ghashiyah",
+    "hizb": 60,
+    "quart": 1,
+    "quart_global": 237
+  },
+  {
+    "version": "warsh",
+    "page": 593,
+    "sourate_num": 89,
+    "sourate_nom": "Al-Fajr",
+    "hizb": 60,
+    "quart": 1,
+    "quart_global": 237
+  },
+  {
+    "version": "warsh",
+    "page": 594,
+    "sourate_num": 90,
+    "sourate_nom": "Al-Balad",
+    "hizb": 60,
+    "quart": 2,
+    "quart_global": 238
+  },
+  {
+    "version": "warsh",
+    "page": 595,
+    "sourate_num": 91,
+    "sourate_nom": "Ash-Shams",
+    "hizb": 60,
+    "quart": 2,
+    "quart_global": 238
+  },
+  {
+    "version": "warsh",
+    "page": 595,
+    "sourate_num": 92,
+    "sourate_nom": "Al-Layl",
+    "hizb": 60,
+    "quart": 2,
+    "quart_global": 238
+  },
+  {
+    "version": "warsh",
+    "page": 596,
+    "sourate_num": 93,
+    "sourate_nom": "Ad-Duha",
+    "hizb": 60,
+    "quart": 2,
+    "quart_global": 238
+  },
+  {
+    "version": "warsh",
+    "page": 596,
+    "sourate_num": 94,
+    "sourate_nom": "Ash-Sharh",
+    "hizb": 60,
+    "quart": 3,
+    "quart_global": 239
+  },
+  {
+    "version": "warsh",
+    "page": 597,
+    "sourate_num": 95,
+    "sourate_nom": "At-Tin",
+    "hizb": 60,
+    "quart": 3,
+    "quart_global": 239
+  },
+  {
+    "version": "warsh",
+    "page": 597,
+    "sourate_num": 96,
+    "sourate_nom": "Al-Alaq",
+    "hizb": 60,
+    "quart": 3,
+    "quart_global": 239
+  },
+  {
+    "version": "warsh",
+    "page": 598,
+    "sourate_num": 97,
+    "sourate_nom": "Al- Qadr",
+    "hizb": 60,
+    "quart": 3,
+    "quart_global": 239
+  },
+  {
+    "version": "warsh",
+    "page": 598,
+    "sourate_num": 98,
+    "sourate_nom": "Al-Bayyina",
+    "hizb": 60,
+    "quart": 3,
+    "quart_global": 239
+  },
+  {
+    "version": "warsh",
+    "page": 599,
+    "sourate_num": 99,
+    "sourate_nom": "Az-Zalzalah",
+    "hizb": 60,
+    "quart": 3,
+    "quart_global": 239
+  },
+  {
+    "version": "warsh",
+    "page": 599,
+    "sourate_num": 100,
+    "sourate_nom": "Al-Adiyat",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 600,
+    "sourate_num": 101,
+    "sourate_nom": "Al-Qari’ah",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 600,
+    "sourate_num": 102,
+    "sourate_nom": "At-Takathur",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 601,
+    "sourate_num": 103,
+    "sourate_nom": "Al-Asr",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 601,
+    "sourate_num": 104,
+    "sourate_nom": "Al-Humaza",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 601,
+    "sourate_num": 105,
+    "sourate_nom": "Al-Fil",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 602,
+    "sourate_num": 106,
+    "sourate_nom": "Al-Quraish",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 602,
+    "sourate_num": 107,
+    "sourate_nom": "Al-Ma’un",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 602,
+    "sourate_num": 108,
+    "sourate_nom": "Al-Kawthar",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 603,
+    "sourate_num": 109,
+    "sourate_nom": "Al-Kafirun",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 603,
+    "sourate_num": 110,
+    "sourate_nom": "An-Nasr",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 603,
+    "sourate_num": 111,
+    "sourate_nom": "Al-Masad",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 604,
+    "sourate_num": 112,
+    "sourate_nom": "Al-Ikhlas",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 604,
+    "sourate_num": 113,
+    "sourate_nom": "Al-Falaq",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  },
+  {
+    "version": "warsh",
+    "page": 604,
+    "sourate_num": 114,
+    "sourate_nom": "An-Nas",
+    "hizb": 60,
+    "quart": 4,
+    "quart_global": 240
+  }
+]

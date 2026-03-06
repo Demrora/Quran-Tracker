@@ -1,45 +1,17 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
+import {
+  getSourates, getHizbs, getMapping,
+  getEntreesDeSourate, getEntreesDeHizb, getEntreesDeQuart,
+  calculerPourcentage, couleurPourcentage
+} from '../mapping'
 
-const SOURATES = Array.from({ length: 114 }, (_, i) => i + 1)
 const PAGES = Array.from({ length: 604 }, (_, i) => i + 1)
 
-const HIZBS = [
-  { num: 1, sourate: 'Al-Fatiha' }, { num: 2, sourate: 'Al-Baqara' },
-  { num: 3, sourate: 'Al-Baqara' }, { num: 4, sourate: 'Al-Baqara' },
-  { num: 5, sourate: 'Al-Baqara' }, { num: 6, sourate: 'Al-Baqara' },
-  { num: 7, sourate: 'Al-Baqara' }, { num: 8, sourate: 'Al-Imran' },
-  { num: 9, sourate: 'Al-Imran' }, { num: 10, sourate: 'An-Nisa' },
-  { num: 11, sourate: 'An-Nisa' }, { num: 12, sourate: 'An-Nisa' },
-  { num: 13, sourate: 'Al-Maida' }, { num: 14, sourate: 'Al-Maida' },
-  { num: 15, sourate: 'Al-Anam' }, { num: 16, sourate: 'Al-Anam' },
-  { num: 17, sourate: 'Al-Araf' }, { num: 18, sourate: 'Al-Araf' },
-  { num: 19, sourate: 'Al-Anfal' }, { num: 20, sourate: 'Yunus' },
-  { num: 21, sourate: 'Hud' }, { num: 22, sourate: 'Yusuf' },
-  { num: 23, sourate: 'Ibrahim' }, { num: 24, sourate: 'Al-Kahf' },
-  { num: 25, sourate: 'Maryam' }, { num: 26, sourate: 'Al-Hajj' },
-  { num: 27, sourate: 'Al-Muminun' }, { num: 28, sourate: 'Al-Furqan' },
-  { num: 29, sourate: 'An-Naml' }, { num: 30, sourate: 'Al-Ankabut' },
-  { num: 31, sourate: 'Luqman' }, { num: 32, sourate: 'Al-Ahzab' },
-  { num: 33, sourate: 'Saba' }, { num: 34, sourate: 'Fatir' },
-  { num: 35, sourate: 'As-Saffat' }, { num: 36, sourate: 'Az-Zumar' },
-  { num: 37, sourate: 'Ghafir' }, { num: 38, sourate: 'Fussilat' },
-  { num: 39, sourate: 'Az-Zukhruf' }, { num: 40, sourate: 'Al-Ahqaf' },
-  { num: 41, sourate: 'Qaf' }, { num: 42, sourate: 'Al-Qamar' },
-  { num: 43, sourate: 'Al-Hadid' }, { num: 44, sourate: 'Al-Mujadila' },
-  { num: 45, sourate: 'At-Tahrim' }, { num: 46, sourate: 'Al-Qalam' },
-  { num: 47, sourate: 'Nuh' }, { num: 48, sourate: 'Al-Insan' },
-  { num: 49, sourate: 'An-Naziat' }, { num: 50, sourate: 'Abasa' },
-  { num: 51, sourate: 'Al-Mutaffifin' }, { num: 52, sourate: 'Al-Ghashiya' },
-  { num: 53, sourate: 'Ad-Duha' }, { num: 54, sourate: 'Al-Bayyina' },
-  { num: 55, sourate: 'Al-Adiyat' }, { num: 56, sourate: 'Al-Masad' },
-  { num: 57, sourate: 'Al-Ikhlas' }, { num: 58, sourate: 'Al-Falaq' },
-  { num: 59, sourate: 'An-Nas' }, { num: 60, sourate: 'An-Nas' },
-]
-
 function Parametrage() {
+  const [version] = useState('warsh')
   const [unite, setUnite] = useState('')
-  const [corpus, setCorpus] = useState([])
+  const [corpus, setCorpus] = useState([]) // [{page, sourate_num}]
   const [tempsSave, setTempsSave] = useState(false)
 
   useEffect(() => {
@@ -50,63 +22,90 @@ function Parametrage() {
     const { data } = await supabase.from('utilisateur').select('*').single()
     if (data) {
       setUnite(data.unite)
-      chargerCorpus(data.unite)
+      chargerCorpus()
     }
   }
 
-  async function chargerCorpus(type) {
-    const { data } = await supabase.from('corpus').select('*').eq('type', type)
-    if (data) setCorpus(data.map(d => d.valeur))
+  async function chargerCorpus() {
+    const { data } = await supabase.from('corpus').select('*')
+    if (data) setCorpus(data.map(d => ({ page: d.valeur, sourate_num: d.sourate_num })))
   }
 
   async function sauvegarderUnite(nouvelleUnite) {
     setUnite(nouvelleUnite)
-    setCorpus([])
     await supabase.from('utilisateur').delete().neq('id', 0)
-    await supabase.from('utilisateur').insert({ unite: nouvelleUnite })
-    await supabase.from('corpus').delete().neq('id', 0)
-    chargerCorpus(nouvelleUnite)
+    await supabase.from('utilisateur').insert({ unite: nouvelleUnite, version })
     setTempsSave(true)
     setTimeout(() => setTempsSave(false), 2000)
   }
 
-  async function toggleCorpus(valeur) {
-    if (corpus.includes(valeur)) {
-      setCorpus(corpus.filter(v => v !== valeur))
-      await supabase.from('corpus').delete().eq('valeur', valeur).eq('type', unite)
+  async function toggleEntrees(entrees) {
+    // entrees = [{page, sourate_num, ...}]
+    const toutesValidees = entrees.every(e =>
+      corpus.some(c => c.page === e.page && c.sourate_num === e.sourate_num)
+    )
+
+    if (toutesValidees) {
+      // Dévalider
+      const nouveau = corpus.filter(c =>
+        !entrees.some(e => e.page === c.page && e.sourate_num === c.sourate_num)
+      )
+      setCorpus(nouveau)
+      for (const e of entrees) {
+        await supabase.from('corpus')
+          .delete()
+          .eq('valeur', e.page)
+          .eq('sourate_num', e.sourate_num)
+      }
     } else {
-      setCorpus([...corpus, valeur])
-      await supabase.from('corpus').insert({ type: unite, valeur, valide: true })
+      // Valider les manquantes
+      const aAjouter = entrees.filter(e =>
+        !corpus.some(c => c.page === e.page && c.sourate_num === e.sourate_num)
+      )
+      setCorpus([...corpus, ...aAjouter.map(e => ({ page: e.page, sourate_num: e.sourate_num }))])
+      for (const e of aAjouter) {
+        await supabase.from('corpus').insert({
+          type: 'page',
+          valeur: e.page,
+          sourate_num: e.sourate_num,
+          valide: true
+        })
+      }
     }
   }
 
-  const btnStyle = (actif) => ({
-    width: '45px', height: '45px',
-    borderRadius: '8px', border: 'none',
-    cursor: 'pointer', fontSize: '13px', fontWeight: 'bold',
-    background: actif ? '#2d6a4f' : '#f0f0f0',
-    color: actif ? 'white' : '#333',
-  })
+  function pct(entrees) {
+    return calculerPourcentage(entrees, corpus)
+  }
+
+  function btnStyle(entrees, width = '42px', height = '42px', fontSize = '12px') {
+    const p = pct(entrees)
+    return {
+      width, height, fontSize,
+      borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold',
+      background: couleurPourcentage(p),
+      color: p === 0 ? '#333' : p < 34 ? '#2d6a4f' : 'white',
+    }
+  }
+
+  const sourates = getSourates(version)
+  const hizbs = getHizbs()
+  const mapping = getMapping(version)
 
   return (
     <div>
       <h1>⚙️ Paramétrage</h1>
 
-      {/* Choix unité */}
       <h2>Quelle est ton unité d'étude ?</h2>
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
         {['page', 'sourate', 'hizb', 'quart'].map((u) => (
-          <button
-            key={u}
-            onClick={() => sauvegarderUnite(u)}
-            style={{
-              padding: '15px 25px', fontSize: '16px', cursor: 'pointer',
-              borderRadius: '8px',
-              border: unite === u ? '3px solid #2d6a4f' : '2px solid #ccc',
-              background: unite === u ? '#e6ffe6' : 'white',
-              fontWeight: unite === u ? 'bold' : 'normal'
-            }}
-          >
+          <button key={u} onClick={() => sauvegarderUnite(u)} style={{
+            padding: '15px 25px', fontSize: '16px', cursor: 'pointer',
+            borderRadius: '8px',
+            border: unite === u ? '3px solid #2d6a4f' : '2px solid #ccc',
+            background: unite === u ? '#e6ffe6' : 'white',
+            fontWeight: unite === u ? 'bold' : 'normal'
+          }}>
             {u === 'page' && '📄 Page'}
             {u === 'sourate' && '📖 Sourate'}
             {u === 'hizb' && '🔵 Hizb'}
@@ -117,106 +116,109 @@ function Parametrage() {
 
       {tempsSave && <p style={{ color: 'green', marginTop: '10px' }}>✅ Sauvegardé !</p>}
 
-      {/* Pages et Sourates */}
-      {unite && (unite === 'page' || unite === 'sourate') && (
+      {unite && (
         <div style={{ marginTop: '30px' }}>
-          <h2>Quelles {unite}s tu connais déjà ?</h2>
-          <p style={{ color: '#666' }}>Clique sur chaque {unite} mémorisée :</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '15px' }}>
-            {(unite === 'page' ? PAGES : SOURATES).map((valeur) => (
-              <button key={valeur} onClick={() => toggleCorpus(valeur)} style={btnStyle(corpus.includes(valeur))}>
-                {valeur}
-              </button>
-            ))}
-          </div>
+
+          {/* PAGES */}
+          {unite === 'page' && (
+            <>
+              <h2>Quelles pages tu connais ?</h2>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '15px' }}>
+                {PAGES.map(p => {
+                  const entrees = mapping.filter(r => r.page === p)
+                  return (
+                    <button key={p} onClick={() => toggleEntrees(entrees)}
+                      style={btnStyle(entrees)}>
+                      {p}
+                    </button>
+                  )
+                })}
+              </div>
+            </>
+          )}
+
+          {/* SOURATES */}
+          {unite === 'sourate' && (
+            <>
+              <h2>Quelles sourates tu connais ?</h2>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '15px' }}>
+                {sourates.map(({ num, nom }) => {
+                  const entrees = getEntreesDeSourate(num, version)
+                  const p = pct(entrees)
+                  return (
+                    <button key={num} onClick={() => toggleEntrees(entrees)}
+                      style={{ ...btnStyle(entrees, 'auto', '42px', '13px'), padding: '8px 12px' }}>
+                      {num}. {nom} {p > 0 && p < 100 ? `${p}%` : ''}
+                    </button>
+                  )
+                })}
+              </div>
+            </>
+          )}
+
+          {/* HIZB */}
+          {unite === 'hizb' && (
+            <>
+              <h2>Quels Hizb tu connais ?</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginTop: '15px' }}>
+                {hizbs.map(num => {
+                  const entrees = getEntreesDeHizb(num, version)
+                  const sourate = mapping.find(r => r.hizb === num)?.sourate_nom || ''
+                  const p = pct(entrees)
+                  return (
+                    <button key={num} onClick={() => toggleEntrees(entrees)}
+                      style={{ ...btnStyle(entrees, '100%', 'auto'), padding: '10px', textAlign: 'left' }}>
+                      <div style={{ fontSize: '14px' }}>Hizb {num} {p > 0 && p < 100 ? `${p}%` : ''}</div>
+                      <div style={{ fontSize: '11px', opacity: 0.8 }}>{sourate}</div>
+                    </button>
+                  )
+                })}
+              </div>
+            </>
+          )}
+
+          {/* QUARTS */}
+          {unite === 'quart' && (
+            <>
+              <h2>Quels quarts tu connais ?</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '15px' }}>
+                {hizbs.map(hizb => {
+                  const sourate = mapping.find(r => r.hizb === hizb)?.sourate_nom || ''
+                  const quarts = [1, 2, 3, 4].map(q => (hizb - 1) * 4 + q)
+                  const labels = ['¼', '½', '¾', '1']
+                  return (
+                    <div key={hizb} style={{
+                      display: 'flex', alignItems: 'center', gap: '10px',
+                      padding: '8px 12px', borderRadius: '8px',
+                      background: '#f9f9f9', border: '1px solid #eee'
+                    }}>
+                      <div style={{ minWidth: '150px' }}>
+                        <span style={{ fontWeight: 'bold', fontSize: '13px', color: '#333' }}>Hizb {hizb}</span>
+                        <span style={{ color: '#888', fontSize: '12px' }}> — {sourate}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        {quarts.map((q, i) => {
+                          const entrees = getEntreesDeQuart(q, version)
+                          return (
+                            <button key={q} onClick={() => toggleEntrees(entrees)}
+                              style={btnStyle(entrees, '40px', '40px', '13px')}>
+                              {labels[i]}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )}
+
           <p style={{ marginTop: '20px', color: '#2d6a4f', fontWeight: 'bold' }}>
-            ✅ {corpus.length} {unite}(s) mémorisée(s)
+            ✅ {corpus.length} entrées — {[...new Set(corpus.map(c => c.page))].length} pages couvertes sur 604
           </p>
         </div>
       )}
-
-      {/* Hizb — grille compacte 3 colonnes */}
-      {unite === 'hizb' && (
-        <div style={{ marginTop: '30px' }}>
-          <h2>Quels Hizb tu connais déjà ?</h2>
-          <p style={{ color: '#666' }}>Clique sur chaque Hizb mémorisé :</p>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '8px', marginTop: '15px'
-          }}>
-            {HIZBS.map(({ num, sourate }) => (
-              <button
-                key={num}
-                onClick={() => toggleCorpus(num)}
-                style={{
-                  padding: '10px', borderRadius: '8px', border: 'none',
-                  cursor: 'pointer', textAlign: 'left',
-                  background: corpus.includes(num) ? '#2d6a4f' : '#f0f0f0',
-                  color: corpus.includes(num) ? 'white' : '#333',
-                }}
-              >
-                <div style={{ fontWeight: 'bold', fontSize: '14px' }}>Hizb {num}</div>
-                <div style={{ fontSize: '11px', opacity: 0.8 }}>{sourate}</div>
-              </button>
-            ))}
-          </div>
-          <p style={{ marginTop: '20px', color: '#2d6a4f', fontWeight: 'bold' }}>
-            ✅ {corpus.length} Hizb mémorisé(s) sur 60
-          </p>
-        </div>
-      )}
-
-      {/* Quarts — 1 ligne par Hizb avec 4 boutons */}
-      {unite === 'quart' && (
-        <div style={{ marginTop: '30px' }}>
-          <h2>Quels quarts tu connais déjà ?</h2>
-          <p style={{ color: '#666' }}>Clique sur chaque quart mémorisé :</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '15px' }}>
-            {HIZBS.map(({ num, sourate }) => {
-              const quarts = [
-                (num - 1) * 4 + 1,
-                (num - 1) * 4 + 2,
-                (num - 1) * 4 + 3,
-                (num - 1) * 4 + 4,
-              ]
-              const labels = ['¼', '½', '¾', '1']
-              return (
-                <div key={num} style={{
-                  display: 'flex', alignItems: 'center', gap: '10px',
-                  padding: '8px 12px', borderRadius: '8px',
-                  background: '#f9f9f9', border: '1px solid #eee'
-                }}>
-                  <div style={{ minWidth: '140px' }}>
-                    <span style={{ fontWeight: 'bold', fontSize: '13px',color:'333' }}>Hizb {num}</span>
-                    <span style={{ color: '#888', fontSize: '12px' }}> — {sourate}</span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    {quarts.map((q, i) => (
-                      <button
-                        key={q}
-                        onClick={() => toggleCorpus(q)}
-                        style={{
-                          width: '40px', height: '40px', borderRadius: '8px',
-                          border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold',
-                          background: corpus.includes(q) ? '#2d6a4f' : '#e0e0e0',
-                          color: corpus.includes(q) ? 'white' : '#333',
-                        }}
-                      >
-                        {labels[i]}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <p style={{ marginTop: '20px', color: '#2d6a4f', fontWeight: 'bold' }}>
-            ✅ {corpus.length} quart(s) mémorisé(s) sur 240
-          </p>
-        </div>
-      )}
-
     </div>
   )
 }
