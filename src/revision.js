@@ -43,12 +43,9 @@ export function getRevisionsDuJour(revisions) {
 }
 
 // Calcule les unités de chevauchement
-export function getChevauchement(valeur, mode, mapping, unite) {
+export function getChevauchement(valeur, mode, mapping, unite, corpus = []) {
   if (mode === 'aucun') return []
-
   const rayon = mode === 'leger' ? 2 : 5
-
-  // Trouve les pages de l'unité courante
   let pagesUnite = []
   if (unite === 'page') {
     pagesUnite = [valeur]
@@ -59,25 +56,16 @@ export function getChevauchement(valeur, mode, mapping, unite) {
   } else if (unite === 'sourate') {
     pagesUnite = [...new Set(mapping.filter(m => m.sourate_num === valeur).map(m => m.page))]
   }
-
   if (pagesUnite.length === 0) return []
-
   const pageMin = Math.min(...pagesUnite)
   const pageMax = Math.max(...pagesUnite)
-
-  // Pages avant et après
-  const pagesAvant = []
-  const pagesApres = []
-
+  const pagesCorpus = new Set(corpus.map(c => c.page))
+  const result = []
   for (let i = 1; i <= rayon; i++) {
-    if (pageMin - i >= 1) pagesAvant.unshift(pageMin - i)
-    if (pageMax + i <= 604) pagesApres.push(pageMax + i)
+    if (pageMin - i >= 1 && pagesCorpus.has(pageMin - i)) result.unshift({ page: pageMin - i, position: 'avant' })
+    if (pageMax + i <= 604 && pagesCorpus.has(pageMax + i)) result.push({ page: pageMax + i, position: 'apres' })
   }
-
-  return [
-    ...pagesAvant.map(p => ({ page: p, position: 'avant' })),
-    ...pagesApres.map(p => ({ page: p, position: 'apres' }))
-  ]
+  return result
 }
 
 function getMax(unite) {

@@ -85,6 +85,75 @@ function ParamBtns({ options, value, onChange }) {
   )
 }
 
+function getJoursDeSessions(frequence, dateDebut) {
+  const jours = []
+  const debut = new Date(dateDebut + 'T00:00:00')
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(debut)
+    date.setDate(debut.getDate() + i)
+    const jourSemaine = date.getDay()
+    if (frequence === 'quotidien') {
+      jours.push(date.toISOString().split('T')[0])
+    } else if (frequence === '2x_semaine') {
+      if (jourSemaine === 1 || jourSemaine === 4) jours.push(date.toISOString().split('T')[0])
+    } else if (frequence === '1x_semaine') {
+      if (jourSemaine === 1) jours.push(date.toISOString().split('T')[0])
+    }
+  }
+  return jours
+}
+
+function genererPlanning(revisions, parametres, mapping) {
+  const unite = parametres.unite_revision
+  const tempsSession = parametres.temps_session
+  const frequence = parametres.frequence
+  const today = aujourdhui()
+
+  const tempsParUnite = (rev) => {
+    if (unite === 'sourate') {
+      const pages = new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page))
+      return pages.size * 1.5
+    }
+    return { page: 1.5, quart: 4, hizb: 15 }[unite] || 5
+  }
+
+  const tempsTotalUneFois = revisions.reduce((acc, r) => acc + tempsParUnite(r), 0)
+  const joursDispo = getJoursDeSessions(frequence, today)
+  const tempsTotalDispo = joursDispo.length * tempsSession
+
+  if (tempsTotalUneFois > tempsTotalDispo) {
+    return {
+      erreur: true,
+      message: `Il te faut ${Math.round(tempsTotalUneFois)} min pour tout reviser une fois, mais tu n'as que ${Math.round(tempsTotalDispo)} min disponibles sur 30 jours. Augmente le temps de session ou la frequence.`,
+      planning: null
+    }
+  }
+
+  const planning = {}
+  let indexUnite = 0
+
+  for (const jour of joursDispo) {
+    planning[jour] = []
+    let tempsRestant = tempsSession
+
+    while (indexUnite < revisions.length) {
+      const rev = revisions[indexUnite]
+      const duree = tempsParUnite(rev)
+      if (duree <= tempsRestant) {
+        planning[jour].push(rev)
+        tempsRestant -= duree
+        indexUnite++
+      } else {
+        break
+      }
+    }
+
+    if (indexUnite >= revisions.length) indexUnite = 0
+  }
+
+  return { erreur: false, message: null, planning }
+}
+
 function Revisions() {
   const [parametres, setParametres] = useState(null)
   const [corpus, setCorpus] = useState([])
@@ -230,44 +299,38 @@ function Revisions() {
   const mapping = getMapping(parametres?.version || 'warsh')
   const version = parametres?.version || 'warsh'
 
-  // CHARGEMENT
   if (etape === 'chargement') return (
     <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '14px', letterSpacing: '1px' }}>
       Chargement...
     </div>
   )
 
-  // PARAMETRAGE
   if (etape === 'parametrage') return (
     <div>
       <CarteCoran corpus={corpus} version={version} />
       <SectionTag>Rythme</SectionTag>
       <SectionTitle>Configure tes revisions</SectionTitle>
       <SectionSub>Ces parametres determinent ton planning quotidien</SectionSub>
-      <ParametrageRevision parametres={parametres} onSave={sauvegarderParametres} />
+      <ParametrageRevision parametres={parametres} onSave={sauvegarderParametres} mapping={mapping} />
     </div>
   )
 
-  // SESSION
   if (etape === 'session' && revisionsDuJour.length > 0) {
     const rev = revisionsDuJour[indexCourant]
     const tempsUnite = getTempsUnite(rev)
     const tempsTotal = Math.round(calculerTempsSession(revisionsDuJour, parametres.unite_revision, mapping))
     const progression = Math.round((indexCourant / revisionsDuJour.length) * 100)
-
     const unitLabel = {
       hizb: `Hizb ${rev.valeur}`,
       page: `Page ${rev.valeur}`,
       quart: `Quart ${rev.valeur}`,
       sourate: `Sourate ${rev.valeur}`
     }[parametres.unite_revision]
-
-    const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision)
+  const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision, corpus)
 
     return (
       <div>
         <CarteCoran corpus={corpus} version={version} />
-
         <SectionTag>Revisions du jour</SectionTag>
         <SectionTitle>Bismillah</SectionTitle>
         <SectionSub>{revisionsDuJour.length} unites · environ {tempsTotal} min</SectionSub>
@@ -286,11 +349,7 @@ function Revisions() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
-          {[
-            `${revisionsDuJour.length} unites`,
-            `${tempsTotal} min estimees`,
-            `${parametres.unite_revision} · Warsh`
-          ].map(t => (
+          {[`${revisionsDuJour.length} unites`, `${tempsTotal} min estimees`, `${parametres.unite_revision} · Warsh`].map(t => (
             <div key={t} style={{
               padding: '6px 14px', borderRadius: '50px',
               background: 'rgba(255,255,255,0.04)',
@@ -314,28 +373,22 @@ function Revisions() {
             pointerEvents: 'none', userSelect: 'none'
           }}>ب</div>
 
-          <div style={{
-            fontSize: '10px', fontWeight: 700, letterSpacing: '3px',
-            textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '14px'
-          }}>A reciter</div>
-
-          <div style={{
-            fontSize: '52px', fontWeight: 800, color: 'var(--text)',
-            letterSpacing: '-2px', lineHeight: 1, marginBottom: '8px'
-          }}>{unitLabel}</div>
-
+          <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '14px' }}>
+            A reciter
+          </div>
+          <div style={{ fontSize: '52px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-2px', lineHeight: 1, marginBottom: '8px' }}>
+            {unitLabel}
+          </div>
           {rev.nb_revisions > 0 && (
             <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '16px' }}>
               {rev.nb_revisions} revision{rev.nb_revisions > 1 ? 's' : ''} · derniere le {rev.derniere_revision}
             </div>
           )}
-
           {chevauchements.length > 0 && (
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '24px', flexWrap: 'wrap' }}>
               {chevauchements.map(({ page, position }) => (
                 <div key={page} style={{
-                  padding: '5px 14px', borderRadius: '50px',
-                  fontSize: '12px', fontWeight: 600,
+                  padding: '5px 14px', borderRadius: '50px', fontSize: '12px', fontWeight: 600,
                   background: position === 'avant' ? 'rgba(230,81,0,0.12)' : 'rgba(45,138,78,0.12)',
                   border: `1px solid ${position === 'avant' ? 'rgba(230,81,0,0.25)' : 'rgba(45,138,78,0.25)'}`,
                   color: position === 'avant' ? '#ffb74d' : '#81c784'
@@ -345,20 +398,16 @@ function Revisions() {
               ))}
             </div>
           )}
-
           {!chronoActif && !chronoTermine && (
             <button onClick={() => demarrerChrono(tempsUnite)} style={{
-              padding: '13px 32px',
-              background: 'linear-gradient(135deg, #c9a84c, #a07830)',
+              padding: '13px 32px', background: 'linear-gradient(135deg, #c9a84c, #a07830)',
               color: '#071a0e', border: 'none', borderRadius: '50px',
               fontSize: '14px', fontWeight: 700, cursor: 'pointer',
-              letterSpacing: '0.3px',
               boxShadow: '0 4px 20px rgba(201,168,76,0.25)'
             }}>
               Commencer · {tempsUnite < 1 ? `${Math.round(tempsUnite * 60)}s` : `${tempsUnite} min`}
             </button>
           )}
-
           {chronoActif && (
             <div>
               <div style={{
@@ -369,41 +418,30 @@ function Revisions() {
               }}>
                 <div style={{
                   position: 'absolute', inset: '-2px', borderRadius: '50%',
-                  border: '2px solid transparent',
-                  borderTopColor: 'var(--gold)',
-                  borderRightColor: 'rgba(201,168,76,0.4)',
-                  animation: 'spin 3s linear infinite'
+                  border: '2px solid transparent', borderTopColor: 'var(--gold)',
+                  borderRightColor: 'rgba(201,168,76,0.4)', animation: 'spin 3s linear infinite'
                 }} />
-                <div style={{
-                  fontSize: '28px', fontWeight: 700, color: 'var(--gold)',
-                  letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums'
-                }}>{formatTemps(tempsRestant)}</div>
+                <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--gold)', letterSpacing: '-1px' }}>
+                  {formatTemps(tempsRestant)}
+                </div>
               </div>
               <button onClick={passerChrono} style={{
-                padding: '10px 24px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '50px', color: 'var(--text-dim)',
-                fontSize: '13px', fontWeight: 500, cursor: 'pointer'
+                padding: '10px 24px', background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px',
+                color: 'var(--text-dim)', fontSize: '13px', fontWeight: 500, cursor: 'pointer'
               }}>Passer</button>
             </div>
           )}
-
           {chronoTermine && (
-            <div style={{ color: '#7ac49a', fontWeight: 600, fontSize: '14px', letterSpacing: '0.3px' }}>
-              Temps ecoule
-            </div>
+            <div style={{ color: '#7ac49a', fontWeight: 600, fontSize: '14px' }}>Temps ecoule</div>
           )}
         </div>
 
         {chronoTermine && (
           <>
-            <div style={{
-              textAlign: 'center', fontSize: '11px', fontWeight: 700,
-              letterSpacing: '2.5px', textTransform: 'uppercase',
-              color: 'var(--gold)', marginBottom: '14px'
-            }}>Comment s'est passee la recitation ?</div>
-
+            <div style={{ textAlign: 'center', fontSize: '11px', fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '14px' }}>
+              Comment s'est passee la recitation ?
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {[
                 { niveau: 'fluide',   label: 'Fluide',            desc: 'Parfait, sans hesitation', bg: 'linear-gradient(135deg, rgba(61,184,106,0.25), rgba(26,92,46,0.15))',  border: 'rgba(61,184,106,0.35)',  color: '#a8f0c0' },
@@ -412,10 +450,8 @@ function Revisions() {
                 { niveau: 'bloque',   label: 'Bloque',             desc: 'Impossible de reciter',    bg: 'linear-gradient(135deg, rgba(201,120,40,0.25), rgba(160,80,20,0.15))',  border: 'rgba(201,120,40,0.35)', color: '#f0b060' },
               ].map(({ niveau, label, desc, bg, border, color }) => (
                 <button key={niveau} onClick={() => validerRevision(niveau)} style={{
-                  padding: '18px 16px', borderRadius: '16px',
-                  border: `1px solid ${border}`,
-                  background: bg, color, textAlign: 'left',
-                  cursor: 'pointer', transition: 'all 0.2s'
+                  padding: '18px 16px', borderRadius: '16px', border: `1px solid ${border}`,
+                  background: bg, color, textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s'
                 }}>
                   <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>{label}</div>
                   <div style={{ fontSize: '12px', opacity: 0.65 }}>{desc}</div>
@@ -424,13 +460,11 @@ function Revisions() {
             </div>
           </>
         )}
-
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     )
   }
 
-  // TERMINE
   return (
     <div>
       <CarteCoran corpus={corpus} version={version} />
@@ -448,31 +482,121 @@ function Revisions() {
           </span>{' '}
           aujourd'hui
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
-          Reviens demain pour continuer
-        </div>
+        <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>Reviens demain pour continuer</div>
       </div>
     </div>
   )
 }
 
-function ParametrageRevision({ parametres, onSave }) {
+function ParametrageRevision({ parametres, onSave, mapping }) {
   const [frequence, setFrequence] = useState(parametres?.frequence || 'quotidien')
   const [tempsSession, setTempsSession] = useState(parametres?.temps_session || 30)
   const [uniteRevision, setUniteRevision] = useState(parametres?.unite_revision || 'hizb')
   const [modeChevauchement, setModeChevauchement] = useState(parametres?.mode_chevauchement || 'leger')
+  const [planification, setPlanification] = useState(null)
+  const [animationEtape, setAnimationEtape] = useState(0)
+  const [enCours, setEnCours] = useState(false)
+
+  const etapesAnimation = [
+    'Analyse du corpus...',
+    'Calcul des intervalles...',
+    'Optimisation de la frequence...',
+    'Generation du planning...',
+    'Finalisation...'
+  ]
+
+  async function lancerPlanification() {
+  setEnCours(true)
+  setPlanification(null)
+  for (let i = 0; i < etapesAnimation.length; i++) {
+    setAnimationEtape(i)
+    await new Promise(r => setTimeout(r, 1000))
+  }
+
+  // Initialiser les revisions si vides
+  const { data: revs } = await supabase.from('revisions').select('*')
+  if (!revs || revs.length === 0) {
+    const { data: corpusData } = await supabase.from('corpus').select('*')
+    const today = aujourdhui()
+    const unite = uniteRevision
+    let valeurs = []
+    if (unite === 'hizb') {
+      const s = new Set()
+      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.hizb)))
+      valeurs = [...s]
+    } else if (unite === 'page') {
+      valeurs = [...new Set(corpusData.map(c => c.valeur))]
+    } else if (unite === 'quart') {
+      const s = new Set()
+      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.quart_global)))
+      valeurs = [...s]
+    } else if (unite === 'sourate') {
+      valeurs = [...new Set(corpusData.map(c => c.sourate_num))]
+    }
+    for (const valeur of valeurs) {
+      await supabase.from('revisions').insert({
+        unite, valeur,
+        sourate_num: unite === 'sourate' ? valeur : null,
+        score: 0, intervalle: 1, nb_revisions: 0,
+        derniere_revision: null, prochaine_revision: today,
+        version: 'warsh'
+      })
+    }
+  }
+
+  const { data: revsFinales } = await supabase.from('revisions').select('*')
+  const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement }
+  const revsTriees = (revsFinales || []).sort((a, b) => {
+  const pageA = Math.min(...mapping.filter(m => {
+    if (uniteRevision === 'hizb') return m.hizb === a.valeur
+    if (uniteRevision === 'page') return m.page === a.valeur
+    if (uniteRevision === 'quart') return m.quart_global === a.valeur
+    if (uniteRevision === 'sourate') return m.sourate_num === a.valeur
+    return false
+  }).map(m => m.page))
+  const pageB = Math.min(...mapping.filter(m => {
+    if (uniteRevision === 'hizb') return m.hizb === b.valeur
+    if (uniteRevision === 'page') return m.page === b.valeur
+    if (uniteRevision === 'quart') return m.quart_global === b.valeur
+    if (uniteRevision === 'sourate') return m.sourate_num === b.valeur
+    return false
+  }).map(m => m.page))
+  return pageA - pageB
+})
+const result = genererPlanning(revsTriees, params, mapping)
+
+// Mettre a jour prochaine_revision selon le planning
+if (!result.erreur && result.planning) {
+  for (const [date, revsDuJour] of Object.entries(result.planning)) {
+    for (const rev of revsDuJour) {
+      await supabase.from('revisions').update({
+        prochaine_revision: date
+      }).eq('id', rev.id)
+    }
+  }
+}
+
+setPlanification(result)
+setEnCours(false)
+}
+
+  function formatDate(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00')
+    return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
+  }
+
+  function isToday(dateStr) {
+    return dateStr === aujourdhui()
+  }
 
   return (
     <Card>
       <FieldLabel>Frequence</FieldLabel>
-      <ParamBtns
-        value={frequence} onChange={setFrequence}
-        options={[
-          { val: 'quotidien', label: 'Tous les jours' },
-          { val: '2x_semaine', label: '2x par semaine' },
-          { val: '1x_semaine', label: '1x par semaine' },
-        ]}
-      />
+      <ParamBtns value={frequence} onChange={setFrequence} options={[
+        { val: 'quotidien', label: 'Tous les jours' },
+        { val: '2x_semaine', label: '2x par semaine' },
+        { val: '1x_semaine', label: '1x par semaine' },
+      ]} />
 
       <FieldLabel>Duree par session</FieldLabel>
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -485,52 +609,159 @@ function ParametrageRevision({ parametres, onSave }) {
             fontSize: '13px', fontWeight: 500, cursor: 'pointer'
           }}>{t} min</button>
         ))}
-        <input
-          type="number" min="5" max="180" value={tempsSession}
+        <input type="number" min="5" max="180" value={tempsSession}
           onChange={e => setTempsSession(parseInt(e.target.value))}
           style={{
             width: '70px', padding: '9px 12px', borderRadius: '50px',
             border: '1px solid rgba(255,255,255,0.08)',
             background: 'rgba(255,255,255,0.03)',
             color: 'var(--text)', fontSize: '13px', textAlign: 'center'
-          }}
-        />
+          }} />
       </div>
 
       <FieldLabel>Unite de revision</FieldLabel>
-      <ParamBtns
-        value={uniteRevision} onChange={setUniteRevision}
-        options={[
-          { val: 'page', label: 'Page' },
-          { val: 'quart', label: 'Quart' },
-          { val: 'hizb', label: 'Hizb' },
-          { val: 'sourate', label: 'Sourate' },
-        ]}
-      />
+      <ParamBtns value={uniteRevision} onChange={setUniteRevision} options={[
+        { val: 'page', label: 'Page' },
+        { val: 'quart', label: 'Quart' },
+        { val: 'hizb', label: 'Hizb' },
+        { val: 'sourate', label: 'Sourate' },
+      ]} />
 
       <FieldLabel>Chevauchement</FieldLabel>
-      <ParamBtns
-        value={modeChevauchement} onChange={setModeChevauchement}
-        options={[
-          { val: 'aucun', label: 'Aucun', desc: "Revise uniquement l'unite" },
-          { val: 'leger', label: 'Leger', desc: '2 pages avant / apres' },
-          { val: 'renforce', label: 'Renforce', desc: '5 pages avant / apres' },
-        ]}
-      />
+      <ParamBtns value={modeChevauchement} onChange={setModeChevauchement} options={[
+        { val: 'aucun', label: 'Aucun', desc: "Revise uniquement l'unite" },
+        { val: 'leger', label: 'Leger', desc: '2 pages avant / apres' },
+        { val: 'renforce', label: 'Renforce', desc: '5 pages avant / apres' },
+      ]} />
 
-      <button
-        onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement })}
-        style={{
-          marginTop: '32px', width: '100%', padding: '16px',
-          background: 'linear-gradient(135deg, #1a5c2e, #2d8a4e)',
-          border: '1px solid rgba(45,138,78,0.4)',
-          borderRadius: '14px', color: 'white',
-          fontSize: '14px', fontWeight: 700, cursor: 'pointer',
-          letterSpacing: '0.5px',
-          boxShadow: '0 4px 24px rgba(26,92,46,0.25)'
-        }}>
-        Sauvegarder et commencer
+      {/* Bouton Planifier */}
+      <button onClick={lancerPlanification} disabled={enCours} style={{
+        marginTop: '32px', width: '100%', padding: '16px',
+        background: enCours ? 'rgba(201,168,76,0.06)' : 'rgba(201,168,76,0.12)',
+        border: '1px solid rgba(201,168,76,0.4)',
+        borderRadius: '14px', color: 'var(--gold)',
+        fontSize: '14px', fontWeight: 700,
+        cursor: enCours ? 'default' : 'pointer',
+        letterSpacing: '0.5px', transition: 'all 0.3s'
+      }}>
+        {enCours ? etapesAnimation[animationEtape] : 'Generer le planning 30 jours'}
       </button>
+
+      {enCours && (
+        <div style={{ marginTop: '16px' }}>
+          <div style={{ height: '2px', background: 'rgba(255,255,255,0.05)', borderRadius: '1px', overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', borderRadius: '1px',
+              background: 'linear-gradient(90deg, var(--gold), var(--green-light))',
+              width: `${((animationEtape + 1) / etapesAnimation.length) * 100}%`,
+              transition: 'width 0.9s ease'
+            }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+            {etapesAnimation.map((_, i) => (
+              <div key={i} style={{
+                width: '6px', height: '6px', borderRadius: '50%',
+                background: i <= animationEtape ? 'var(--gold)' : 'rgba(255,255,255,0.1)',
+                transition: 'background 0.3s'
+              }} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {planification?.erreur && (
+        <div style={{
+          marginTop: '20px', padding: '16px',
+          background: 'rgba(183,28,28,0.15)',
+          border: '1px solid rgba(244,67,54,0.3)',
+          borderRadius: '12px', color: '#ef9a9a',
+          fontSize: '13px', lineHeight: 1.5
+        }}>
+          {planification.message}
+        </div>
+      )}
+
+      {planification && !planification.erreur && (
+        <div style={{ marginTop: '28px' }}>
+          <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '16px' }}>
+            Planning 30 jours
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '400px', overflowY: 'auto' }}>
+            {Object.entries(planification.planning).map(([date, revs]) => {
+              const today = isToday(date)
+              return (
+                <div key={date} style={{
+                  display: 'flex', alignItems: 'flex-start', gap: '12px',
+                  padding: '12px 16px', borderRadius: '12px',
+                  background: today ? 'rgba(201,168,76,0.08)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${today ? 'rgba(201,168,76,0.3)' : 'rgba(255,255,255,0.05)'}`,
+                }}>
+                  <div style={{ minWidth: '90px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: today ? 'var(--gold)' : 'var(--text)', textTransform: 'capitalize' }}>
+                      {formatDate(date)}
+                    </div>
+                    {today && (
+                      <div style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '1px', marginTop: '2px' }}>
+                        Aujourd'hui
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', flex: 1 }}>
+                    {revs.map((rev, i) => {
+  const entree = mapping.find(m => {
+    if (uniteRevision === 'page') return m.page === rev.valeur
+    if (uniteRevision === 'hizb') return m.hizb === rev.valeur
+    if (uniteRevision === 'quart') return m.quart_global === rev.valeur
+    if (uniteRevision === 'sourate') return m.sourate_num === rev.valeur
+    return false
+  })
+  const pagesUnite = [...new Set(mapping.filter(m => {
+  if (uniteRevision === 'hizb') return m.hizb === rev.valeur
+  if (uniteRevision === 'page') return m.page === rev.valeur
+  if (uniteRevision === 'quart') return m.quart_global === rev.valeur
+  if (uniteRevision === 'sourate') return m.sourate_num === rev.valeur
+  return false
+}).map(m => m.page).filter(p => corpus.some(c => c.page === p)))]
+  const pageMin = Math.min(...pagesUnite)
+  const pageMax = Math.max(...pagesUnite)
+  const pagesLabel = pageMin === pageMax ? `p.${pageMin}` : `p.${pageMin}-${pageMax}`
+
+  return (
+    <div key={i} style={{
+      padding: '4px 12px', borderRadius: '50px',
+      background: 'rgba(45,138,78,0.15)',
+      border: '1px solid rgba(45,138,78,0.25)',
+      fontSize: '11px', fontWeight: 600, color: '#81c784',
+      display: 'flex', flexDirection: 'column', gap: '1px'
+    }}>
+      <span>{entree?.sourate_nom || `Unite ${rev.valeur}`}</span>
+      <span style={{ opacity: 0.6, fontSize: '10px' }}>{pagesLabel}</span>
+    </div>
+  )
+})}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                    {Math.round(revs.length * ({ page: 1.5, quart: 4, hizb: 15, sourate: 20 }[uniteRevision] || 5))} min
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          <button
+            onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement })}
+            style={{
+              marginTop: '20px', width: '100%', padding: '16px',
+              background: 'linear-gradient(135deg, #1a5c2e, #2d8a4e)',
+              border: '1px solid rgba(45,138,78,0.4)',
+              borderRadius: '14px', color: 'white',
+              fontSize: '14px', fontWeight: 700, cursor: 'pointer',
+              letterSpacing: '0.5px', boxShadow: '0 4px 24px rgba(26,92,46,0.25)'
+            }}>
+            Demarrer les revisions
+          </button>
+        </div>
+      )}
     </Card>
   )
 }
