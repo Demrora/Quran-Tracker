@@ -7,6 +7,83 @@ import {
 } from '../revision'
 import { getMapping } from '../mapping'
 
+function SectionTag({ children }) {
+  return (
+    <div style={{
+      fontSize: '10px', fontWeight: 700, letterSpacing: '3px',
+      textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '10px'
+    }}>{children}</div>
+  )
+}
+
+function SectionTitle({ children }) {
+  return (
+    <h1 style={{
+      fontSize: '28px', fontWeight: 700, color: 'var(--text)',
+      letterSpacing: '-0.5px', marginBottom: '6px'
+    }}>{children}</h1>
+  )
+}
+
+function SectionSub({ children }) {
+  return (
+    <p style={{ fontSize: '14px', color: 'var(--text-dim)', fontWeight: 400, marginBottom: '28px' }}>
+      {children}
+    </p>
+  )
+}
+
+function Card({ children, style }) {
+  return (
+    <div style={{
+      background: 'rgba(255,255,255,0.03)',
+      border: '1px solid rgba(201,168,76,0.18)',
+      borderRadius: '20px', padding: '28px',
+      backdropFilter: 'blur(16px)', marginBottom: '16px',
+      ...style
+    }}>{children}</div>
+  )
+}
+
+function FieldLabel({ children }) {
+  return (
+    <div style={{
+      fontSize: '10px', fontWeight: 700, letterSpacing: '3px',
+      textTransform: 'uppercase', color: 'var(--gold)',
+      marginBottom: '12px', marginTop: '24px'
+    }}>{children}</div>
+  )
+}
+
+function ParamBtns({ options, value, onChange }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+      {options.map(({ val, label, desc }) => {
+        const active = value === val
+        return (
+          <button key={val} onClick={() => onChange(val)} style={{
+            padding: desc ? '10px 16px' : '9px 18px',
+            borderRadius: '50px',
+            border: `1px solid ${active ? 'rgba(201,168,76,0.4)' : 'rgba(255,255,255,0.08)'}`,
+            background: active ? 'rgba(201,168,76,0.12)' : 'rgba(255,255,255,0.03)',
+            color: active ? 'var(--gold)' : 'var(--text-dim)',
+            fontSize: '13px', fontWeight: 500, cursor: 'pointer',
+            textAlign: desc ? 'left' : 'center',
+            transition: 'all 0.2s'
+          }}>
+            {desc ? (
+              <>
+                <div style={{ fontWeight: 600 }}>{label}</div>
+                <div style={{ fontSize: '11px', opacity: 0.65, marginTop: '2px' }}>{desc}</div>
+              </>
+            ) : label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function Revisions() {
   const [parametres, setParametres] = useState(null)
   const [revisionsDuJour, setRevisionsDuJour] = useState([])
@@ -56,32 +133,23 @@ function Revisions() {
   async function initialiserRevisions(user) {
     const { data: corpus } = await supabase.from('corpus').select('*')
     if (!corpus || corpus.length === 0) { setEtape('termine'); return }
-
     const mapping = getMapping(user.version || 'warsh')
     const unite = user.unite_revision
     const today = aujourdhui()
     let valeurs = []
-
     if (unite === 'hizb') {
-      const hizbSet = new Set()
-      corpus.forEach(c => {
-        mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num)
-          .forEach(e => hizbSet.add(e.hizb))
-      })
-      valeurs = [...hizbSet]
+      const s = new Set()
+      corpus.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.hizb)))
+      valeurs = [...s]
     } else if (unite === 'page') {
       valeurs = [...new Set(corpus.map(c => c.valeur))]
     } else if (unite === 'quart') {
-      const quartSet = new Set()
-      corpus.forEach(c => {
-        mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num)
-          .forEach(e => quartSet.add(e.quart_global))
-      })
-      valeurs = [...quartSet]
+      const s = new Set()
+      corpus.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.quart_global)))
+      valeurs = [...s]
     } else if (unite === 'sourate') {
       valeurs = [...new Set(corpus.map(c => c.sourate_num))]
     }
-
     for (const valeur of valeurs) {
       await supabase.from('revisions').insert({
         unite, valeur,
@@ -91,7 +159,6 @@ function Revisions() {
         version: user.version || 'warsh'
       })
     }
-
     const { data: revs } = await supabase.from('revisions').select('*')
     const duJour = getRevisionsDuJour(revs || [])
     setRevisionsDuJour(duJour)
@@ -100,8 +167,7 @@ function Revisions() {
 
   async function sauvegarderParametres(params) {
     await supabase.from('utilisateur').update(params).neq('id', 0)
-    const nouveaux = { ...parametres, ...params }
-    setParametres(nouveaux)
+    setParametres({ ...parametres, ...params })
     await chargerTout()
   }
 
@@ -118,10 +184,10 @@ function Revisions() {
     setChronoTermine(true)
   }
 
-  function formatTemps(secondes) {
-    const m = Math.floor(secondes / 60)
-    const s = secondes % 60
-    return `${m}:${s.toString().padStart(2, '0')}`
+  function formatTemps(s) {
+    const m = Math.floor(s / 60)
+    const sec = s % 60
+    return `${m}:${sec.toString().padStart(2, '0')}`
   }
 
   function getTempsUnite(rev) {
@@ -130,8 +196,7 @@ function Revisions() {
       const pages = new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page))
       return pages.size * 1.5
     }
-    const temps = { page: 1.5, quart: 4, hizb: 15 }
-    return temps[parametres?.unite_revision] || 5
+    return { page: 1.5, quart: 4, hizb: 15 }[parametres?.unite_revision] || 5
   }
 
   async function validerRevision(niveau) {
@@ -146,11 +211,9 @@ function Revisions() {
              niveau === 'hesitant' ? rev.score :
              niveau === 'erreurs' ? Math.max(0, rev.score - 0.5) : 0
     }).eq('id', rev.id)
-
     setChronoTermine(false)
     setChronoActif(false)
     setTempsRestant(0)
-
     if (indexCourant + 1 >= revisionsDuJour.length) {
       setEtape('termine')
     } else {
@@ -162,15 +225,17 @@ function Revisions() {
 
   // CHARGEMENT
   if (etape === 'chargement') return (
-    <div style={{ padding: '40px', textAlign: 'center', color: '#424242' }}>
-      ⏳ Chargement...
+    <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '14px', letterSpacing: '1px' }}>
+      Chargement...
     </div>
   )
 
   // PARAMÉTRAGE
   if (etape === 'parametrage') return (
     <div>
-      <h1 style={{ marginBottom: '20px' }}>📖 Paramétrage des révisions</h1>
+      <SectionTag>Rythme</SectionTag>
+      <SectionTitle>Configure tes révisions</SectionTitle>
+      <SectionSub>Ces paramètres déterminent ton planning quotidien</SectionSub>
       <ParametrageRevision parametres={parametres} onSave={sauvegarderParametres} />
     </div>
   )
@@ -180,227 +245,284 @@ function Revisions() {
     const rev = revisionsDuJour[indexCourant]
     const tempsUnite = getTempsUnite(rev)
     const tempsTotal = Math.round(calculerTempsSession(revisionsDuJour, parametres.unite_revision, mapping))
+    const progression = Math.round((indexCourant / revisionsDuJour.length) * 100)
+
+    const unitLabel = {
+      hizb: `Hizb ${rev.valeur}`,
+      page: `Page ${rev.valeur}`,
+      quart: `Quart ${rev.valeur}`,
+      sourate: `Sourate ${rev.valeur}`
+    }[parametres.unite_revision]
+
+    const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision)
 
     return (
       <div>
-        <h1 style={{ marginBottom: '15px' }}>📖 Révisions du jour</h1>
+        <SectionTag>Révisions du jour</SectionTag>
+        <SectionTitle>Bismillah</SectionTitle>
+        <SectionSub>{revisionsDuJour.length} unités · environ {tempsTotal} min</SectionSub>
 
         {/* Barre de progression */}
-        <div style={{ background: '#e0e0e0', borderRadius: '8px', height: '8px', marginBottom: '15px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+          <div style={{ flex: 1, height: '3px', background: 'rgba(255,255,255,0.07)', borderRadius: '2px', overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', borderRadius: '2px',
+              background: 'linear-gradient(90deg, var(--green-light), var(--gold))',
+              width: `${progression}%`, transition: 'width 0.5s'
+            }} />
+          </div>
+          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+            {indexCourant + 1} / {revisionsDuJour.length}
+          </div>
+        </div>
+
+        {/* Info pills */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          {[
+            `${revisionsDuJour.length} unités`,
+            `${tempsTotal} min estimées`,
+            `${parametres.unite_revision} · Warsh`
+          ].map(t => (
+            <div key={t} style={{
+              padding: '6px 14px', borderRadius: '50px',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              fontSize: '12px', fontWeight: 500, color: 'var(--text-dim)'
+            }}>{t}</div>
+          ))}
+        </div>
+
+        {/* Carte révision */}
+        <div style={{
+          background: 'linear-gradient(145deg, rgba(26,92,46,0.12), rgba(7,26,14,0.6))',
+          border: '1px solid rgba(201,168,76,0.22)',
+          borderRadius: '24px', padding: '40px 32px',
+          textAlign: 'center', position: 'relative',
+          overflow: 'hidden', marginBottom: '16px'
+        }}>
+          {/* Lettre arabe décorative */}
           <div style={{
-            background: '#2d6a4f', height: '8px', borderRadius: '8px',
-            width: `${(indexCourant / revisionsDuJour.length) * 100}%`,
-            transition: 'width 0.3s'
-          }} />
-        </div>
+            position: 'absolute', fontFamily: 'Amiri, serif',
+            fontSize: '240px', color: 'rgba(201,168,76,0.03)',
+            right: '-20px', bottom: '-50px', lineHeight: 1,
+            pointerEvents: 'none', userSelect: 'none'
+          }}>ب</div>
 
-        {/* Infos session */}
-        <div style={{
-          background: 'white', borderRadius: '12px', padding: '12px 15px',
-          marginBottom: '20px', display: 'flex', gap: '20px',
-          flexWrap: 'wrap', color: '#424242', border: '1px solid #e0e0e0'
-        }}>
-          <span>📚 <strong>{revisionsDuJour.length}</strong> unités</span>
-          <span>⏱️ ~<strong>{tempsTotal}</strong> min au total</span>
-          <span>📍 <strong>{indexCourant + 1}</strong> / {revisionsDuJour.length}</span>
-        </div>
+          <div style={{
+            fontSize: '10px', fontWeight: 700, letterSpacing: '3px',
+            textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '14px'
+          }}>À réciter</div>
 
-        {/* Carte unité */}
-        <div style={{
-          background: 'white', borderRadius: '16px', padding: '30px',
-          textAlign: 'center', border: '2px solid #e0e0e0', marginBottom: '20px'
-        }}>
-          <p style={{ color: '#888', marginBottom: '8px', fontSize: '14px' }}>À réviser :</p>
-          <h2 style={{ fontSize: '32px', color: '#1b5e20', marginBottom: '8px' }}>
-            {parametres.unite_revision === 'hizb' && `Hizb ${rev.valeur}`}
-            {parametres.unite_revision === 'page' && `Page ${rev.valeur}`}
-            {parametres.unite_revision === 'quart' && `Quart ${rev.valeur}`}
-            {parametres.unite_revision === 'sourate' && `Sourate ${rev.valeur}`}
-          </h2>
+          <div style={{
+            fontSize: '52px', fontWeight: 800, color: 'var(--text)',
+            letterSpacing: '-2px', lineHeight: 1, marginBottom: '8px'
+          }}>{unitLabel}</div>
+
+          {rev.nb_revisions > 0 && (
+            <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '16px' }}>
+              {rev.nb_revisions} révision{rev.nb_revisions > 1 ? 's' : ''} · dernière le {rev.derniere_revision}
+            </div>
+          )}
 
           {/* Chevauchement */}
-          {parametres.mode_chevauchement !== 'aucun' && (
-  <div style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-    {getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision)
-      .map(({ page, position }) => (
-        <span key={page} style={{
-          margin: '3px', padding: '3px 8px',
-          background: position === 'avant' ? '#fff3e0' : '#e8f5e9',
-          borderRadius: '6px',
-          color: position === 'avant' ? '#e65100' : '#2d6a4f'
-        }}>
-          {position === 'avant' ? '◀️' : '▶️'} p.{page}
-        </span>
-      ))}
-  </div>
-)}
+          {chevauchements.length > 0 && (
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '24px', flexWrap: 'wrap' }}>
+              {chevauchements.map(({ page, position }) => (
+                <div key={page} style={{
+                  padding: '5px 14px', borderRadius: '50px',
+                  fontSize: '12px', fontWeight: 600,
+                  background: position === 'avant' ? 'rgba(230,81,0,0.12)' : 'rgba(45,138,78,0.12)',
+                  border: `1px solid ${position === 'avant' ? 'rgba(230,81,0,0.25)' : 'rgba(45,138,78,0.25)'}`,
+                  color: position === 'avant' ? '#ffb74d' : '#81c784'
+                }}>
+                  {position === 'avant' ? '← ' : ''}p.{page}{position === 'apres' ? ' →' : ''}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Chrono */}
-          <div style={{ marginTop: '20px' }}>
-            {!chronoActif && !chronoTermine && (
-              <button onClick={() => demarrerChrono(tempsUnite)} style={{
-                padding: '12px 30px', background: '#1b5e20', color: 'white',
-                border: 'none', borderRadius: '10px', fontSize: '16px',
-                cursor: 'pointer', fontWeight: 'bold'
+          {!chronoActif && !chronoTermine && (
+            <button onClick={() => demarrerChrono(tempsUnite)} style={{
+              padding: '13px 32px',
+              background: 'linear-gradient(135deg, #c9a84c, #a07830)',
+              color: '#071a0e', border: 'none', borderRadius: '50px',
+              fontSize: '14px', fontWeight: 700, cursor: 'pointer',
+              letterSpacing: '0.3px',
+              boxShadow: '0 4px 20px rgba(201,168,76,0.25)'
+            }}>
+              Commencer · {tempsUnite < 1 ? `${Math.round(tempsUnite * 60)}s` : `${tempsUnite} min`}
+            </button>
+          )}
+
+          {chronoActif && (
+            <div>
+              <div style={{
+                width: '120px', height: '120px', borderRadius: '50%',
+                border: '2px solid rgba(201,168,76,0.12)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 16px', position: 'relative'
               }}>
-                ▶️ Commencer — {tempsUnite < 1 ? `${Math.round(tempsUnite * 60)}s` : `${tempsUnite} min`}
-              </button>
-            )}
-
-            {chronoActif && (
-              <div>
                 <div style={{
-                  fontSize: '48px', fontWeight: 'bold', color: '#1b5e20',
-                  marginBottom: '15px'
-                }}>
-                  {formatTemps(tempsRestant)}
-                </div>
-                <button onClick={passerChrono} style={{
-                  padding: '10px 25px', background: '#f0f0f0', color: '#424242',
-                  border: 'none', borderRadius: '10px', fontSize: '14px',
-                  cursor: 'pointer', fontWeight: 'bold'
-                }}>
-                  ⏭️ Passer
-                </button>
+                  position: 'absolute', inset: '-2px', borderRadius: '50%',
+                  border: '2px solid transparent',
+                  borderTopColor: 'var(--gold)',
+                  borderRightColor: 'rgba(201,168,76,0.4)',
+                  animation: 'spin 3s linear infinite'
+                }} />
+                <div style={{
+                  fontSize: '28px', fontWeight: 700, color: 'var(--gold)',
+                  letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums'
+                }}>{formatTemps(tempsRestant)}</div>
               </div>
-            )}
+              <button onClick={passerChrono} style={{
+                padding: '10px 24px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '50px', color: 'var(--text-dim)',
+                fontSize: '13px', fontWeight: 500, cursor: 'pointer'
+              }}>Passer</button>
+            </div>
+          )}
 
-            {chronoTermine && (
-              <p style={{ color: '#2d6a4f', fontWeight: 'bold', fontSize: '16px' }}>
-                ✅ Temps écoulé — Comment s'est passée la révision ?
-              </p>
-            )}
-          </div>
+          {chronoTermine && (
+            <div style={{ color: '#7ac49a', fontWeight: 600, fontSize: '14px', letterSpacing: '0.3px' }}>
+              Temps écoulé
+            </div>
+          )}
         </div>
 
-        {/* Boutons validation — seulement si chrono terminé */}
+        {/* Boutons validation */}
         {chronoTermine && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-            {[
-              { niveau: 'fluide', label: '🟢 Fluide', desc: 'Parfait, sans hésitation', bg: '#1b5e20' },
-              { niveau: 'hesitant', label: '🔵 Hésitant', desc: 'Quelques hésitations', bg: '#1565c0' },
-              { niveau: 'erreurs', label: '🟠 Beaucoup d\'erreurs', desc: 'Erreurs fréquentes', bg: '#e65100' },
-              { niveau: 'bloque', label: '🔴 Bloqué', desc: 'Impossible de réciter', bg: '#b71c1c' },
-            ].map(({ niveau, label, desc, bg }) => (
-              <button key={niveau} onClick={() => validerRevision(niveau)} style={{
-                padding: '15px', borderRadius: '12px', border: 'none',
-                cursor: 'pointer', background: bg, color: 'white', textAlign: 'left'
-              }}>
-                <div style={{ fontWeight: 'bold', fontSize: '16px' }}>{label}</div>
-                <div style={{ fontSize: '12px', opacity: 0.8 }}>{desc}</div>
-              </button>
-            ))}
-          </div>
+          <>
+            <div style={{
+              textAlign: 'center', fontSize: '11px', fontWeight: 700,
+              letterSpacing: '2.5px', textTransform: 'uppercase',
+              color: 'var(--gold)', marginBottom: '14px'
+            }}>Comment s'est passée la récitation ?</div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              {[
+  { niveau: 'fluide',   label: 'Fluide',             desc: 'Parfait, sans hésitation', bg: 'linear-gradient(135deg, rgba(61,184,106,0.25), rgba(26,92,46,0.15))',  border: 'rgba(61,184,106,0.35)',  color: '#a8f0c0' },
+  { niveau: 'hesitant', label: 'Hésitant',            desc: 'Quelques hésitations',     bg: 'linear-gradient(135deg, rgba(100,180,80,0.25), rgba(40,110,50,0.15))', border: 'rgba(100,180,80,0.35)', color: '#c8f0a0' },
+  { niveau: 'erreurs',  label: "Beaucoup d'erreurs",  desc: 'Erreurs fréquentes',       bg: 'linear-gradient(135deg, rgba(200,150,40,0.25), rgba(160,100,20,0.15))', border: 'rgba(200,150,40,0.35)', color: '#f0d080' },
+  { niveau: 'bloque',   label: 'Bloqué',              desc: 'Impossible de réciter',    bg: 'linear-gradient(135deg, rgba(201,120,40,0.25), rgba(160,80,20,0.15))',  border: 'rgba(201,120,40,0.35)', color: '#f0b060' },
+].map(({ niveau, label, desc, bg, border, color }) => (
+  <button key={niveau} onClick={() => validerRevision(niveau)} style={{
+    padding: '18px 16px', borderRadius: '16px',
+    border: `1px solid ${border}`,
+    background: bg, color, textAlign: 'left',
+    cursor: 'pointer', transition: 'all 0.2s'
+  }}>
+    <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>{label}</div>
+    <div style={{ fontSize: '12px', opacity: 0.65 }}>{desc}</div>
+  </button>
+))}
+            </div>
+          </>
         )}
+
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     )
   }
 
   // TERMINÉ
   return (
-    <div style={{ textAlign: 'center', padding: '40px' }}>
-      <h1>🎉 Révisions terminées !</h1>
-      <p style={{ fontSize: '18px', color: '#2d6a4f', marginTop: '15px' }}>
-        Tu as révisé <strong>{revisionsDuJour.length}</strong> unité(s) aujourd'hui.
-      </p>
-      <p style={{ color: '#888', marginTop: '10px' }}>
-        Reviens demain pour tes prochaines révisions !
-      </p>
+    <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+      <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '16px' }}>
+        Session terminée
+      </div>
+      <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-1px', marginBottom: '10px' }}>
+        Barakallahu fik
+      </div>
+      <div style={{ fontSize: '14px', color: 'var(--text-dim)', marginBottom: '8px' }}>
+        Tu as révisé <span style={{ color: 'var(--text)', fontWeight: 600 }}>{revisionsDuJour.length} unité{revisionsDuJour.length > 1 ? 's' : ''}</span> aujourd'hui
+      </div>
+      <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
+        Reviens demain pour continuer
+      </div>
     </div>
   )
 }
 
+// ─── PARAMÉTRAGE RÉVISION ───
 function ParametrageRevision({ parametres, onSave }) {
   const [frequence, setFrequence] = useState(parametres?.frequence || 'quotidien')
   const [tempsSession, setTempsSession] = useState(parametres?.temps_session || 30)
   const [uniteRevision, setUniteRevision] = useState(parametres?.unite_revision || 'hizb')
   const [modeChevauchement, setModeChevauchement] = useState(parametres?.mode_chevauchement || 'leger')
 
-  const labelStyle = {
-    fontWeight: 'bold', marginBottom: '8px',
-    display: 'block', marginTop: '20px', color: '#424242'
-  }
-
-  const btnChoix = (actif) => ({
-    padding: '10px 20px', borderRadius: '8px', border: 'none',
-    cursor: 'pointer', fontWeight: actif ? 'bold' : 'normal',
-    background: actif ? '#1b5e20' : '#f0f0f0',
-    color: actif ? 'white' : '#424242',
-    margin: '4px'
-  })
-
   return (
-    <div>
-      <span style={labelStyle}>📅 Fréquence de révision</span>
-      <div>
-        {[
+    <Card>
+      <FieldLabel>Fréquence</FieldLabel>
+      <ParamBtns
+        value={frequence} onChange={setFrequence}
+        options={[
           { val: 'quotidien', label: 'Tous les jours' },
           { val: '2x_semaine', label: '2x par semaine' },
           { val: '1x_semaine', label: '1x par semaine' },
-        ].map(({ val, label }) => (
-          <button key={val} onClick={() => setFrequence(val)} style={btnChoix(frequence === val)}>
-            {label}
-          </button>
-        ))}
-      </div>
+        ]}
+      />
 
-      <span style={labelStyle}>⏱️ Temps par session</span>
-      <div>
+      <FieldLabel>Durée par session</FieldLabel>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
         {[15, 30, 45, 60].map(t => (
-          <button key={t} onClick={() => setTempsSession(t)} style={btnChoix(tempsSession === t)}>
-            {t} min
-          </button>
+          <button key={t} onClick={() => setTempsSession(t)} style={{
+            padding: '9px 18px', borderRadius: '50px',
+            border: `1px solid ${tempsSession === t ? 'rgba(201,168,76,0.4)' : 'rgba(255,255,255,0.08)'}`,
+            background: tempsSession === t ? 'rgba(201,168,76,0.12)' : 'rgba(255,255,255,0.03)',
+            color: tempsSession === t ? 'var(--gold)' : 'var(--text-dim)',
+            fontSize: '13px', fontWeight: 500, cursor: 'pointer'
+          }}>{t} min</button>
         ))}
         <input
-          type="number" min="5" max="180"
-          value={tempsSession}
+          type="number" min="5" max="180" value={tempsSession}
           onChange={e => setTempsSession(parseInt(e.target.value))}
           style={{
-            width: '70px', padding: '8px', borderRadius: '8px',
-            border: '1px solid #ccc', marginLeft: '8px', color: '#424242'
+            width: '70px', padding: '9px 12px', borderRadius: '50px',
+            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.03)',
+            color: 'var(--text)', fontSize: '13px', textAlign: 'center'
           }}
         />
       </div>
 
-      <span style={labelStyle}>📖 Unité de révision</span>
-      <div>
-        {[
-          { val: 'page', label: '📄 Page' },
-          { val: 'quart', label: '◼️ Quart' },
-          { val: 'hizb', label: '🔵 Hizb' },
-          { val: 'sourate', label: '📖 Sourate' },
-        ].map(({ val, label }) => (
-          <button key={val} onClick={() => setUniteRevision(val)} style={btnChoix(uniteRevision === val)}>
-            {label}
-          </button>
-        ))}
-      </div>
+      <FieldLabel>Unité de révision</FieldLabel>
+      <ParamBtns
+        value={uniteRevision} onChange={setUniteRevision}
+        options={[
+          { val: 'page', label: 'Page' },
+          { val: 'quart', label: 'Quart' },
+          { val: 'hizb', label: 'Hizb' },
+          { val: 'sourate', label: 'Sourate' },
+        ]}
+      />
 
-      <span style={labelStyle}>🌀 Mode de chevauchement</span>
-      <div>
-        {[
-          { val: 'aucun', label: '❌ Aucun', desc: 'Révise uniquement l\'unité' },
-          { val: 'leger', label: '🔵 Léger', desc: '2 pages avant et 2 pages après' },
-          { val: 'renforce', label: '🟢 Renforcé', desc: '5 pages avant et 5 pages après' },
-        ].map(({ val, label, desc }) => (
-          <button key={val} onClick={() => setModeChevauchement(val)}
-            style={{ ...btnChoix(modeChevauchement === val), textAlign: 'left' }}>
-            <div>{label}</div>
-            <div style={{ fontSize: '11px', opacity: 0.7 }}>{desc}</div>
-          </button>
-        ))}
-      </div>
+      <FieldLabel>Chevauchement</FieldLabel>
+      <ParamBtns
+        value={modeChevauchement} onChange={setModeChevauchement}
+        options={[
+          { val: 'aucun', label: 'Aucun', desc: 'Révise uniquement l\'unité' },
+          { val: 'leger', label: 'Léger', desc: '2 pages avant / après' },
+          { val: 'renforce', label: 'Renforcé', desc: '5 pages avant / après' },
+        ]}
+      />
 
-      <button onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement })}
+      <button
+        onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement })}
         style={{
-          marginTop: '30px', padding: '15px 40px',
-          background: '#1b5e20', color: 'white',
-          border: 'none', borderRadius: '12px',
-          fontSize: '16px', fontWeight: 'bold', cursor: 'pointer'
+          marginTop: '32px', width: '100%', padding: '16px',
+          background: 'linear-gradient(135deg, #1a5c2e, #2d8a4e)',
+          border: '1px solid rgba(45,138,78,0.4)',
+          borderRadius: '14px', color: 'white',
+          fontSize: '14px', fontWeight: 700, cursor: 'pointer',
+          letterSpacing: '0.5px',
+          boxShadow: '0 4px 24px rgba(26,92,46,0.25)'
         }}>
-        ✅ Sauvegarder et commencer
+        Sauvegarder et commencer
       </button>
-    </div>
+    </Card>
   )
 }
 
