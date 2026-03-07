@@ -8,6 +8,32 @@ import {
 import { getMapping } from '../mapping'
 import CarteCoran from '../components/CarteCoran'
 
+function corpusEnPages(corpusData, mapping) {
+  const pages = new Set()
+  corpusData.forEach(c => {
+    mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num)
+           .forEach(m => pages.add(m.page))
+  })
+  return pages
+}
+
+function unitesEligibles(unite, pagesCorpus, mapping) {
+  const candidats = [...new Set(mapping.map(m => m[
+    unite === 'hizb' ? 'hizb' :
+    unite === 'quart' ? 'quart_global' :
+    unite === 'sourate' ? 'sourate_num' : 'page'
+  ]))]
+  return candidats.filter(val => {
+    const pages = [...new Set(mapping.filter(m =>
+      unite === 'hizb' ? m.hizb === val :
+      unite === 'quart' ? m.quart_global === val :
+      unite === 'sourate' ? m.sourate_num === val :
+      m.page === val
+    ).map(m => m.page))]
+    return pages.every(p => pagesCorpus.has(p))
+  })
+}
+
 function SectionTag({ children }) {
   return (
     <div style={{
@@ -87,7 +113,7 @@ function ParamBtns({ options, value, onChange }) {
 
 function getJoursDeSessions(frequence, dateDebut) {
   const jours = []
-  const debut = new Date(dateDebut + 'T00:00:00')
+  const debut = new Date(dateDebut + 'T12:00:00')
   for (let i = 0; i < 30; i++) {
     const date = new Date(debut)
     date.setDate(debut.getDate() + i)
@@ -211,20 +237,8 @@ function Revisions() {
     const mapping = getMapping(user.version || 'warsh')
     const unite = user.unite_revision
     const today = aujourdhui()
-    let valeurs = []
-    if (unite === 'hizb') {
-      const s = new Set()
-      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.hizb)))
-      valeurs = [...s]
-    } else if (unite === 'page') {
-      valeurs = [...new Set(corpusData.map(c => c.valeur))]
-    } else if (unite === 'quart') {
-      const s = new Set()
-      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.quart_global)))
-      valeurs = [...s]
-    } else if (unite === 'sourate') {
-      valeurs = [...new Set(corpusData.map(c => c.sourate_num))]
-    }
+    const pagesCorpus = corpusEnPages(corpusData, mapping)
+    const valeurs = unitesEligibles(unite, pagesCorpus, mapping)
     for (const valeur of valeurs) {
       await supabase.from('revisions').insert({
         unite, valeur,
@@ -311,7 +325,7 @@ function Revisions() {
       <SectionTag>Rythme</SectionTag>
       <SectionTitle>Configure tes revisions</SectionTitle>
       <SectionSub>Ces parametres determinent ton planning quotidien</SectionSub>
-      <ParametrageRevision parametres={parametres} onSave={sauvegarderParametres} mapping={mapping} />
+      <ParametrageRevision parametres={parametres} onSave={sauvegarderParametres} mapping={mapping} corpus={corpus} />
     </div>
   )
 
@@ -326,7 +340,7 @@ function Revisions() {
       quart: `Quart ${rev.valeur}`,
       sourate: `Sourate ${rev.valeur}`
     }[parametres.unite_revision]
-  const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision, corpus)
+    const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision, corpus)
 
     return (
       <div>
@@ -488,7 +502,7 @@ function Revisions() {
   )
 }
 
-function ParametrageRevision({ parametres, onSave, mapping }) {
+function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
   const [frequence, setFrequence] = useState(parametres?.frequence || 'quotidien')
   const [tempsSession, setTempsSession] = useState(parametres?.temps_session || 30)
   const [uniteRevision, setUniteRevision] = useState(parametres?.unite_revision || 'hizb')
@@ -506,33 +520,21 @@ function ParametrageRevision({ parametres, onSave, mapping }) {
   ]
 
   async function lancerPlanification() {
-  setEnCours(true)
-  setPlanification(null)
-  for (let i = 0; i < etapesAnimation.length; i++) {
-    setAnimationEtape(i)
-    await new Promise(r => setTimeout(r, 1000))
-  }
+    setEnCours(true)
+    setPlanification(null)
+    for (let i = 0; i < etapesAnimation.length; i++) {
+      setAnimationEtape(i)
+      await new Promise(r => setTimeout(r, 1000))
+    }
 
-  // Initialiser les revisions si vides
-  const { data: revs } = await supabase.from('revisions').select('*')
-  if (!revs || revs.length === 0) {
+    // Vider et reremplir les revisions selon la nouvelle unite
+    await supabase.from('revisions').delete().neq('id', 0)
     const { data: corpusData } = await supabase.from('corpus').select('*')
     const today = aujourdhui()
     const unite = uniteRevision
-    let valeurs = []
-    if (unite === 'hizb') {
-      const s = new Set()
-      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.hizb)))
-      valeurs = [...s]
-    } else if (unite === 'page') {
-      valeurs = [...new Set(corpusData.map(c => c.valeur))]
-    } else if (unite === 'quart') {
-      const s = new Set()
-      corpusData.forEach(c => mapping.filter(m => m.page === c.valeur && m.sourate_num === c.sourate_num).forEach(e => s.add(e.quart_global)))
-      valeurs = [...s]
-    } else if (unite === 'sourate') {
-      valeurs = [...new Set(corpusData.map(c => c.sourate_num))]
-    }
+    const pagesCorpus = corpusEnPages(corpusData || [], mapping)
+    const valeurs = unitesEligibles(unite, pagesCorpus, mapping)
+
     for (const valeur of valeurs) {
       await supabase.from('revisions').insert({
         unite, valeur,
@@ -542,46 +544,42 @@ function ParametrageRevision({ parametres, onSave, mapping }) {
         version: 'warsh'
       })
     }
-  }
 
-  const { data: revsFinales } = await supabase.from('revisions').select('*')
-  const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement }
-  const revsTriees = (revsFinales || []).sort((a, b) => {
-  const pageA = Math.min(...mapping.filter(m => {
-    if (uniteRevision === 'hizb') return m.hizb === a.valeur
-    if (uniteRevision === 'page') return m.page === a.valeur
-    if (uniteRevision === 'quart') return m.quart_global === a.valeur
-    if (uniteRevision === 'sourate') return m.sourate_num === a.valeur
-    return false
-  }).map(m => m.page))
-  const pageB = Math.min(...mapping.filter(m => {
-    if (uniteRevision === 'hizb') return m.hizb === b.valeur
-    if (uniteRevision === 'page') return m.page === b.valeur
-    if (uniteRevision === 'quart') return m.quart_global === b.valeur
-    if (uniteRevision === 'sourate') return m.sourate_num === b.valeur
-    return false
-  }).map(m => m.page))
-  return pageA - pageB
-})
-const result = genererPlanning(revsTriees, params, mapping)
+    const { data: revsFinales } = await supabase.from('revisions').select('*')
+    const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement }
 
-// Mettre a jour prochaine_revision selon le planning
-if (!result.erreur && result.planning) {
-  for (const [date, revsDuJour] of Object.entries(result.planning)) {
-    for (const rev of revsDuJour) {
-      await supabase.from('revisions').update({
-        prochaine_revision: date
-      }).eq('id', rev.id)
+    const revsTriees = (revsFinales || []).sort((a, b) => {
+      const pageA = Math.min(...mapping.filter(m =>
+        uniteRevision === 'hizb' ? m.hizb === a.valeur :
+        uniteRevision === 'page' ? m.page === a.valeur :
+        uniteRevision === 'quart' ? m.quart_global === a.valeur :
+        m.sourate_num === a.valeur
+      ).map(m => m.page))
+      const pageB = Math.min(...mapping.filter(m =>
+        uniteRevision === 'hizb' ? m.hizb === b.valeur :
+        uniteRevision === 'page' ? m.page === b.valeur :
+        uniteRevision === 'quart' ? m.quart_global === b.valeur :
+        m.sourate_num === b.valeur
+      ).map(m => m.page))
+      return pageA - pageB
+    })
+
+    const result = genererPlanning(revsTriees, params, mapping)
+
+    if (!result.erreur && result.planning) {
+      for (const [date, revsDuJour] of Object.entries(result.planning)) {
+        for (const rev of revsDuJour) {
+          await supabase.from('revisions').update({ prochaine_revision: date }).eq('id', rev.id)
+        }
+      }
     }
-  }
-}
 
-setPlanification(result)
-setEnCours(false)
-}
+    setPlanification(result)
+    setEnCours(false)
+  }
 
   function formatDate(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00')
+    const date = new Date(dateStr + 'T12:00:00')
     return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
   }
 
@@ -634,7 +632,6 @@ setEnCours(false)
         { val: 'renforce', label: 'Renforce', desc: '5 pages avant / apres' },
       ]} />
 
-      {/* Bouton Planifier */}
       <button onClick={lancerPlanification} disabled={enCours} style={{
         marginTop: '32px', width: '100%', padding: '16px',
         background: enCours ? 'rgba(201,168,76,0.06)' : 'rgba(201,168,76,0.12)',
@@ -708,37 +705,40 @@ setEnCours(false)
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', flex: 1 }}>
                     {revs.map((rev, i) => {
-  const entree = mapping.find(m => {
-    if (uniteRevision === 'page') return m.page === rev.valeur
-    if (uniteRevision === 'hizb') return m.hizb === rev.valeur
-    if (uniteRevision === 'quart') return m.quart_global === rev.valeur
-    if (uniteRevision === 'sourate') return m.sourate_num === rev.valeur
-    return false
-  })
-  const pagesUnite = [...new Set(mapping.filter(m => {
-  if (uniteRevision === 'hizb') return m.hizb === rev.valeur
-  if (uniteRevision === 'page') return m.page === rev.valeur
-  if (uniteRevision === 'quart') return m.quart_global === rev.valeur
-  if (uniteRevision === 'sourate') return m.sourate_num === rev.valeur
-  return false
-}).map(m => m.page).filter(p => corpus.some(c => c.page === p)))]
-  const pageMin = Math.min(...pagesUnite)
-  const pageMax = Math.max(...pagesUnite)
-  const pagesLabel = pageMin === pageMax ? `p.${pageMin}` : `p.${pageMin}-${pageMax}`
+                      const entree = mapping.find(m =>
+                        uniteRevision === 'page' ? m.page === rev.valeur :
+                        uniteRevision === 'hizb' ? m.hizb === rev.valeur :
+                        uniteRevision === 'quart' ? m.quart_global === rev.valeur :
+                        m.sourate_num === rev.valeur
+                      )
+                      const pagesUnite = [...new Set(mapping.filter(m =>
+                        uniteRevision === 'hizb' ? m.hizb === rev.valeur :
+                        uniteRevision === 'page' ? m.page === rev.valeur :
+                        uniteRevision === 'quart' ? m.quart_global === rev.valeur :
+                        m.sourate_num === rev.valeur
+                      ).map(m => m.page))]
+                      const pageMin = Math.min(...pagesUnite)
+                      const pageMax = Math.max(...pagesUnite)
+                      const pagesLabel = pageMin === pageMax ? `p.${pageMin}` : `p.${pageMin}-${pageMax}`
+                      const titreLabel =
+                        uniteRevision === 'hizb' ? `Hizb ${rev.valeur}` :
+                        uniteRevision === 'page' ? `p.${rev.valeur}` :
+                        uniteRevision === 'quart' ? `Quart ${rev.valeur}` :
+                        (entree?.sourate_nom || `Sourate ${rev.valeur}`)
 
-  return (
-    <div key={i} style={{
-      padding: '4px 12px', borderRadius: '50px',
-      background: 'rgba(45,138,78,0.15)',
-      border: '1px solid rgba(45,138,78,0.25)',
-      fontSize: '11px', fontWeight: 600, color: '#81c784',
-      display: 'flex', flexDirection: 'column', gap: '1px'
-    }}>
-      <span>{entree?.sourate_nom || `Unite ${rev.valeur}`}</span>
-      <span style={{ opacity: 0.6, fontSize: '10px' }}>{pagesLabel}</span>
-    </div>
-  )
-})}
+                      return (
+                        <div key={i} style={{
+                          padding: '4px 12px', borderRadius: '50px',
+                          background: 'rgba(45,138,78,0.15)',
+                          border: '1px solid rgba(45,138,78,0.25)',
+                          fontSize: '11px', fontWeight: 600, color: '#81c784',
+                          display: 'flex', flexDirection: 'column', gap: '1px'
+                        }}>
+                          <span>{titreLabel}</span>
+                          <span style={{ opacity: 0.6, fontSize: '10px' }}>{pagesLabel}</span>
+                        </div>
+                      )
+                    })}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                     {Math.round(revs.length * ({ page: 1.5, quart: 4, hizb: 15, sourate: 20 }[uniteRevision] || 5))} min
