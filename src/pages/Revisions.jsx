@@ -113,17 +113,18 @@ function ParamBtns({ options, value, onChange }) {
 
 function getJoursDeSessions(frequence, dateDebut) {
   const jours = []
-  const debut = new Date(dateDebut + 'T12:00:00')
+  const [y, m, d] = dateDebut.split('-').map(Number)
+const debut = new Date(y, m - 1, d)
   for (let i = 0; i < 30; i++) {
     const date = new Date(debut)
     date.setDate(debut.getDate() + i)
     const jourSemaine = date.getDay()
     if (frequence === 'quotidien') {
-      jours.push(date.toISOString().split('T')[0])
+      jours.push(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`)
     } else if (frequence === '2x_semaine') {
-      if (jourSemaine === 1 || jourSemaine === 4) jours.push(date.toISOString().split('T')[0])
+      if (jourSemaine === 1 || jourSemaine === 4) jours.push(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`)
     } else if (frequence === '1x_semaine') {
-      if (jourSemaine === 1) jours.push(date.toISOString().split('T')[0])
+      if (jourSemaine === 1) jours.push(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`)
     }
   }
   return jours
@@ -223,7 +224,7 @@ function Revisions() {
     }
     const { data: revs } = await supabase.from('revisions').select('*')
     if (!revs || revs.length === 0) {
-      await initialiserRevisions(user)
+  setEtape('parametrage')
     } else {
       const duJour = getRevisionsDuJour(revs)
       setRevisionsDuJour(duJour)
@@ -567,6 +568,7 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
     const result = genererPlanning(revsTriees, params, mapping)
 
     if (!result.erreur && result.planning) {
+      console.log('revs du planning:', JSON.stringify(Object.values(result.planning)[0]))
       for (const [date, revsDuJour] of Object.entries(result.planning)) {
         for (const rev of revsDuJour) {
           await supabase.from('revisions').update({ prochaine_revision: date }).eq('id', rev.id)

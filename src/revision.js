@@ -28,12 +28,13 @@ export function calculerProchainIntervalle(intervalleActuel, niveau, nbRevisions
 export function prochaineDate(intervalleJours) {
   const date = new Date()
   date.setDate(date.getDate() + intervalleJours)
-  return date.toISOString().split('T')[0]
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
 }
 
 // Aujourd'hui en format YYYY-MM-DD
 export function aujourdhui() {
-  return new Date().toISOString().split('T')[0]
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
 }
 
 // Calcule les unités à réviser aujourd'hui
