@@ -212,7 +212,8 @@ function Revisions() {
   }, [chronoActif])
 
   async function chargerTout() {
-    const { data: user } = await supabase.from('utilisateur').select('*').single()
+    const { data: users } = await supabase.from('utilisateur').select('*')
+const user = users?.[0] || null
     if (!user) { setEtape('parametrage'); return }
     setParametres(user)
 
@@ -300,7 +301,7 @@ function Revisions() {
       score: niveau === 'fluide' ? rev.score + 1 :
              niveau === 'hesitant' ? rev.score :
              niveau === 'erreurs' ? Math.max(0, rev.score - 0.5) : 0
-    }).eq('id', rev.id)
+    }).eq('id', parseInt(rev.id))
     setChronoTermine(false)
     setChronoActif(false)
     setTempsRestant(0)
@@ -535,6 +536,7 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
     const unite = uniteRevision
     const pagesCorpus = corpusEnPages(corpusData || [], mapping)
     const valeurs = unitesEligibles(unite, pagesCorpus, mapping)
+    
 
     for (const valeur of valeurs) {
       await supabase.from('revisions').insert({
@@ -547,6 +549,7 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
     }
 
     const { data: revsFinales } = await supabase.from('revisions').select('*')
+    console.log('nb revisions insérées:', revsFinales?.length, revsFinales?.map(r => r.id))
     const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement }
 
     const revsTriees = (revsFinales || []).sort((a, b) => {
@@ -569,9 +572,13 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
 
     if (!result.erreur && result.planning) {
       console.log('revs du planning:', JSON.stringify(Object.values(result.planning)[0]))
+      const dejaMisAJour = new Set()
       for (const [date, revsDuJour] of Object.entries(result.planning)) {
         for (const rev of revsDuJour) {
-          await supabase.from('revisions').update({ prochaine_revision: date }).eq('id', rev.id)
+          if (!dejaMisAJour.has(rev.id)) {
+            await supabase.from('revisions').update({ prochaine_revision: date }).eq('id', parseInt(rev.id))
+            dejaMisAJour.add(rev.id)
+          }
         }
       }
     }
