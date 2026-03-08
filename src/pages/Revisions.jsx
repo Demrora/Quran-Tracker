@@ -8,6 +8,10 @@ import {
 import { getMapping } from '../mapping'
 import CarteCoran from '../components/CarteCoran'
 
+// ─────────────────────────────────────────────
+// UTILITAIRES DE BASE
+// ─────────────────────────────────────────────
+
 function corpusEnPages(corpusData, mapping) {
   const pages = new Set()
   corpusData.forEach(c => {
@@ -17,59 +21,447 @@ function corpusEnPages(corpusData, mapping) {
   return pages
 }
 
-function unitesEligibles(unite, pagesCorpus, mapping) {
-  const candidats = [...new Set(mapping.map(m => m[
-    unite === 'hizb' ? 'hizb' :
-    unite === 'quart' ? 'quart_global' :
-    unite === 'sourate' ? 'sourate_num' : 'page'
-  ]))]
-  return candidats.filter(val => {
-    const pages = [...new Set(mapping.filter(m =>
-      unite === 'hizb' ? m.hizb === val :
-      unite === 'quart' ? m.quart_global === val :
-      unite === 'sourate' ? m.sourate_num === val :
-      m.page === val
-    ).map(m => m.page))]
-    return pages.every(p => pagesCorpus.has(p))
+// Durée réelle d'un ensemble de pages
+const DUREE_PAGE = 1.5 // min
+
+function dureePages(pages) {
+  return pages.length * DUREE_PAGE
+}
+
+// Pages d'une valeur pour une unité donnée
+function pagesDeUnite(unite, valeur, mapping) {
+  return [...new Set(mapping.filter(m =>
+    unite === 'hizb' ? m.hizb === valeur :
+    unite === 'quart' ? m.quart_global === valeur :
+    unite === 'sourate' ? m.sourate_num === valeur :
+    m.page === valeur
+  ).map(m => m.page))].sort((a, b) => a - b)
+}
+
+// Regroupe des pages triées en intervalles consécutifs
+// [2,3,4,7,8] → [[2,4],[7,8]]
+function pagesEnIntervalles(pages) {
+  if (!pages || pages.length === 0) return []
+  const sorted = [...pages].sort((a, b) => a - b)
+  const res = []
+  let debut = sorted[0], fin = sorted[0]
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === fin + 1) { fin = sorted[i] }
+    else { res.push([debut, fin]); debut = sorted[i]; fin = sorted[i] }
+  }
+  res.push([debut, fin])
+  return res
+}
+
+// Label pages : [2,3,4,7,8] → "p.2–4, p.7–8"
+function labelPages(pages) {
+  return pagesEnIntervalles(pages).map(([d, f]) => d === f ? `p.${d}` : `p.${d}–${f}`).join(', ')
+}
+
+// ─────────────────────────────────────────────
+// HIÉRARCHIE DE DÉCOUPAGE
+// Quand une unité est trop grande, on descend :
+// sourate → hizb → quart → page
+// ─────────────────────────────────────────────
+const SOUS_UNITES = { sourate: 'hizb', hizb: 'quart', quart: 'page', page: null }
+
+// Valeurs de sous-unité présentes dans un ensemble de pages
+function sousValeursDansPages(sousUnite, pages, mapping) {
+  const pageSet = new Set(pages)
+  const candidats = [...new Set(mapping.filter(m => pageSet.has(m.page)).map(m =>
+    sousUnite === 'hizb' ? m.hizb :
+    sousUnite === 'quart' ? m.quart_global :
+    m.page
+  ))]
+  return candidats.sort((a, b) => {
+    const pA = Math.min(...mapping.filter(m => sousUnite === 'hizb' ? m.hizb === a : sousUnite === 'quart' ? m.quart_global === a : m.page === a).map(m => m.page))
+    const pB = Math.min(...mapping.filter(m => sousUnite === 'hizb' ? m.hizb === b : sousUnite === 'quart' ? m.quart_global === b : m.page === b).map(m => m.page))
+    return pA - pB
   })
 }
 
-// Unités ayant AU MOINS une page dans le corpus mais pas toutes (partielles)
-function unitesPartielles(unite, pagesCorpus, mapping) {
-  if (unite === 'page') return [] // une page = atomique, pas de partiel
-  const candidats = [...new Set(mapping.map(m => m[
-    unite === 'hizb' ? 'hizb' :
-    unite === 'quart' ? 'quart_global' :
-    unite === 'sourate' ? 'sourate_num' : 'page'
-  ]))]
-  const result = []
-  for (const val of candidats) {
-    const toutesPages = [...new Set(mapping.filter(m =>
-      unite === 'hizb' ? m.hizb === val :
-      unite === 'quart' ? m.quart_global === val :
-      m.sourate_num === val
-    ).map(m => m.page))]
-    const pagesInCorpus = toutesPages.filter(p => pagesCorpus.has(p))
-    // Partiel = au moins 1 page dans corpus mais pas toutes
-    if (pagesInCorpus.length > 0 && pagesInCorpus.length < toutesPages.length) {
-      result.push({ valeur: val, pagesCorpus: pagesInCorpus.sort((a,b) => a-b) })
+// ─────────────────────────────────────────────
+// GÉNÉRATION DES CHUNKS
+// Prend une liste d'unités brutes (valeurs + pages disponibles dans le corpus)
+// et les transforme en chunks adaptés au temps_session
+// ─────────────────────────────────────────────
+
+// Un chunk = { unite, valeur, pages, label, labelCourt, partiel }
+// - unite/valeur : l'unité d'origine (pour le SM-2)
+// - pages : pages effectives de ce chunk
+// - label : texte d'affichage complet ex "Al-Baqara · Hizb 2–3"
+// - labelCourt : pour le calendrier ex "Baqar H2–3"
+// - partiel : true si unité incomplète dans le corpus
+
+function genererChunks(unite, valeurs, pagesCorpus, mapping, tempsSession) {
+  const chunks = []
+
+  // ── Étape 1 : construire les unités brutes avec leurs pages corpus ──
+  const unitesBrutes = []
+
+  // Unités complètes dans le corpus
+  for (const valeur of valeurs) {
+    const toutesPages = pagesDeUnite(unite, valeur, mapping)
+    const pages = toutesPages.filter(p => pagesCorpus.has(p))
+    if (pages.length > 0) {
+      // partiel = UNIQUEMENT si des pages manquent dans le corpus
+      const partielCorpus = pages.length < toutesPages.length
+      unitesBrutes.push({ valeur, pages, partiel: partielCorpus })
     }
   }
-  return result
+
+  // Unités avec pages partiellement dans le corpus (jamais dans valeurs)
+  if (unite !== 'page') {
+    const candidatsTous = [...new Set(mapping.map(m =>
+      unite === 'hizb' ? m.hizb :
+      unite === 'quart' ? m.quart_global :
+      unite === 'sourate' ? m.sourate_num : m.page
+    ))]
+    for (const valeur of candidatsTous) {
+      if (valeurs.includes(valeur)) continue
+      const toutesPages = pagesDeUnite(unite, valeur, mapping)
+      const pages = toutesPages.filter(p => pagesCorpus.has(p))
+      if (pages.length > 0 && pages.length < toutesPages.length) {
+        unitesBrutes.push({ valeur, pages, partiel: true }) // vrai partiel corpus
+      }
+    }
+  }
+
+  // Trier dans l'ordre du Coran
+  unitesBrutes.sort((a, b) => Math.min(...a.pages) - Math.min(...b.pages))
+
+  // ── Étape 2 : chunker chaque unité brute ──
+  for (const unite_brute of unitesBrutes) {
+    const { valeur, pages, partiel } = unite_brute
+    const duree = dureePages(pages)
+
+    if (duree <= tempsSession) {
+      // ── Cas normal : rentre dans le temps ──
+      chunks.push(creerChunk(unite, valeur, pages, partiel, mapping))
+    } else {
+      // ── Cas trop grand : découper par sous-unité ──
+      const sousUnite = SOUS_UNITES[unite]
+      if (!sousUnite) {
+        // Page = unité atomique, on ne peut pas descendre
+        chunks.push(creerChunk(unite, valeur, pages, partiel, mapping))
+        continue
+      }
+      const sousValeurs = sousValeursDansPages(sousUnite, pages, mapping)
+      // Regrouper les sous-valeurs en chunks qui rentrent dans temps_session
+      let groupeEnCours = []
+      let pagesGroupe = []
+      for (const sv of sousValeurs) {
+        const pagesSv = pagesDeUnite(sousUnite, sv, mapping).filter(p => pages.includes(p))
+        const nouvellesDuree = dureePages([...pagesGroupe, ...pagesSv])
+        if (groupeEnCours.length === 0 || nouvellesDuree <= tempsSession) {
+          groupeEnCours.push(sv)
+          pagesGroupe = [...pagesGroupe, ...pagesSv]
+        } else {
+          // Flush le groupe courant
+          chunks.push(creerChunk(unite, valeur, pagesGroupe, partiel, mapping))
+          groupeEnCours = [sv]
+          pagesGroupe = [...pagesSv]
+        }
+      }
+      if (groupeEnCours.length > 0) {
+        chunks.push(creerChunk(unite, valeur, pagesGroupe, partiel, mapping))
+      }
+    }
+  }
+
+  // ── Étape 3 : regrouper les unités trop petites ──
+  // On regroupe des chunks consécutifs si leur durée totale ≤ tempsSession
+  // SEULEMENT si chaque chunk individuel est < tempsSession / 3 (vraiment petits)
+  const SEUIL_PETIT = tempsSession / 3
+  const chunksFinaux = []
+  let groupe = []
+  let dureeGroupe = 0
+
+  for (const chunk of chunks) {
+    const dc = dureePages(chunk.pages)
+    if (dc < SEUIL_PETIT && groupe.length > 0 && dureeGroupe + dc <= tempsSession) {
+      // Ajouter au groupe courant
+      groupe.push(chunk)
+      dureeGroupe += dc
+    } else if (dc < SEUIL_PETIT && groupe.length === 0) {
+      groupe.push(chunk)
+      dureeGroupe = dc
+    } else {
+      // Flush groupe
+      if (groupe.length > 0) chunksFinaux.push(fusionnerChunks(groupe, mapping))
+      groupe = dc < SEUIL_PETIT ? [chunk] : []
+      dureeGroupe = dc < SEUIL_PETIT ? dc : 0
+      if (dc >= SEUIL_PETIT) chunksFinaux.push(chunk)
+    }
+  }
+  if (groupe.length > 0) chunksFinaux.push(fusionnerChunks(groupe, mapping))
+
+  return chunksFinaux
 }
 
-// Calcul du temps pour une révision (partielle ou complète)
+// ─────────────────────────────────────────────
+// HELPERS CHUNKS
+// ─────────────────────────────────────────────
+
+function getNomUnite(unite, valeur, mapping) {
+  if (unite === 'sourate') {
+    return mapping.find(m => m.sourate_num === valeur)?.sourate_nom || `Sourate ${valeur}`
+  }
+  if (unite === 'hizb') return `Hizb ${valeur}`
+  if (unite === 'quart') return `Quart ${valeur}`
+  return `Page ${valeur}`
+}
+
+// ─────────────────────────────────────────────
+// LABEL OPTIMAL
+// Pour un ensemble de pages, trouve la représentation
+// la plus compacte en testant sourate → hizb → quart → page
+// ─────────────────────────────────────────────
+
+// Vérifie si un ensemble de pages correspond exactement à
+// une suite consécutive de valeurs d'une unité donnée
+function pagesCorrespondExactement(pages, unite, mapping) {
+  const pageSet = new Set(pages)
+  // Valeurs présentes dans ces pages
+  const valeursPresentes = [...new Set(mapping.filter(m => pageSet.has(m.page)).map(m =>
+    unite === 'hizb' ? m.hizb :
+    unite === 'quart' ? m.quart_global :
+    unite === 'sourate' ? m.sourate_num : m.page
+  ))].sort((a, b) => {
+    const pA = Math.min(...mapping.filter(m => unite === 'hizb' ? m.hizb === a : unite === 'quart' ? m.quart_global === a : unite === 'sourate' ? m.sourate_num === a : m.page === a).map(m => m.page))
+    const pB = Math.min(...mapping.filter(m => unite === 'hizb' ? m.hizb === b : unite === 'quart' ? m.quart_global === b : unite === 'sourate' ? m.sourate_num === b : m.page === b).map(m => m.page))
+    return pA - pB
+  })
+
+  // Pour chaque valeur présente, vérifier que TOUTES ses pages sont dans notre set
+  for (const val of valeursPresentes) {
+    const toutesPages = pagesDeUnite(unite, val, mapping)
+    if (!toutesPages.every(p => pageSet.has(p))) return null // valeur incomplète
+  }
+
+  // Vérifier que l'union de toutes ces valeurs = exactement nos pages
+  const pagesDesValeurs = new Set(valeursPresentes.flatMap(v => pagesDeUnite(unite, v, mapping)))
+  if (pagesDesValeurs.size !== pageSet.size) return null
+  for (const p of pageSet) if (!pagesDesValeurs.has(p)) return null
+
+  return valeursPresentes
+}
+
+// Formate un label à partir d'une liste de valeurs consécutives
+function labelValeurs(unite, valeurs, mapping) {
+  if (!valeurs || valeurs.length === 0) return null
+  if (unite === 'sourate') {
+    if (valeurs.length === 1) {
+      return mapping.find(m => m.sourate_num === valeurs[0])?.sourate_nom || `Sourate ${valeurs[0]}`
+    }
+    // Max 3 sourates listées, sinon "Sourate X · ... · Sourate Y"
+    if (valeurs.length <= 3) {
+      return valeurs.map(v => mapping.find(m => m.sourate_num === v)?.sourate_nom || `S.${v}`).join(' · ')
+    }
+    const first = mapping.find(m => m.sourate_num === valeurs[0])?.sourate_nom || `S.${valeurs[0]}`
+    const last = mapping.find(m => m.sourate_num === valeurs[valeurs.length-1])?.sourate_nom || `S.${valeurs[valeurs.length-1]}`
+    return `${first} → ${last}`
+  }
+  const prefix = unite === 'hizb' ? 'Hizb' : unite === 'quart' ? 'Quart' : 'p.'
+  const premier = valeurs[0], dernier = valeurs[valeurs.length - 1]
+  return valeurs.length === 1 ? `${prefix} ${premier}` : `${prefix} ${premier}–${dernier}`
+}
+
+// Trouve le label le plus compact pour un ensemble de pages
+// Retourne { label, labelCourt, estPartiel }
+function labelOptimal(pages, mapping) {
+  const pagesSorted = [...new Set(pages)].sort((a, b) => a - b)
+
+  // Tester dans l'ordre : sourate, hizb, quart, page
+  for (const unite of ['sourate', 'hizb', 'quart', 'page']) {
+    const valeurs = pagesCorrespondExactement(pagesSorted, unite, mapping)
+    if (valeurs) {
+      const label = labelValeurs(unite, valeurs, mapping)
+      const labelCourt = labelCourtValeurs(unite, valeurs, mapping)
+      return { label, labelCourt, estPartiel: false }
+    }
+  }
+
+  // Aucune correspondance exacte → représentation mixte
+  // On décompose en segments, chaque segment = meilleure unité dispo
+  return labelMixte(pagesSorted, mapping)
+}
+
+function labelCourtValeurs(unite, valeurs, mapping) {
+  if (unite === 'sourate') {
+    if (valeurs.length === 1) {
+      const nom = mapping.find(m => m.sourate_num === valeurs[0])?.sourate_nom || `S${valeurs[0]}`
+      return nom.slice(0, 6)
+    }
+    const first = (mapping.find(m => m.sourate_num === valeurs[0])?.sourate_nom || `S${valeurs[0]}`).slice(0, 4)
+    const last = (mapping.find(m => m.sourate_num === valeurs[valeurs.length-1])?.sourate_nom || `S${valeurs[valeurs.length-1]}`).slice(0, 4)
+    return `${first}–${last}`
+  }
+  const prefix = unite === 'hizb' ? 'H' : unite === 'quart' ? 'Q' : 'p.'
+  return valeurs.length === 1
+    ? `${prefix}${valeurs[0]}`
+    : `${prefix}${valeurs[0]}–${valeurs[valeurs.length-1]}`
+}
+
+// Pour les cas mixtes : décompose en segments correspondant chacun
+// à la meilleure unité disponible, puis assemble
+function labelMixte(pages, mapping) {
+  const segments = []
+  let restant = [...pages]
+
+  while (restant.length > 0) {
+    let trouve = false
+    // Essayer de "manger" le maximum de pages avec l'unité la plus large possible
+    for (const unite of ['hizb', 'quart']) {
+      // Chercher les valeurs complètes présentes dans le début de restant
+      const premiereValeur = mapping.find(m => m.page === restant[0])?.[
+        unite === 'hizb' ? 'hizb' : 'quart_global'
+      ]
+      if (!premiereValeur) continue
+      const pagesValeur = pagesDeUnite(unite, premiereValeur, mapping)
+      // Est-ce que toutes les pages de cette valeur sont dans restant (contiguës au début) ?
+      if (pagesValeur.every(p => restant.includes(p))) {
+        // Trouver le max de valeurs consécutives qu'on peut prendre
+        let valeursConsec = [premiereValeur]
+        let pagesConsommees = [...pagesValeur]
+        // Continuer à prendre la valeur suivante si dispo
+        let resteApres = restant.filter(p => !new Set(pagesConsommees).has(p))
+        while (resteApres.length > 0) {
+          const prochaineVal = mapping.find(m => m.page === resteApres[0])?.[
+            unite === 'hizb' ? 'hizb' : 'quart_global'
+          ]
+          if (!prochaineVal || prochaineVal === valeursConsec[valeursConsec.length - 1]) break
+          const pagesProchaineVal = pagesDeUnite(unite, prochaineVal, mapping)
+          if (!pagesProchaineVal.every(p => resteApres.includes(p) || pagesConsommees.includes(p))) break
+          const nouvellesPagesExclusives = pagesProchaineVal.filter(p => !new Set(pagesConsommees).has(p))
+          valeursConsec.push(prochaineVal)
+          pagesConsommees = [...pagesConsommees, ...nouvellesPagesExclusives]
+          resteApres = restant.filter(p => !new Set(pagesConsommees).has(p))
+        }
+        segments.push(labelValeurs(unite, valeursConsec, mapping))
+        restant = restant.filter(p => !new Set(pagesConsommees).has(p))
+        trouve = true
+        break
+      }
+    }
+    if (!trouve) {
+      // Aucune unité ne correspond — prendre des pages consécutives
+      const pageDebut = restant[0]
+      let fin = 0
+      while (fin < restant.length - 1 && restant[fin + 1] === restant[fin] + 1) fin++
+      const bloc = restant.slice(0, fin + 1)
+      segments.push(labelPages(bloc))
+      restant = restant.slice(fin + 1)
+    }
+  }
+
+  const label = segments.join(' · ')
+  // labelCourt : premier segment tronqué
+  const labelCourt = segments[0]?.slice(0, 8) + (segments.length > 1 ? '…' : '')
+  return { label, labelCourt, estPartiel: true }
+}
+
+function creerChunk(unite, valeur, pages, partiel, mapping) {
+  const pagesSorted = [...new Set(pages)].sort((a, b) => a - b)
+  const { label, labelCourt } = labelOptimal(pagesSorted, mapping)
+
+  const sourates = [...new Set(pagesSorted.flatMap(p =>
+    mapping.filter(m => m.page === p).map(m => m.sourate_nom)
+  ).filter(Boolean))]
+
+  return {
+    unite, valeur,
+    pages: pagesSorted,
+    partiel,
+    label,
+    labelCourt,
+    sourates,
+    pagesLabel: labelPages(pagesSorted),
+    estGroupe: false
+  }
+}
+
+function fusionnerChunks(chunks, mapping) {
+  const pages = [...new Set(chunks.flatMap(c => c.pages))].sort((a, b) => a - b)
+  const { label, labelCourt } = labelOptimal(pages, mapping)
+  const sourates = [...new Set(chunks.flatMap(c => c.sourates))]
+  return {
+    unite: chunks[0].unite,
+    valeur: chunks[0].valeur,
+    valeurs_groupees: chunks.map(c => ({ unite: c.unite, valeur: c.valeur })),
+    pages,
+    partiel: chunks.some(c => c.partiel),
+    label,
+    labelCourt,
+    sourates,
+    pagesLabel: labelPages(pages),
+    estGroupe: true
+  }
+}
+
+// ─────────────────────────────────────────────
+// tempsRevision — utilise pages_corpus si disponible
+// ─────────────────────────────────────────────
 function tempsRevision(rev, unite, mapping) {
-  // Si partielle: pages réelles × 1.5 min/page
-  if (rev.partiel && rev.pages_corpus) {
-    const pages = JSON.parse(rev.pages_corpus)
-    return pages.length * 1.5
+  if (rev.pages_corpus) {
+    try { return JSON.parse(rev.pages_corpus).length * DUREE_PAGE } catch(e) {}
   }
   if (unite === 'sourate') {
-    const pages = new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page))
-    return pages.size * 1.5
+    return new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page)).size * DUREE_PAGE
   }
-  return { page: 1.5, quart: 4, hizb: 15 }[unite] || 5
+  return { page: DUREE_PAGE, quart: 4, hizb: 15 }[unite] || 5
+}
+
+// ─────────────────────────────────────────────
+// analyserRevision — pour l'affichage
+// ─────────────────────────────────────────────
+function analyserRevision(rev, unite, mapping) {
+  let pages
+  if (rev.pages_corpus) {
+    try { pages = JSON.parse(rev.pages_corpus).sort((a, b) => a - b) } catch(e) { pages = [] }
+  } else {
+    pages = pagesDeUnite(unite, rev.valeur, mapping)
+  }
+
+  // Statut partiel par page (pour mode sourate : page partagée avec autres sourates)
+  const pagesAvecStatut = pages.map(page => {
+    let estPartielle = false
+    if (unite === 'sourate' && !rev.pages_corpus) {
+      const souratesPage = [...new Set(mapping.filter(m => m.page === page).map(m => m.sourate_num))]
+      estPartielle = souratesPage.length > 1
+    }
+    return { page, estPartielle }
+  })
+
+  // Regrouper en intervalles
+  const intervalles = []
+  if (pagesAvecStatut.length > 0) {
+    let debut = pagesAvecStatut[0].page, fin = pagesAvecStatut[0].page, partiel = pagesAvecStatut[0].estPartielle
+    for (let i = 1; i < pagesAvecStatut.length; i++) {
+      const { page, estPartielle } = pagesAvecStatut[i]
+      if (page === fin + 1 && estPartielle === partiel) { fin = page }
+      else { intervalles.push({ debut, fin, partiel }); debut = page; fin = page; partiel = estPartielle }
+    }
+    intervalles.push({ debut, fin, partiel })
+  }
+
+  if (rev.partiel && unite !== 'sourate') intervalles.forEach(iv => { iv.partiel = true })
+
+  const sourates = [...new Set(pages.flatMap(page =>
+    mapping.filter(m => m.page === page).map(m => m.sourate_nom)
+  ).filter(Boolean))]
+
+  return { intervalles, sourates, pages }
+}
+
+// Label court calendrier
+function shortLabelRevision(rev, unite, mapping) {
+  // Utiliser chunk_label_court s'il existe (stocké en base)
+  if (rev.chunk_label_court) return rev.chunk_label_court
+  const { intervalles } = analyserRevision(rev, unite, mapping)
+  if (intervalles.length === 0) return '?'
+  const first = intervalles[0]
+  return first.debut === first.fin ? `p.${first.debut}` : `p.${first.debut}–${first.fin}`
 }
 
 function SectionTag({ children }) {
@@ -182,40 +574,73 @@ function genererPlanning(revisions, parametres, mapping) {
   const joursChoisis = parametres.jours_choisis || null
   const today = aujourdhui()
 
-  const tempsParUnite = (rev) => tempsRevision(rev, unite, mapping)
+  const duree = (rev) => tempsRevision(rev, unite, mapping)
 
-  const tempsTotalUneFois = revisions.reduce((acc, r) => acc + tempsParUnite(r), 0)
+  const tempsTotalUneFois = revisions.reduce((acc, r) => acc + duree(r), 0)
   const joursDispo = getJoursDeSessions(frequence, today, joursChoisis)
-  const tempsTotalDispo = joursDispo.length * tempsSession
+  const nbJours = joursDispo.length
+  const tempsTotalDispo = nbJours * tempsSession
 
+  // ── Erreur si impossible de tout réviser une fois en 30j ──
   if (tempsTotalUneFois > tempsTotalDispo) {
     return {
       erreur: true,
-      message: `Il te faut ${Math.round(tempsTotalUneFois)} min pour tout reviser une fois, mais tu n'as que ${Math.round(tempsTotalDispo)} min disponibles sur 30 jours. Augmente le temps de session ou la frequence.`,
+      message: `Il te faut ${Math.round(tempsTotalUneFois)} min pour tout réviser une fois, mais tu n'as que ${Math.round(tempsTotalDispo)} min sur 30 jours (${nbJours} sessions × ${tempsSession} min). Augmente le temps de session ou la fréquence.`,
       planning: null
     }
   }
 
+  // ── Répartition équilibrée par cycles ──
+  // Approche : construire une queue circulaire infinie de révisions,
+  // et pour chaque jour calculer la cible = tempsTotalUneFois / joursParCycle
+  // où joursParCycle = ceil(tempsTotalUneFois / tempsSession)
+
   const planning = {}
-  let indexUnite = 0
+  joursDispo.forEach(j => { planning[j] = [] })
 
-  for (const jour of joursDispo) {
-    planning[jour] = []
-    let tempsRestant = tempsSession
+  // Nombre de jours nécessaires pour un cycle complet
+  // = nombre minimum de sessions pour couvrir tout le corpus une fois
+  const joursParCycle = Math.ceil(tempsTotalUneFois / tempsSession)
+  // Cible par jour = répartition équitable du corpus sur ces jours
+  const cibleJour = tempsTotalUneFois / joursParCycle
 
-    while (indexUnite < revisions.length) {
-      const rev = revisions[indexUnite]
-      const duree = tempsParUnite(rev)
-      if (duree <= tempsRestant) {
+  // File circulaire : on repart du début à chaque fin de cycle
+  let queueIndex = 0
+  const getRevCirculaire = () => revisions[queueIndex % revisions.length]
+  const avancer = () => { queueIndex++ }
+  const positionDansQueue = () => queueIndex % revisions.length
+
+  for (let ji = 0; ji < nbJours; ji++) {
+    const jour = joursDispo[ji]
+    let dureeJour = 0
+    const posDepart = positionDansQueue()
+
+    while (true) {
+      // Si on a fait un tour complet dans ce jour, stop
+      if (positionDansQueue() === posDepart && dureeJour > 0) break
+
+      const rev = getRevCirculaire()
+      const dc = duree(rev)
+
+      if (dureeJour === 0 && dc > cibleJour) {
+        // Chunk seul plus grand que la cible → jour entier pour lui
         planning[jour].push(rev)
-        tempsRestant -= duree
-        indexUnite++
+        avancer()
+        break
+      }
+
+      if (dureeJour + dc <= cibleJour + (cibleJour * 0.15)) {
+        // Rentre dans la cible avec 15% de tolérance
+        planning[jour].push(rev)
+        dureeJour += dc
+        avancer()
+        // Si on a atteint la cible, on s'arrête
+        if (dureeJour >= cibleJour - 0.5) break
       } else {
+        // Ne rentre pas → jour terminé
         break
       }
     }
-
-    if (indexUnite >= revisions.length) indexUnite = 0
   }
 
   return { erreur: false, message: null, planning }
@@ -254,25 +679,44 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
 
   const revsDuJourSelectionne = selectedDay ? (planning[selectedDay] || []) : []
 
-  function getUnitLabel(rev) {
-    if (rev.partiel && rev.pages_corpus) {
-      const pages = JSON.parse(rev.pages_corpus)
-      const pMin = Math.min(...pages), pMax = Math.max(...pages)
-      const baseLabel =
-        uniteRevision === 'hizb' ? `Hizb ${rev.valeur}` :
-        uniteRevision === 'quart' ? `Quart ${rev.valeur}` :
-        (mapping.find(m => m.sourate_num === rev.valeur)?.sourate_nom || `Sourate ${rev.valeur}`)
-      return `${baseLabel} · p.${pMin}${pMin !== pMax ? `–${pMax}` : ''}`
-    }
-    if (uniteRevision === 'hizb') return `Hizb ${rev.valeur}`
-    if (uniteRevision === 'page') return `p.${rev.valeur}`
-    if (uniteRevision === 'quart') return `Quart ${rev.valeur}`
-    const entree = mapping.find(m => m.sourate_num === rev.valeur)
-    return entree?.sourate_nom || `Sourate ${rev.valeur}`
-  }
-
   function getDureeJour(revs) {
     return Math.round(revs.reduce((acc, r) => acc + tempsRevision(r, uniteRevision, mapping), 0))
+  }
+
+  // Rendu d'une ligne dans le détail du jour sélectionné
+  function PastilleDetail({ rev }) {
+    const aPartiel = rev.partiel
+    // Titre : chunk_label stocké en base (ex: "Al-Baqara · Hizb 2–3")
+    const titre = rev.chunk_label || getNomUnite(uniteRevision, rev.valeur, mapping)
+    // Pages
+    const pages = rev.pages_corpus ? (() => { try { return JSON.parse(rev.pages_corpus) } catch(e) { return [] } })() : []
+    const pagesLabel = labelPages(pages)
+    // Sourates
+    const sourates = [...new Set(pages.flatMap(p =>
+      mapping.filter(m => m.page === p).map(m => m.sourate_nom)
+    ).filter(Boolean))]
+    const secondLine = [sourates.join(' · '), pagesLabel].filter(Boolean).join(' · ')
+
+    return (
+      <div style={{
+        padding: '10px 14px', borderRadius: '10px',
+        background: aPartiel ? 'rgba(201,168,76,0.08)' : 'rgba(45,138,78,0.1)',
+        border: `1px solid ${aPartiel ? 'rgba(201,168,76,0.25)' : 'rgba(45,138,78,0.25)'}`,
+        display: 'flex', flexDirection: 'column', gap: '3px'
+      }}>
+        <div style={{ fontSize: '13px', fontWeight: 700, color: aPartiel ? '#e8c97a' : '#81c784', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {titre}
+          {aPartiel && (
+            <span style={{
+              fontSize: '9px', fontWeight: 600,
+              background: 'rgba(201,168,76,0.2)', color: '#e8c97a',
+              padding: '1px 6px', borderRadius: '4px'
+            }}>partiel</span>
+          )}
+        </div>
+        <div style={{ fontSize: '11px', color: 'var(--text-dim)' }}>{secondLine}</div>
+      </div>
+    )
   }
 
   // Grille: cases vides + cases jours
@@ -313,9 +757,9 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
       </div>
 
       {/* Grille calendrier */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gridAutoRows: '64px', gap: '4px' }}>
         {cases.map((jour, i) => {
-          if (!jour) return <div key={`vide-${i}`} />
+          if (!jour) return <div key={`vide-${i}`} style={{ height: '64px' }} />
 
           const key = formatKey(annee, mois, jour)
           const aSession = !!planning[key]
@@ -323,22 +767,9 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
           const isSelected = key === selectedDay
           const revs = planning[key] || []
 
-          // Labels courts pour les pastilles dans la case
+          // Label court pour la case calendrier
           function shortLabel(rev) {
-            if (rev.partiel && rev.pages_corpus) {
-              const pages = JSON.parse(rev.pages_corpus)
-              const pMin = Math.min(...pages), pMax = Math.max(...pages)
-              const base =
-                uniteRevision === 'hizb' ? `H${rev.valeur}` :
-                uniteRevision === 'quart' ? `Q${rev.valeur}` :
-                (mapping.find(m => m.sourate_num === rev.valeur)?.sourate_nom?.slice(0,4) || `S${rev.valeur}`)
-              return `${base} p.${pMin}${pMin !== pMax ? `–${pMax}` : ''}`
-            }
-            if (uniteRevision === 'hizb') return `H${rev.valeur}`
-            if (uniteRevision === 'page') return `p.${rev.valeur}`
-            if (uniteRevision === 'quart') return `Q${rev.valeur}`
-            const nom = mapping.find(m => m.sourate_num === rev.valeur)?.sourate_nom
-            return nom ? nom.slice(0, 5) : `S${rev.valeur}`
+            return shortLabelRevision(rev, uniteRevision, mapping)
           }
 
           return (
@@ -350,7 +781,7 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
               }}
               style={{
                 position: 'relative',
-                borderRadius: '10px',
+                borderRadius: '8px',
                 border: isSelected
                   ? '1px solid rgba(201,168,76,0.6)'
                   : isToday
@@ -367,33 +798,36 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
                       : 'rgba(255,255,255,0.02)',
                 cursor: aSession ? 'pointer' : 'default',
                 display: 'flex', flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: '3px', padding: '5px 4px 5px 5px',
-                transition: 'all 0.15s', minHeight: '36px'
+                alignItems: 'stretch',
+                padding: '4px 3px 3px 4px',
+                transition: 'all 0.15s',
+                height: '64px', overflow: 'hidden',
+                boxSizing: 'border-box'
               }}
             >
               {/* Numéro du jour */}
               <span style={{
-                fontSize: '11px', fontWeight: isToday ? 800 : 500,
-                color: isSelected ? 'var(--gold)' : isToday ? 'var(--gold)' : aSession ? 'var(--text)' : 'var(--text-dim)',
-                lineHeight: 1, alignSelf: 'flex-end', paddingRight: '2px'
+                fontSize: '10px', fontWeight: isToday ? 800 : 500,
+                color: isSelected ? 'var(--gold)' : isToday ? 'var(--gold)' : aSession ? 'var(--text)' : 'rgba(240,235,224,0.3)',
+                lineHeight: 1, textAlign: 'right', flexShrink: 0,
+                marginBottom: '3px'
               }}>{jour}</span>
 
               {/* Pastilles unités */}
               {aSession && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', width: '100%' }}>
-                  {revs.slice(0, 3).map((rev, ri) => {
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', overflow: 'hidden', flex: 1 }}>
+                  {revs.slice(0, 2).map((rev, ri) => {
                     const isRevPartiel = rev.partiel && rev.pages_corpus
                     return (
                       <div key={ri} style={{
-                        fontSize: '9px', fontWeight: 600,
+                        fontSize: '9px', fontWeight: 700,
                         padding: '1px 4px',
                         borderRadius: '3px',
                         background: isRevPartiel
-                          ? 'rgba(201,168,76,0.18)'
+                          ? 'rgba(201,168,76,0.2)'
                           : isSelected
-                            ? 'rgba(201,168,76,0.2)'
-                            : 'rgba(45,138,78,0.2)',
+                            ? 'rgba(201,168,76,0.22)'
+                            : 'rgba(45,138,78,0.25)',
                         color: isRevPartiel
                           ? '#e8c97a'
                           : isSelected
@@ -402,18 +836,21 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        maxWidth: '100%',
-                        lineHeight: '1.4'
+                        lineHeight: '1.5',
+                        flexShrink: 0,
+                        minWidth: 0,
+                        width: '100%',
+                        boxSizing: 'border-box'
                       }}>
                         {shortLabel(rev)}
                       </div>
                     )
                   })}
-                  {revs.length > 3 && (
+                  {revs.length > 2 && (
                     <div style={{
-                      fontSize: '9px', color: 'var(--text-dim)',
-                      paddingLeft: '2px', lineHeight: 1
-                    }}>+{revs.length - 3}</div>
+                      fontSize: '8px', color: 'var(--text-dim)',
+                      lineHeight: 1, flexShrink: 0, paddingLeft: '2px'
+                    }}>+{revs.length - 2}</div>
                   )}
                 </div>
               )}
@@ -447,38 +884,10 @@ function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
             </div>
 
             {revsDuJourSelectionne.length > 0 ? (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {revsDuJourSelectionne.map((rev, i) => {
-                  const isPartiel = rev.partiel && rev.pages_corpus
-                  const pagesUnite = isPartiel
-                    ? JSON.parse(rev.pages_corpus)
-                    : [...new Set(mapping.filter(m =>
-                        uniteRevision === 'hizb' ? m.hizb === rev.valeur :
-                        uniteRevision === 'page' ? m.page === rev.valeur :
-                        uniteRevision === 'quart' ? m.quart_global === rev.valeur :
-                        m.sourate_num === rev.valeur
-                      ).map(m => m.page))]
-                  const pageMin = Math.min(...pagesUnite)
-                  const pageMax = Math.max(...pagesUnite)
-                  const pagesLabel = pageMin === pageMax ? `p.${pageMin}` : `p.${pageMin}–${pageMax}`
-
-                  return (
-                    <div key={i} style={{
-                      padding: '5px 12px', borderRadius: '50px',
-                      background: isPartiel ? 'rgba(201,168,76,0.12)' : 'rgba(45,138,78,0.15)',
-                      border: `1px solid ${isPartiel ? 'rgba(201,168,76,0.35)' : 'rgba(45,138,78,0.3)'}`,
-                      fontSize: '11px', fontWeight: 600,
-                      color: isPartiel ? '#e8c97a' : '#81c784',
-                      display: 'flex', flexDirection: 'column', gap: '1px', alignItems: 'center'
-                    }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        {getUnitLabel(rev)}
-                        {isPartiel && <span style={{ fontSize: '9px', opacity: 0.7, background: 'rgba(201,168,76,0.2)', padding: '1px 5px', borderRadius: '4px' }}>partiel</span>}
-                      </span>
-                      <span style={{ opacity: 0.55, fontSize: '10px' }}>{pagesLabel}</span>
-                    </div>
-                  )
-                })}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {revsDuJourSelectionne.map((rev, i) => (
+                  <PastilleDetail key={i} rev={rev} />
+                ))}
               </div>
             ) : (
               <div style={{ fontSize: '13px', color: 'var(--text-dim)', fontStyle: 'italic' }}>
@@ -556,18 +965,36 @@ function Revisions() {
   async function initialiserRevisions(user) {
     const { data: corpusData } = await supabase.from('corpus').select('*')
     if (!corpusData || corpusData.length === 0) { setEtape('termine'); return }
-    const mapping = getMapping(user.version || 'warsh')
-    const unite = user.unite_revision
+    const mappingLocal = getMapping(user.version || 'warsh')
+    const unite = user.unite_revision || user.unite || 'hizb'
+    const tempsSession = user.temps_session || 30
     const today = aujourdhui()
-    const pagesCorpus = corpusEnPages(corpusData, mapping)
-    const valeurs = unitesEligibles(unite, pagesCorpus, mapping)
-    for (const valeur of valeurs) {
+    const pagesCorpus = corpusEnPages(corpusData, mappingLocal)
+
+    // Valeurs complètes dans le corpus
+    const candidats = [...new Set(mappingLocal.map(m =>
+      unite === 'hizb' ? m.hizb :
+      unite === 'quart' ? m.quart_global :
+      unite === 'sourate' ? m.sourate_num : m.page
+    ))]
+    const valeurs = candidats.filter(val => {
+      const pages = pagesDeUnite(unite, val, mappingLocal)
+      return pages.length > 0 && pages.every(p => pagesCorpus.has(p))
+    })
+
+    const chunks = genererChunks(unite, valeurs, pagesCorpus, mappingLocal, tempsSession)
+    for (const chunk of chunks) {
       await supabase.from('revisions').insert({
-        unite, valeur,
-        sourate_num: unite === 'sourate' ? valeur : null,
+        unite: chunk.unite, valeur: chunk.valeur,
+        sourate_num: chunk.unite === 'sourate' ? chunk.valeur : null,
         score: 0, intervalle: 1, nb_revisions: 0,
         derniere_revision: null, prochaine_revision: today,
-        version: user.version || 'warsh'
+        version: user.version || 'warsh',
+        partiel: chunk.partiel || false,
+        pages_corpus: JSON.stringify(chunk.pages),
+        chunk_label: chunk.label,
+        chunk_label_court: chunk.labelCourt,
+        chunk_est_groupe: chunk.estGroupe || false
       })
     }
     const { data: revs } = await supabase.from('revisions').select('*')
@@ -603,7 +1030,7 @@ function Revisions() {
 
   function getTempsUnite(rev) {
     const mapping = getMapping(parametres?.version || 'warsh')
-    return tempsRevision(rev, parametres?.unite_revision || 'hizb', mapping)
+    return tempsRevision(rev, parametres?.unite || parametres?.unite_revision || 'hizb', mapping)
   }
 
   async function validerRevision(niveau) {
@@ -678,21 +1105,24 @@ function Revisions() {
 
   if (etape === 'session' && revisionsDuJour.length > 0) {
     const rev = revisionsDuJour[indexCourant]
-    const isPartiel = rev.partiel && rev.pages_corpus
-    const pagesPartielles = isPartiel ? JSON.parse(rev.pages_corpus) : null
+    const unite = parametres.unite || parametres.unite_revision || 'hizb'
     const tempsUnite = getTempsUnite(rev)
-    const tempsTotal = Math.round(revisionsDuJour.reduce((acc, r) => acc + tempsRevision(r, parametres.unite_revision, mapping), 0))
+    const tempsTotal = Math.round(revisionsDuJour.reduce((acc, r) => acc + tempsRevision(r, unite, mapping), 0))
     const progression = Math.round((indexCourant / revisionsDuJour.length) * 100)
 
-    // Label principal
-    const unitLabelBase = {
-      hizb: `Hizb ${rev.valeur}`,
-      page: `Page ${rev.valeur}`,
-      quart: `Quart ${rev.valeur}`,
-      sourate: `Sourate ${rev.valeur}`
-    }[parametres.unite_revision]
+    // Données du chunk depuis la base
+    const chunkLabel = rev.chunk_label || getNomUnite(unite, rev.valeur, mapping)
+    const pages = rev.pages_corpus ? (() => { try { return JSON.parse(rev.pages_corpus) } catch(e) { return [] } })() : []
+    const pagesLabel = labelPages(pages)
+    const sourates = [...new Set(pages.flatMap(p =>
+      mapping.filter(m => m.page === p).map(m => m.sourate_nom)
+    ).filter(Boolean))]
+    const aPartiel = rev.partiel
 
-    const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision, corpus)
+    // Ligne secondaire dans la session : sourates · pages
+    const sousInfos = [sourates.join(' · '), pagesLabel].filter(Boolean).join(' · ')
+
+    const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, unite, corpus)
 
     return (
       <div>
@@ -715,7 +1145,7 @@ function Revisions() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
-          {[`${revisionsDuJour.length} unites`, `${tempsTotal} min estimees`, `${parametres.unite_revision} · Warsh`].map(t => (
+          {[`${revisionsDuJour.length} unites`, `${tempsTotal} min estimees`, `${unite} · Warsh`].map(t => (
             <div key={t} style={{
               padding: '6px 14px', borderRadius: '50px',
               background: 'rgba(255,255,255,0.04)',
@@ -743,25 +1173,22 @@ function Revisions() {
             A reciter
           </div>
 
-          {/* Titre principal */}
-          <div style={{ fontSize: '52px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-2px', lineHeight: 1, marginBottom: isPartiel ? '10px' : '8px' }}>
-            {unitLabelBase}
+          {/* Titre principal : chunk_label (ex: "Al-Baqara · Hizb 2–3") */}
+          <div style={{ fontSize: aPartiel ? '32px' : '40px', fontWeight: 800, color: aPartiel ? '#e8c97a' : 'var(--text)', letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: '10px' }}>
+            {chunkLabel}
+            {aPartiel && (
+              <span style={{
+                marginLeft: '10px', fontSize: '11px', fontWeight: 600, letterSpacing: '1px',
+                background: 'rgba(201,168,76,0.2)', color: '#e8c97a',
+                padding: '3px 8px', borderRadius: '6px', verticalAlign: 'middle'
+              }}>partiel</span>
+            )}
           </div>
 
-          {/* Badge + pages pour unité partielle */}
-          {isPartiel && pagesPartielles && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                padding: '5px 14px', borderRadius: '50px',
-                background: 'rgba(201,168,76,0.12)',
-                border: '1px solid rgba(201,168,76,0.3)',
-                fontSize: '13px', fontWeight: 600, color: '#e8c97a'
-              }}>
-                <span style={{ fontSize: '10px', opacity: 0.7 }}>partiel</span>
-                p.{Math.min(...pagesPartielles)}{pagesPartielles.length > 1 ? `–${Math.max(...pagesPartielles)}` : ''}
-                <span style={{ fontSize: '11px', opacity: 0.6 }}>· {pagesPartielles.length} page{pagesPartielles.length > 1 ? 's' : ''}</span>
-              </div>
+          {/* Sous-infos : sourates · pages */}
+          {sousInfos && (
+            <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '20px', fontStyle: 'italic' }}>
+              {sousInfos}
             </div>
           )}
 
@@ -926,9 +1353,9 @@ function Revisions() {
 // PARAMETRAGE REVISION
 // ─────────────────────────────────────────────
 function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
+  const unite = parametres?.unite || 'hizb' // vient de la page Paramétrage corpus
   const [frequence, setFrequence] = useState(parametres?.frequence || 'quotidien')
   const [tempsSession, setTempsSession] = useState(parametres?.temps_session || 30)
-  const [uniteRevision, setUniteRevision] = useState(parametres?.unite_revision || 'hizb')
   const [modeChevauchement, setModeChevauchement] = useState(parametres?.mode_chevauchement || 'leger')
   const [planification, setPlanification] = useState(null)
   const [animationEtape, setAnimationEtape] = useState(0)
@@ -1030,58 +1457,59 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
     await supabase.from('revisions').delete().neq('id', 0)
     const { data: corpusData } = await supabase.from('corpus').select('*')
     const today = aujourdhui()
-    const unite = uniteRevision
     const pagesCorpus = corpusEnPages(corpusData || [], mapping)
-    const valeurs = unitesEligibles(unite, pagesCorpus, mapping)
-    const partielles = unitesPartielles(unite, pagesCorpus, mapping)
 
-    for (const valeur of valeurs) {
-      await supabase.from('revisions').insert({
-        unite, valeur,
-        sourate_num: unite === 'sourate' ? valeur : null,
-        score: 0, intervalle: 1, nb_revisions: 0,
-        derniere_revision: null, prochaine_revision: today,
-        version: 'warsh'
-      })
-    }
+    // Valeurs complètes dans le corpus
+    const candidatsTous = [...new Set(mapping.map(m =>
+      unite === 'hizb' ? m.hizb :
+      unite === 'quart' ? m.quart_global :
+      unite === 'sourate' ? m.sourate_num : m.page
+    ))]
+    const valeurs = candidatsTous.filter(val => {
+      const pages = pagesDeUnite(unite, val, mapping)
+      return pages.length > 0 && pages.every(p => pagesCorpus.has(p))
+    })
 
-    // Unités partielles
-    for (const { valeur, pagesCorpus: pagesList } of partielles) {
+    // Générer tous les chunks (découpe + regroupement)
+    const chunks = genererChunks(unite, valeurs, pagesCorpus, mapping, tempsSession)
+
+    // Insérer chaque chunk comme une révision
+    for (const chunk of chunks) {
       await supabase.from('revisions').insert({
-        unite, valeur,
-        sourate_num: unite === 'sourate' ? valeur : null,
+        unite: chunk.unite,
+        valeur: chunk.valeur,
+        sourate_num: chunk.unite === 'sourate' ? chunk.valeur : null,
         score: 0, intervalle: 1, nb_revisions: 0,
         derniere_revision: null, prochaine_revision: today,
         version: 'warsh',
-        partiel: true,
-        pages_corpus: JSON.stringify(pagesList)
+        partiel: chunk.partiel || false,
+        pages_corpus: JSON.stringify(chunk.pages),
+        chunk_label: chunk.label,
+        chunk_label_court: chunk.labelCourt,
+        chunk_est_groupe: chunk.estGroupe || false
       })
     }
 
     const { data: revsFinales } = await supabase.from('revisions').select('*')
-    console.log('nb revisions insérées:', revsFinales?.length, revsFinales?.map(r => r.id))
-    const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement, jours_choisis: getJoursChoisisPourPlanning() }
+    console.log('nb chunks insérés:', revsFinales?.length)
 
+    const params = {
+      frequence, temps_session: tempsSession,
+      unite_revision: unite,
+      mode_chevauchement: modeChevauchement,
+      jours_choisis: getJoursChoisisPourPlanning()
+    }
+
+    // Trier dans l'ordre du Coran
     const revsTriees = (revsFinales || []).sort((a, b) => {
-      const pageA = Math.min(...mapping.filter(m =>
-        uniteRevision === 'hizb' ? m.hizb === a.valeur :
-        uniteRevision === 'page' ? m.page === a.valeur :
-        uniteRevision === 'quart' ? m.quart_global === a.valeur :
-        m.sourate_num === a.valeur
-      ).map(m => m.page))
-      const pageB = Math.min(...mapping.filter(m =>
-        uniteRevision === 'hizb' ? m.hizb === b.valeur :
-        uniteRevision === 'page' ? m.page === b.valeur :
-        uniteRevision === 'quart' ? m.quart_global === b.valeur :
-        m.sourate_num === b.valeur
-      ).map(m => m.page))
-      return pageA - pageB
+      const pA = a.pages_corpus ? Math.min(...JSON.parse(a.pages_corpus)) : 999
+      const pB = b.pages_corpus ? Math.min(...JSON.parse(b.pages_corpus)) : 999
+      return pA - pB
     })
 
     const result = genererPlanning(revsTriees, params, mapping)
 
     if (!result.erreur && result.planning) {
-      console.log('revs du planning:', JSON.stringify(Object.values(result.planning)[0]))
       const dejaMisAJour = new Set()
       for (const [date, revsDuJour] of Object.entries(result.planning)) {
         for (const rev of revsDuJour) {
@@ -1127,14 +1555,6 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
             color: 'var(--text)', fontSize: '13px', textAlign: 'center'
           }} />
       </div>
-
-      <FieldLabel>Unite de revision</FieldLabel>
-      <ParamBtns value={uniteRevision} onChange={setUniteRevision} options={[
-        { val: 'page', label: 'Page' },
-        { val: 'quart', label: 'Quart' },
-        { val: 'hizb', label: 'Hizb' },
-        { val: 'sourate', label: 'Sourate' },
-      ]} />
 
       <FieldLabel>Chevauchement</FieldLabel>
       <ParamBtns value={modeChevauchement} onChange={setModeChevauchement} options={[
@@ -1198,12 +1618,12 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
           {/* CALENDRIER */}
           <CalendrierPlanning
             planning={planification.planning}
-            uniteRevision={uniteRevision}
+            uniteRevision={unite}
             mapping={mapping}
           />
 
           <button
-            onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement, jours_choisis: getJoursChoisisPourPlanning() })}
+            onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: unite, mode_chevauchement: modeChevauchement, jours_choisis: getJoursChoisisPourPlanning() })}
             style={{
               marginTop: '24px', width: '100%', padding: '16px',
               background: 'linear-gradient(135deg, #1a5c2e, #2d8a4e)',
