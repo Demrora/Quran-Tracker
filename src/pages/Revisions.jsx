@@ -34,6 +34,44 @@ function unitesEligibles(unite, pagesCorpus, mapping) {
   })
 }
 
+// Unités ayant AU MOINS une page dans le corpus mais pas toutes (partielles)
+function unitesPartielles(unite, pagesCorpus, mapping) {
+  if (unite === 'page') return [] // une page = atomique, pas de partiel
+  const candidats = [...new Set(mapping.map(m => m[
+    unite === 'hizb' ? 'hizb' :
+    unite === 'quart' ? 'quart_global' :
+    unite === 'sourate' ? 'sourate_num' : 'page'
+  ]))]
+  const result = []
+  for (const val of candidats) {
+    const toutesPages = [...new Set(mapping.filter(m =>
+      unite === 'hizb' ? m.hizb === val :
+      unite === 'quart' ? m.quart_global === val :
+      m.sourate_num === val
+    ).map(m => m.page))]
+    const pagesInCorpus = toutesPages.filter(p => pagesCorpus.has(p))
+    // Partiel = au moins 1 page dans corpus mais pas toutes
+    if (pagesInCorpus.length > 0 && pagesInCorpus.length < toutesPages.length) {
+      result.push({ valeur: val, pagesCorpus: pagesInCorpus.sort((a,b) => a-b) })
+    }
+  }
+  return result
+}
+
+// Calcul du temps pour une révision (partielle ou complète)
+function tempsRevision(rev, unite, mapping) {
+  // Si partielle: pages réelles × 1.5 min/page
+  if (rev.partiel && rev.pages_corpus) {
+    const pages = JSON.parse(rev.pages_corpus)
+    return pages.length * 1.5
+  }
+  if (unite === 'sourate') {
+    const pages = new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page))
+    return pages.size * 1.5
+  }
+  return { page: 1.5, quart: 4, hizb: 15 }[unite] || 5
+}
+
 function SectionTag({ children }) {
   return (
     <div style={{
@@ -111,20 +149,27 @@ function ParamBtns({ options, value, onChange }) {
   )
 }
 
-function getJoursDeSessions(frequence, dateDebut) {
+// joursChoisis: tableau de numéros de jours JS (0=dim, 1=lun, ..., 6=sam)
+function getJoursDeSessions(frequence, dateDebut, joursChoisis = null) {
   const jours = []
   const [y, m, d] = dateDebut.split('-').map(Number)
-const debut = new Date(y, m - 1, d)
+  const debut = new Date(y, m - 1, d)
+  // Jours par défaut si non précisés
+  const defaut2x = [1, 4] // lun + jeu
+  const defaut1x = [1]    // lun
   for (let i = 0; i < 30; i++) {
     const date = new Date(debut)
     date.setDate(debut.getDate() + i)
     const jourSemaine = date.getDay()
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
     if (frequence === 'quotidien') {
-      jours.push(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`)
+      jours.push(dateStr)
     } else if (frequence === '2x_semaine') {
-      if (jourSemaine === 1 || jourSemaine === 4) jours.push(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`)
+      const jrs = joursChoisis?.length === 2 ? joursChoisis : defaut2x
+      if (jrs.includes(jourSemaine)) jours.push(dateStr)
     } else if (frequence === '1x_semaine') {
-      if (jourSemaine === 1) jours.push(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`)
+      const jrs = joursChoisis?.length === 1 ? joursChoisis : defaut1x
+      if (jrs.includes(jourSemaine)) jours.push(dateStr)
     }
   }
   return jours
@@ -134,18 +179,13 @@ function genererPlanning(revisions, parametres, mapping) {
   const unite = parametres.unite_revision
   const tempsSession = parametres.temps_session
   const frequence = parametres.frequence
+  const joursChoisis = parametres.jours_choisis || null
   const today = aujourdhui()
 
-  const tempsParUnite = (rev) => {
-    if (unite === 'sourate') {
-      const pages = new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page))
-      return pages.size * 1.5
-    }
-    return { page: 1.5, quart: 4, hizb: 15 }[unite] || 5
-  }
+  const tempsParUnite = (rev) => tempsRevision(rev, unite, mapping)
 
   const tempsTotalUneFois = revisions.reduce((acc, r) => acc + tempsParUnite(r), 0)
-  const joursDispo = getJoursDeSessions(frequence, today)
+  const joursDispo = getJoursDeSessions(frequence, today, joursChoisis)
   const tempsTotalDispo = joursDispo.length * tempsSession
 
   if (tempsTotalUneFois > tempsTotalDispo) {
@@ -181,6 +221,280 @@ function genererPlanning(revisions, parametres, mapping) {
   return { erreur: false, message: null, planning }
 }
 
+// ─────────────────────────────────────────────
+// CALENDRIER MENSUEL
+// ─────────────────────────────────────────────
+function CalendrierPlanning({ planning, uniteRevision, mapping, onSelectDay }) {
+  const today = aujourdhui()
+  const [annee, setAnnee] = useState(() => parseInt(today.split('-')[0]))
+  const [mois, setMois] = useState(() => parseInt(today.split('-')[1]))
+  const [selectedDay, setSelectedDay] = useState(today)
+
+  const JOURS_SEMAINE = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+  const MOIS_NOMS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
+
+  // Premier jour du mois (0=dim, 1=lun...)
+  const premierJour = new Date(annee, mois - 1, 1).getDay()
+  // Décaler pour semaine lun→dim
+  const decalage = (premierJour === 0 ? 6 : premierJour - 1)
+  const nbJours = new Date(annee, mois, 0).getDate()
+
+  function formatKey(y, m, d) {
+    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+  }
+
+  function moisPrecedent() {
+    if (mois === 1) { setMois(12); setAnnee(a => a - 1) }
+    else setMois(m => m - 1)
+  }
+  function moisSuivant() {
+    if (mois === 12) { setMois(1); setAnnee(a => a + 1) }
+    else setMois(m => m + 1)
+  }
+
+  const revsDuJourSelectionne = selectedDay ? (planning[selectedDay] || []) : []
+
+  function getUnitLabel(rev) {
+    if (rev.partiel && rev.pages_corpus) {
+      const pages = JSON.parse(rev.pages_corpus)
+      const pMin = Math.min(...pages), pMax = Math.max(...pages)
+      const baseLabel =
+        uniteRevision === 'hizb' ? `Hizb ${rev.valeur}` :
+        uniteRevision === 'quart' ? `Quart ${rev.valeur}` :
+        (mapping.find(m => m.sourate_num === rev.valeur)?.sourate_nom || `Sourate ${rev.valeur}`)
+      return `${baseLabel} · p.${pMin}${pMin !== pMax ? `–${pMax}` : ''}`
+    }
+    if (uniteRevision === 'hizb') return `Hizb ${rev.valeur}`
+    if (uniteRevision === 'page') return `p.${rev.valeur}`
+    if (uniteRevision === 'quart') return `Quart ${rev.valeur}`
+    const entree = mapping.find(m => m.sourate_num === rev.valeur)
+    return entree?.sourate_nom || `Sourate ${rev.valeur}`
+  }
+
+  function getDureeJour(revs) {
+    return Math.round(revs.reduce((acc, r) => acc + tempsRevision(r, uniteRevision, mapping), 0))
+  }
+
+  // Grille: cases vides + cases jours
+  const cases = []
+  for (let i = 0; i < decalage; i++) cases.push(null)
+  for (let d = 1; d <= nbJours; d++) cases.push(d)
+
+  return (
+    <div>
+      {/* Header navigation mois */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <button onClick={moisPrecedent} style={{
+          width: '36px', height: '36px', borderRadius: '50%',
+          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.03)',
+          color: 'var(--text-dim)', fontSize: '16px', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>‹</button>
+        <div style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text)', letterSpacing: '0.5px' }}>
+          {MOIS_NOMS[mois - 1]} {annee}
+        </div>
+        <button onClick={moisSuivant} style={{
+          width: '36px', height: '36px', borderRadius: '50%',
+          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.03)',
+          color: 'var(--text-dim)', fontSize: '16px', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>›</button>
+      </div>
+
+      {/* En-têtes jours */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', marginBottom: '6px' }}>
+        {JOURS_SEMAINE.map(j => (
+          <div key={j} style={{ textAlign: 'center', fontSize: '10px', fontWeight: 700, letterSpacing: '1px', color: 'var(--text-dim)', padding: '4px 0' }}>
+            {j}
+          </div>
+        ))}
+      </div>
+
+      {/* Grille calendrier */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+        {cases.map((jour, i) => {
+          if (!jour) return <div key={`vide-${i}`} />
+
+          const key = formatKey(annee, mois, jour)
+          const aSession = !!planning[key]
+          const isToday = key === today
+          const isSelected = key === selectedDay
+          const revs = planning[key] || []
+
+          // Labels courts pour les pastilles dans la case
+          function shortLabel(rev) {
+            if (rev.partiel && rev.pages_corpus) {
+              const pages = JSON.parse(rev.pages_corpus)
+              const pMin = Math.min(...pages), pMax = Math.max(...pages)
+              const base =
+                uniteRevision === 'hizb' ? `H${rev.valeur}` :
+                uniteRevision === 'quart' ? `Q${rev.valeur}` :
+                (mapping.find(m => m.sourate_num === rev.valeur)?.sourate_nom?.slice(0,4) || `S${rev.valeur}`)
+              return `${base} p.${pMin}${pMin !== pMax ? `–${pMax}` : ''}`
+            }
+            if (uniteRevision === 'hizb') return `H${rev.valeur}`
+            if (uniteRevision === 'page') return `p.${rev.valeur}`
+            if (uniteRevision === 'quart') return `Q${rev.valeur}`
+            const nom = mapping.find(m => m.sourate_num === rev.valeur)?.sourate_nom
+            return nom ? nom.slice(0, 5) : `S${rev.valeur}`
+          }
+
+          return (
+            <button
+              key={key}
+              onClick={() => {
+                setSelectedDay(key)
+                onSelectDay && onSelectDay(key, revs)
+              }}
+              style={{
+                position: 'relative',
+                borderRadius: '10px',
+                border: isSelected
+                  ? '1px solid rgba(201,168,76,0.6)'
+                  : isToday
+                    ? '1px solid rgba(201,168,76,0.3)'
+                    : aSession
+                      ? '1px solid rgba(45,138,78,0.25)'
+                      : '1px solid rgba(255,255,255,0.04)',
+                background: isSelected
+                  ? 'rgba(201,168,76,0.15)'
+                  : isToday
+                    ? 'rgba(201,168,76,0.06)'
+                    : aSession
+                      ? 'rgba(45,138,78,0.06)'
+                      : 'rgba(255,255,255,0.02)',
+                cursor: aSession ? 'pointer' : 'default',
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'flex-start',
+                gap: '3px', padding: '5px 4px 5px 5px',
+                transition: 'all 0.15s', minHeight: '36px'
+              }}
+            >
+              {/* Numéro du jour */}
+              <span style={{
+                fontSize: '11px', fontWeight: isToday ? 800 : 500,
+                color: isSelected ? 'var(--gold)' : isToday ? 'var(--gold)' : aSession ? 'var(--text)' : 'var(--text-dim)',
+                lineHeight: 1, alignSelf: 'flex-end', paddingRight: '2px'
+              }}>{jour}</span>
+
+              {/* Pastilles unités */}
+              {aSession && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', width: '100%' }}>
+                  {revs.slice(0, 3).map((rev, ri) => {
+                    const isRevPartiel = rev.partiel && rev.pages_corpus
+                    return (
+                      <div key={ri} style={{
+                        fontSize: '9px', fontWeight: 600,
+                        padding: '1px 4px',
+                        borderRadius: '3px',
+                        background: isRevPartiel
+                          ? 'rgba(201,168,76,0.18)'
+                          : isSelected
+                            ? 'rgba(201,168,76,0.2)'
+                            : 'rgba(45,138,78,0.2)',
+                        color: isRevPartiel
+                          ? '#e8c97a'
+                          : isSelected
+                            ? 'var(--gold)'
+                            : '#81c784',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                        lineHeight: '1.4'
+                      }}>
+                        {shortLabel(rev)}
+                      </div>
+                    )
+                  })}
+                  {revs.length > 3 && (
+                    <div style={{
+                      fontSize: '9px', color: 'var(--text-dim)',
+                      paddingLeft: '2px', lineHeight: 1
+                    }}>+{revs.length - 3}</div>
+                  )}
+                </div>
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Détail du jour sélectionné */}
+      {selectedDay && (
+        <div style={{ marginTop: '20px' }}>
+          <div style={{
+            padding: '16px 18px',
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid rgba(201,168,76,0.15)',
+            borderRadius: '14px'
+          }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: revsDuJourSelectionne.length > 0 ? '12px' : '0' }}>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: selectedDay === today ? 'var(--gold)' : 'var(--text)' }}>
+                  {new Date(selectedDay + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                  {selectedDay === today && <span style={{ marginLeft: '8px', fontSize: '10px', background: 'rgba(201,168,76,0.2)', color: 'var(--gold)', padding: '2px 8px', borderRadius: '50px', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700 }}>Aujourd'hui</span>}
+                </div>
+                {revsDuJourSelectionne.length > 0 && (
+                  <div style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '2px' }}>
+                    {revsDuJourSelectionne.length} unité{revsDuJourSelectionne.length > 1 ? 's' : ''} · {getDureeJour(revsDuJourSelectionne)} min estimées
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {revsDuJourSelectionne.length > 0 ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {revsDuJourSelectionne.map((rev, i) => {
+                  const isPartiel = rev.partiel && rev.pages_corpus
+                  const pagesUnite = isPartiel
+                    ? JSON.parse(rev.pages_corpus)
+                    : [...new Set(mapping.filter(m =>
+                        uniteRevision === 'hizb' ? m.hizb === rev.valeur :
+                        uniteRevision === 'page' ? m.page === rev.valeur :
+                        uniteRevision === 'quart' ? m.quart_global === rev.valeur :
+                        m.sourate_num === rev.valeur
+                      ).map(m => m.page))]
+                  const pageMin = Math.min(...pagesUnite)
+                  const pageMax = Math.max(...pagesUnite)
+                  const pagesLabel = pageMin === pageMax ? `p.${pageMin}` : `p.${pageMin}–${pageMax}`
+
+                  return (
+                    <div key={i} style={{
+                      padding: '5px 12px', borderRadius: '50px',
+                      background: isPartiel ? 'rgba(201,168,76,0.12)' : 'rgba(45,138,78,0.15)',
+                      border: `1px solid ${isPartiel ? 'rgba(201,168,76,0.35)' : 'rgba(45,138,78,0.3)'}`,
+                      fontSize: '11px', fontWeight: 600,
+                      color: isPartiel ? '#e8c97a' : '#81c784',
+                      display: 'flex', flexDirection: 'column', gap: '1px', alignItems: 'center'
+                    }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {getUnitLabel(rev)}
+                        {isPartiel && <span style={{ fontSize: '9px', opacity: 0.7, background: 'rgba(201,168,76,0.2)', padding: '1px 5px', borderRadius: '4px' }}>partiel</span>}
+                      </span>
+                      <span style={{ opacity: 0.55, fontSize: '10px' }}>{pagesLabel}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div style={{ fontSize: '13px', color: 'var(--text-dim)', fontStyle: 'italic' }}>
+                Pas de session ce jour
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────
+// COMPOSANT PRINCIPAL
+// ─────────────────────────────────────────────
 function Revisions() {
   const [parametres, setParametres] = useState(null)
   const [corpus, setCorpus] = useState([])
@@ -190,7 +504,12 @@ function Revisions() {
   const [chronoTermine, setChronoTermine] = useState(false)
   const [tempsRestant, setTempsRestant] = useState(0)
   const [chronoActif, setChronoActif] = useState(false)
+  // Pour "session suivante"
+  const [sessionBonus, setSessionBonus] = useState(false)
+  const [sessionBonusDate, setSessionBonusDate] = useState(null)
+  const [chargementBonus, setChargementBonus] = useState(false)
   const intervalRef = useRef(null)
+  const [allRevisions, setAllRevisions] = useState([])
 
   useEffect(() => { chargerTout() }, [])
 
@@ -213,7 +532,7 @@ function Revisions() {
 
   async function chargerTout() {
     const { data: users } = await supabase.from('utilisateur').select('*')
-const user = users?.[0] || null
+    const user = users?.[0] || null
     if (!user) { setEtape('parametrage'); return }
     setParametres(user)
 
@@ -224,8 +543,9 @@ const user = users?.[0] || null
       setEtape('parametrage'); return
     }
     const { data: revs } = await supabase.from('revisions').select('*')
+    setAllRevisions(revs || [])
     if (!revs || revs.length === 0) {
-  setEtape('parametrage')
+      setEtape('parametrage')
     } else {
       const duJour = getRevisionsDuJour(revs)
       setRevisionsDuJour(duJour)
@@ -283,11 +603,7 @@ const user = users?.[0] || null
 
   function getTempsUnite(rev) {
     const mapping = getMapping(parametres?.version || 'warsh')
-    if (parametres?.unite_revision === 'sourate') {
-      const pages = new Set(mapping.filter(m => m.sourate_num === rev.valeur).map(m => m.page))
-      return pages.size * 1.5
-    }
-    return { page: 1.5, quart: 4, hizb: 15 }[parametres?.unite_revision] || 5
+    return tempsRevision(rev, parametres?.unite_revision || 'hizb', mapping)
   }
 
   async function validerRevision(niveau) {
@@ -312,6 +628,35 @@ const user = users?.[0] || null
     }
   }
 
+  // Trouver la prochaine session disponible (demain ou plus)
+  function trouverProchaineSession() {
+    if (!allRevisions.length || !parametres) return null
+    const today = aujourdhui()
+    // Trier les prochaines_revision futures > aujourd'hui
+    const futures = allRevisions
+      .filter(r => r.prochaine_revision > today)
+      .map(r => r.prochaine_revision)
+    if (!futures.length) return null
+    futures.sort()
+    return futures[0]
+  }
+
+  async function chargerSessionBonus(dateBonus) {
+    setChargementBonus(true)
+    const { data: revs } = await supabase.from('revisions').select('*')
+    // Récupérer les revisions prévues pour cette date
+    const revsBonus = (revs || []).filter(r => r.prochaine_revision === dateBonus)
+    setRevisionsDuJour(revsBonus)
+    setSessionBonusDate(dateBonus)
+    setSessionBonus(true)
+    setIndexCourant(0)
+    setChronoTermine(false)
+    setChronoActif(false)
+    setTempsRestant(0)
+    setChargementBonus(false)
+    setEtape('session')
+  }
+
   const mapping = getMapping(parametres?.version || 'warsh')
   const version = parametres?.version || 'warsh'
 
@@ -333,21 +678,26 @@ const user = users?.[0] || null
 
   if (etape === 'session' && revisionsDuJour.length > 0) {
     const rev = revisionsDuJour[indexCourant]
+    const isPartiel = rev.partiel && rev.pages_corpus
+    const pagesPartielles = isPartiel ? JSON.parse(rev.pages_corpus) : null
     const tempsUnite = getTempsUnite(rev)
-    const tempsTotal = Math.round(calculerTempsSession(revisionsDuJour, parametres.unite_revision, mapping))
+    const tempsTotal = Math.round(revisionsDuJour.reduce((acc, r) => acc + tempsRevision(r, parametres.unite_revision, mapping), 0))
     const progression = Math.round((indexCourant / revisionsDuJour.length) * 100)
-    const unitLabel = {
+
+    // Label principal
+    const unitLabelBase = {
       hizb: `Hizb ${rev.valeur}`,
       page: `Page ${rev.valeur}`,
       quart: `Quart ${rev.valeur}`,
       sourate: `Sourate ${rev.valeur}`
     }[parametres.unite_revision]
+
     const chevauchements = getChevauchement(rev.valeur, parametres.mode_chevauchement, mapping, parametres.unite_revision, corpus)
 
     return (
       <div>
         <CarteCoran corpus={corpus} version={version} />
-        <SectionTag>Revisions du jour</SectionTag>
+        <SectionTag>{sessionBonus ? `Session du ${new Date(sessionBonusDate + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}` : 'Revisions du jour'}</SectionTag>
         <SectionTitle>Bismillah</SectionTitle>
         <SectionSub>{revisionsDuJour.length} unites · environ {tempsTotal} min</SectionSub>
 
@@ -392,9 +742,29 @@ const user = users?.[0] || null
           <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '14px' }}>
             A reciter
           </div>
-          <div style={{ fontSize: '52px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-2px', lineHeight: 1, marginBottom: '8px' }}>
-            {unitLabel}
+
+          {/* Titre principal */}
+          <div style={{ fontSize: '52px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-2px', lineHeight: 1, marginBottom: isPartiel ? '10px' : '8px' }}>
+            {unitLabelBase}
           </div>
+
+          {/* Badge + pages pour unité partielle */}
+          {isPartiel && pagesPartielles && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '5px 14px', borderRadius: '50px',
+                background: 'rgba(201,168,76,0.12)',
+                border: '1px solid rgba(201,168,76,0.3)',
+                fontSize: '13px', fontWeight: 600, color: '#e8c97a'
+              }}>
+                <span style={{ fontSize: '10px', opacity: 0.7 }}>partiel</span>
+                p.{Math.min(...pagesPartielles)}{pagesPartielles.length > 1 ? `–${Math.max(...pagesPartielles)}` : ''}
+                <span style={{ fontSize: '11px', opacity: 0.6 }}>· {pagesPartielles.length} page{pagesPartielles.length > 1 ? 's' : ''}</span>
+              </div>
+            </div>
+          )}
+
           {rev.nb_revisions > 0 && (
             <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '16px' }}>
               {rev.nb_revisions} revision{rev.nb_revisions > 1 ? 's' : ''} · derniere le {rev.derniere_revision}
@@ -481,12 +851,18 @@ const user = users?.[0] || null
     )
   }
 
+  // ── Ecran TERMINE ──
+  const prochaineSession = trouverProchaineSession()
+  const prochaineSessionLabel = prochaineSession
+    ? new Date(prochaineSession + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+    : null
+
   return (
     <div>
       <CarteCoran corpus={corpus} version={version} />
-      <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+      <div style={{ textAlign: 'center', padding: '40px 20px 24px' }}>
         <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '16px' }}>
-          Session terminee
+          {sessionBonus ? 'Session bonus terminee' : 'Session terminee'}
         </div>
         <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-1px', marginBottom: '10px' }}>
           Barakallahu fik
@@ -498,12 +874,57 @@ const user = users?.[0] || null
           </span>{' '}
           aujourd'hui
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>Reviens demain pour continuer</div>
       </div>
+
+      {/* Bouton "Continuer avec la session suivante" */}
+      {prochaineSession && (
+        <div style={{
+          margin: '0 0 20px',
+          padding: '20px 24px',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(201,168,76,0.2)',
+          borderRadius: '18px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)', marginBottom: '8px' }}>
+            Prendre de l'avance
+          </div>
+          <div style={{ fontSize: '14px', color: 'var(--text)', marginBottom: '16px', lineHeight: 1.5 }}>
+            La prochaine session est prévue{' '}
+            <span style={{ color: 'var(--gold)', fontWeight: 700 }}>{prochaineSessionLabel}</span>.
+            <br />
+            <span style={{ fontSize: '13px', color: 'var(--text-dim)' }}>Tu peux la faire maintenant si tu as encore de l'énergie.</span>
+          </div>
+          <button
+            onClick={() => chargerSessionBonus(prochaineSession)}
+            disabled={chargementBonus}
+            style={{
+              padding: '13px 28px',
+              background: chargementBonus ? 'rgba(201,168,76,0.06)' : 'rgba(201,168,76,0.12)',
+              border: '1px solid rgba(201,168,76,0.35)',
+              borderRadius: '50px',
+              color: 'var(--gold)',
+              fontSize: '14px', fontWeight: 700, cursor: chargementBonus ? 'default' : 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            {chargementBonus ? 'Chargement...' : `Commencer la session du ${new Date(prochaineSession + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`}
+          </button>
+        </div>
+      )}
+
+      {!prochaineSession && (
+        <div style={{ textAlign: 'center', fontSize: '13px', color: 'var(--text-dim)', marginBottom: '24px' }}>
+          Reviens demain pour continuer
+        </div>
+      )}
     </div>
   )
 }
 
+// ─────────────────────────────────────────────
+// PARAMETRAGE REVISION
+// ─────────────────────────────────────────────
 function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
   const [frequence, setFrequence] = useState(parametres?.frequence || 'quotidien')
   const [tempsSession, setTempsSession] = useState(parametres?.temps_session || 30)
@@ -512,6 +933,83 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
   const [planification, setPlanification] = useState(null)
   const [animationEtape, setAnimationEtape] = useState(0)
   const [enCours, setEnCours] = useState(false)
+  // Jours choisis: tableau de numéros JS (0=dim,1=lun,...,6=sam)
+  const [joursChoisis2x, setJoursChoisis2x] = useState([1, 4]) // lun+jeu par défaut
+  const [jourChoisi1x, setJourChoisi1x] = useState(1)           // lun par défaut
+
+  const JOURS_SEMAINE = [
+    { num: 1, label: 'Lundi' },
+    { num: 2, label: 'Mardi' },
+    { num: 3, label: 'Mercredi' },
+    { num: 4, label: 'Jeudi' },
+    { num: 5, label: 'Vendredi' },
+    { num: 6, label: 'Samedi' },
+    { num: 0, label: 'Dimanche' },
+  ]
+
+  function toggleJour2x(num) {
+    if (joursChoisis2x.includes(num)) {
+      // Ne pas désélectionner si déjà 1 seul
+      if (joursChoisis2x.length > 1) setJoursChoisis2x(j => j.filter(d => d !== num))
+    } else {
+      // Max 2 jours — remplace le plus ancien si déjà 2
+      if (joursChoisis2x.length < 2) setJoursChoisis2x(j => [...j, num])
+      else setJoursChoisis2x([joursChoisis2x[1], num])
+    }
+  }
+
+  function getJoursChoisisPourPlanning() {
+    if (frequence === '2x_semaine') return joursChoisis2x
+    if (frequence === '1x_semaine') return [jourChoisi1x]
+    return null
+  }
+
+  // Sélecteur de jours inline
+  function DayPicker() {
+    if (frequence === 'quotidien') return null
+    const is2x = frequence === '2x_semaine'
+    return (
+      <div style={{ marginTop: '14px' }}>
+        <div style={{
+          fontSize: '11px', color: 'var(--text-dim)', marginBottom: '10px', letterSpacing: '0.5px'
+        }}>
+          {is2x
+            ? `Choisis 2 jours (${joursChoisis2x.length}/2 sélectionné${joursChoisis2x.length > 1 ? 's' : ''})`
+            : 'Choisis le jour'}
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {JOURS_SEMAINE.map(({ num, label }) => {
+            const active = is2x ? joursChoisis2x.includes(num) : jourChoisi1x === num
+            return (
+              <button
+                key={num}
+                onClick={() => is2x ? toggleJour2x(num) : setJourChoisi1x(num)}
+                style={{
+                  padding: '7px 14px', borderRadius: '50px',
+                  border: `1px solid ${active ? 'rgba(201,168,76,0.5)' : 'rgba(255,255,255,0.08)'}`,
+                  background: active ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.02)',
+                  color: active ? 'var(--gold)' : 'var(--text-dim)',
+                  fontSize: '12px', fontWeight: active ? 700 : 500,
+                  cursor: 'pointer', transition: 'all 0.15s',
+                  position: 'relative'
+                }}
+              >
+                {label}
+                {active && (
+                  <span style={{
+                    position: 'absolute', top: '-4px', right: '-4px',
+                    width: '8px', height: '8px', borderRadius: '50%',
+                    background: 'var(--gold)',
+                    border: '1px solid var(--bg)'
+                  }} />
+                )}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   const etapesAnimation = [
     'Analyse du corpus...',
@@ -529,14 +1027,13 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
       await new Promise(r => setTimeout(r, 1000))
     }
 
-    // Vider et reremplir les revisions selon la nouvelle unite
     await supabase.from('revisions').delete().neq('id', 0)
     const { data: corpusData } = await supabase.from('corpus').select('*')
     const today = aujourdhui()
     const unite = uniteRevision
     const pagesCorpus = corpusEnPages(corpusData || [], mapping)
     const valeurs = unitesEligibles(unite, pagesCorpus, mapping)
-    
+    const partielles = unitesPartielles(unite, pagesCorpus, mapping)
 
     for (const valeur of valeurs) {
       await supabase.from('revisions').insert({
@@ -548,9 +1045,22 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
       })
     }
 
+    // Unités partielles
+    for (const { valeur, pagesCorpus: pagesList } of partielles) {
+      await supabase.from('revisions').insert({
+        unite, valeur,
+        sourate_num: unite === 'sourate' ? valeur : null,
+        score: 0, intervalle: 1, nb_revisions: 0,
+        derniere_revision: null, prochaine_revision: today,
+        version: 'warsh',
+        partiel: true,
+        pages_corpus: JSON.stringify(pagesList)
+      })
+    }
+
     const { data: revsFinales } = await supabase.from('revisions').select('*')
     console.log('nb revisions insérées:', revsFinales?.length, revsFinales?.map(r => r.id))
-    const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement }
+    const params = { frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement, jours_choisis: getJoursChoisisPourPlanning() }
 
     const revsTriees = (revsFinales || []).sort((a, b) => {
       const pageA = Math.min(...mapping.filter(m =>
@@ -587,23 +1097,15 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
     setEnCours(false)
   }
 
-  function formatDate(dateStr) {
-    const date = new Date(dateStr + 'T12:00:00')
-    return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
-  }
-
-  function isToday(dateStr) {
-    return dateStr === aujourdhui()
-  }
-
   return (
     <Card>
       <FieldLabel>Frequence</FieldLabel>
-      <ParamBtns value={frequence} onChange={setFrequence} options={[
+      <ParamBtns value={frequence} onChange={(v) => { setFrequence(v); setPlanification(null) }} options={[
         { val: 'quotidien', label: 'Tous les jours' },
         { val: '2x_semaine', label: '2x par semaine' },
         { val: '1x_semaine', label: '1x par semaine' },
       ]} />
+      <DayPicker />
 
       <FieldLabel>Duree par session</FieldLabel>
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -692,75 +1194,18 @@ function ParametrageRevision({ parametres, onSave, mapping, corpus }) {
           <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '16px' }}>
             Planning 30 jours
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '400px', overflowY: 'auto' }}>
-            {Object.entries(planification.planning).map(([date, revs]) => {
-              const today = isToday(date)
-              return (
-                <div key={date} style={{
-                  display: 'flex', alignItems: 'flex-start', gap: '12px',
-                  padding: '12px 16px', borderRadius: '12px',
-                  background: today ? 'rgba(201,168,76,0.08)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${today ? 'rgba(201,168,76,0.3)' : 'rgba(255,255,255,0.05)'}`,
-                }}>
-                  <div style={{ minWidth: '90px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: today ? 'var(--gold)' : 'var(--text)', textTransform: 'capitalize' }}>
-                      {formatDate(date)}
-                    </div>
-                    {today && (
-                      <div style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '1px', marginTop: '2px' }}>
-                        Aujourd'hui
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', flex: 1 }}>
-                    {revs.map((rev, i) => {
-                      const entree = mapping.find(m =>
-                        uniteRevision === 'page' ? m.page === rev.valeur :
-                        uniteRevision === 'hizb' ? m.hizb === rev.valeur :
-                        uniteRevision === 'quart' ? m.quart_global === rev.valeur :
-                        m.sourate_num === rev.valeur
-                      )
-                      const pagesUnite = [...new Set(mapping.filter(m =>
-                        uniteRevision === 'hizb' ? m.hizb === rev.valeur :
-                        uniteRevision === 'page' ? m.page === rev.valeur :
-                        uniteRevision === 'quart' ? m.quart_global === rev.valeur :
-                        m.sourate_num === rev.valeur
-                      ).map(m => m.page))]
-                      const pageMin = Math.min(...pagesUnite)
-                      const pageMax = Math.max(...pagesUnite)
-                      const pagesLabel = pageMin === pageMax ? `p.${pageMin}` : `p.${pageMin}-${pageMax}`
-                      const titreLabel =
-                        uniteRevision === 'hizb' ? `Hizb ${rev.valeur}` :
-                        uniteRevision === 'page' ? `p.${rev.valeur}` :
-                        uniteRevision === 'quart' ? `Quart ${rev.valeur}` :
-                        (entree?.sourate_nom || `Sourate ${rev.valeur}`)
 
-                      return (
-                        <div key={i} style={{
-                          padding: '4px 12px', borderRadius: '50px',
-                          background: 'rgba(45,138,78,0.15)',
-                          border: '1px solid rgba(45,138,78,0.25)',
-                          fontSize: '11px', fontWeight: 600, color: '#81c784',
-                          display: 'flex', flexDirection: 'column', gap: '1px'
-                        }}>
-                          <span>{titreLabel}</span>
-                          <span style={{ opacity: 0.6, fontSize: '10px' }}>{pagesLabel}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
-                    {Math.round(revs.length * ({ page: 1.5, quart: 4, hizb: 15, sourate: 20 }[uniteRevision] || 5))} min
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+          {/* CALENDRIER */}
+          <CalendrierPlanning
+            planning={planification.planning}
+            uniteRevision={uniteRevision}
+            mapping={mapping}
+          />
 
           <button
-            onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement })}
+            onClick={() => onSave({ frequence, temps_session: tempsSession, unite_revision: uniteRevision, mode_chevauchement: modeChevauchement, jours_choisis: getJoursChoisisPourPlanning() })}
             style={{
-              marginTop: '20px', width: '100%', padding: '16px',
+              marginTop: '24px', width: '100%', padding: '16px',
               background: 'linear-gradient(135deg, #1a5c2e, #2d8a4e)',
               border: '1px solid rgba(45,138,78,0.4)',
               borderRadius: '14px', color: 'white',
